@@ -70,11 +70,11 @@ public final class NBTEditor {
             } else {
                 classCache.put( "BlockPosition", Class.forName( "net.minecraft.core.BlockPosition" ) );
 
-                classCache.put( "NBTBase", Class.forName( "net.minecraft.nbt.NBTBase" ) );
-                classCache.put( "NBTTagCompound", Class.forName( "net.minecraft.nbt.NBTTagCompound" ) );
-                classCache.put( "NBTTagList", Class.forName( "net.minecraft.nbt.NBTTagList" ) );
-                classCache.put( "NBTTagEnd", Class.forName( "net.minecraft.nbt.NBTTagEnd" ) );
-                classCache.put( "MojangsonParser", Class.forName( "net.minecraft.nbt.MojangsonParser" ) );
+                classCache.put( "NBTBase", Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTBase" ) );
+                classCache.put( "NBTTagCompound", Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagCompound" ) );
+                classCache.put( "NBTTagList", Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagList" ) );
+                classCache.put( "NBTTagEnd", Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagEnd" ) );
+                classCache.put( "MojangsonParser", Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.MojangsonParser" ) );
 
                 classCache.put( "ItemStack", Class.forName( "net.minecraft.world.item.ItemStack" ) );
 
@@ -116,16 +116,16 @@ public final class NBTEditor {
                 NBTClasses.put( Class.forName( "[B" ), Class.forName( "net.minecraft.server." + VERSION + "." + "NBTTagByteArray" ) );
                 NBTClasses.put( Class.forName( "[I" ), Class.forName( "net.minecraft.server." + VERSION + "." + "NBTTagIntArray" ) );
             } else {
-                NBTClasses.put( Byte.class, Class.forName( "net.minecraft.nbt.NBTTagByte" ) );
-                NBTClasses.put( Boolean.class, Class.forName( "net.minecraft.nbt.NBTTagByte" ) );
-                NBTClasses.put( String.class, Class.forName( "net.minecraft.nbt.NBTTagString" ) );
-                NBTClasses.put( Double.class, Class.forName( "net.minecraft.nbt.NBTTagDouble" ) );
-                NBTClasses.put( Integer.class, Class.forName( "net.minecraft.nbt.NBTTagInt" ) );
-                NBTClasses.put( Long.class, Class.forName( "net.minecraft.nbt.NBTTagLong" ) );
-                NBTClasses.put( Short.class, Class.forName( "net.minecraft.nbt.NBTTagShort" ) );
-                NBTClasses.put( Float.class, Class.forName( "net.minecraft.nbt.NBTTagFloat" ) );
-                NBTClasses.put( Class.forName( "[B" ), Class.forName( "net.minecraft.nbt.NBTTagByteArray" ) );
-                NBTClasses.put( Class.forName( "[I" ), Class.forName( "net.minecraft.nbt.NBTTagIntArray" ) );
+                NBTClasses.put( Byte.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagByte" ) );
+                NBTClasses.put( Boolean.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagByte" ) );
+                NBTClasses.put( String.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagString" ) );
+                NBTClasses.put( Double.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagDouble" ) );
+                NBTClasses.put( Integer.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagInt" ) );
+                NBTClasses.put( Long.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagLong" ) );
+                NBTClasses.put( Short.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagShort" ) );
+                NBTClasses.put( Float.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagFloat" ) );
+                NBTClasses.put( Class.forName( "[B" ), Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagByteArray" ) );
+                NBTClasses.put( Class.forName( "[I" ), Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagIntArray" ) );
             }
         } catch ( ClassNotFoundException e ) {
             e.printStackTrace();
