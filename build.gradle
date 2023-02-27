@@ -1,0 +1,59 @@
+plugins {
+    id "java"
+    id 'com.github.johnrengelman.shadow' version '7+'
+}
+
+group = "moe.plushie.armourers_workshop.plugin"
+version = "${project.plugin_version}-homebaked"
+archivesBaseName = "armourersworkshop-plugin"
+
+repositories {
+    mavenCentral()
+    maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+    maven { url "https://oss.sonatype.org/content/groups/public/" }
+    maven { url "https://repo.dmulloy2.net/repository/public/" }
+    maven { url "https://jitpack.io/" }
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
+
+    compileOnly "io.netty:netty-buffer:4.1.80+"
+    compileOnly "io.netty:netty-handler:4.1.80+"
+    compileOnly "com.comphenix.protocol:ProtocolLib:4.8.0+"
+
+    implementation "com.github.GeyserMC:OpenNBT:1.4"
+}
+
+def targetJavaVersion = 8
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+shadowJar {
+    archiveBaseName.set(project.getArchivesBaseName())
+    archiveClassifier.set("")
+    archiveVersion.set(project.getVersion())
+}
+
+assemble.dependsOn shadowJar
