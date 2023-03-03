@@ -2,10 +2,17 @@ package moe.plushie.armourers_workshop.plugin.utils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
 import io.netty.util.ByteProcessor;
+import net.querz.nbt.io.NBTInputStream;
+import net.querz.nbt.io.NBTOutputStream;
+import net.querz.nbt.tag.CompoundTag;
+import net.querz.nbt.tag.Tag;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -126,6 +133,39 @@ public class FriendlyByteBuf extends ByteBuf {
 
     public FriendlyByteBuf writeUtf(String string) {
         return writeUtf(string, 32767);
+    }
+
+    public FriendlyByteBuf writeNbt(@Nullable CompoundTag tag) {
+        if (tag == null) {
+            this.writeByte(0);
+        }
+        try {
+            OutputStream outputStream = new ByteBufOutputStream(this);
+            NBTOutputStream nbtOutputStream = new NBTOutputStream(outputStream);
+            nbtOutputStream.writeTag(tag, Tag.DEFAULT_MAX_DEPTH);
+        } catch (IOException var3) {
+            throw new EncoderException(var3);
+        }
+
+        return this;
+    }
+
+    @Nullable
+    public CompoundTag readNbt() {
+        int i = this.readerIndex();
+        byte b = this.readByte();
+        if (b == 0) {
+            return null;
+        }
+        this.readerIndex(i);
+        try {
+            ByteBufInputStream inputStream = new ByteBufInputStream(this);
+            NBTInputStream nbtInputStream = new NBTInputStream(inputStream);
+            Tag<?> tag = nbtInputStream.readRawTag(Tag.DEFAULT_MAX_DEPTH);
+            return (CompoundTag) tag;
+        } catch (IOException var5) {
+            throw new EncoderException(var5);
+        }
     }
 
 

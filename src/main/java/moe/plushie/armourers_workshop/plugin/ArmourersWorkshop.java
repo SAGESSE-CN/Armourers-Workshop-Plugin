@@ -4,6 +4,10 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import io.netty.buffer.ByteBufOutputStream;
+import moe.plushie.armourers_workshop.plugin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.plugin.data.SkinSlotType;
+import moe.plushie.armourers_workshop.plugin.data.SkinWardrobe;
+import moe.plushie.armourers_workshop.plugin.data.impl.ItemStack;
 import moe.plushie.armourers_workshop.plugin.network.MessageListener;
 import moe.plushie.armourers_workshop.plugin.packet.PacketListener;
 import moe.plushie.armourers_workshop.plugin.utils.FriendlyByteBuf;
@@ -88,46 +92,18 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
     }
 
     private void sendSync(Player player) {
+
+        SkinWardrobe wardrobe = new SkinWardrobe();
+
+        wardrobe.setItem(SkinSlotType.OUTFIT, 0, new SkinDescriptor("db:00001", "armourers:outfit").asItemStack());
+        wardrobe.setItem(SkinSlotType.SWORD, 0, new SkinDescriptor("db:00002", "armourers:sword").asItemStack());
+
         FriendlyByteBuf buf1 = new FriendlyByteBuf();
-//        byte[] bytes = Base64.getDecoder().decode("AAAABAAAAAMRCgAAAwAKVmlzaWJpbGl0eQAAAEYJAAVJdGVtcwoAAAABAQAEU2xvdEYIAAJpZAAXYXJtb3VyZXJzX3dvcmtzaG9wOnNraW4BAAVDb3VudAEKAAN0YWcKABFBcm1vdXJlcnNXb3Jrc2hvcAgACFNraW5UeXBlABBhcm1vdXJlcnM6b3V0Zml0CAAKSWRlbnRpZmllcgANZGI6UWNSOENhZEtqaQAAAAEAC0RhdGFWZXJzaW9uAQA=");
-//        buf1.writeBytes(bytes);
-//        buf1.writerIndex(0);
 
         buf1.writeInt(4); //UPDATE_WARDROBE(0x04, UpdateWardrobePacket.class, UpdateWardrobePacket::new),
         buf1.writeVarInt(0); //UpdateWardrobePacket.SYNC.SYNC
         buf1.writeInt(player.getEntityId());
-
-        ListTag<CompoundTag> items = new ListTag<>(CompoundTag.class);
-
-        CompoundTag item = new CompoundTag();
-        item.putByte("Slot", (byte) 70);
-        item.putString("id", "armourers_workshop:skin");
-        item.putByte("Count", (byte) 1);
-
-        CompoundTag itemNBT = new CompoundTag();
-        item.put("tag", itemNBT);
-
-        CompoundTag skinNBT = new CompoundTag();
-        skinNBT.putString("SkinType", "armourers:outfit");
-        skinNBT.putString("Identifier", "db:QcR8CadKji");
-        itemNBT.put("ArmourersWorkshop", skinNBT);
-
-        items.add(item);
-
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("Visibility", 70);
-        tag.put("Items", items);
-        tag.putByte("DataVersion", (byte) 1);
-
-        try {
-            OutputStream outputStream = new ByteBufOutputStream(buf1);
-            NBTOutputStream nbtOutputStream = new NBTOutputStream(outputStream);
-            nbtOutputStream.writeTag(tag, Tag.DEFAULT_MAX_DEPTH);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        // buf1.writeNbt({Visibility: 70, Items: [{Slot: 70b, id: "armourers_workshop:skin", Count: 1b, tag: {ArmourersWorkshop: {SkinType: "armourers:outfit", Identifier: "db:QcR8CadKji"}}}], DataVersion: 1b})
+        buf1.writeNbt(wardrobe.serializeNBT());
 
         player.sendPluginMessage(ArmourersWorkshop.INSTANCE, CHANNEL, buf1.array());
     }

@@ -46,10 +46,18 @@ public class MessageListener implements PluginMessageListener {
             if (id == 0x01) {
                 // REQUEST_FILE(0x01, RequestSkinPacket.class, RequestSkinPacket::new),
                 String kn = bf.readUtf();
-                File file = new File("armourers_workshop/skin-library/胡桃/胡桃.armour");
+
+                String filePath = "";
+                if (kn.equals("db:00001")) {
+                    filePath = "armourers_workshop/skin-library/胡桃/胡桃.armour";
+                }
+                if (kn.equals("db:00002")) {
+                    filePath = "armourers_workshop/skin-library/胡桃/护摩之杖.armour";
+                }
                 ByteBuf buf = Unpooled.buffer();
                 FriendlyByteBuf buf1 = new FriendlyByteBuf();
                 try {
+                    File file = new File(filePath);
                     // read file
                     FileInputStream is = new FileInputStream(file);
                     ByteBufOutputStream os = new ByteBufOutputStream(buf);
