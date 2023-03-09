@@ -1,6 +1,6 @@
-package moe.plushie.armourers_workshop.plugin.data;
+package moe.plushie.armourers_workshop.plugin.core.skin;
 
-import moe.plushie.armourers_workshop.plugin.data.api.ISkinType;
+import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;

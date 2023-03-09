@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.plugin.data.impl;
+package moe.plushie.armourers_workshop.plugin.api;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.Validate;

@@ -1,23 +1,74 @@
-package moe.plushie.armourers_workshop.plugin.data;
+package moe.plushie.armourers_workshop.plugin.core.skin;
 
-import moe.plushie.armourers_workshop.plugin.data.impl.ITagRepresentable;
-import moe.plushie.armourers_workshop.plugin.data.impl.ItemStack;
-import moe.plushie.armourers_workshop.plugin.data.impl.NonNullList;
-import moe.plushie.armourers_workshop.plugin.data.api.ISkinType;
+import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.plugin.api.ITagRepresentable;
+import moe.plushie.armourers_workshop.plugin.api.ItemStack;
+import moe.plushie.armourers_workshop.plugin.api.NonNullList;
+import moe.plushie.armourers_workshop.plugin.network.NetworkManager;
+import moe.plushie.armourers_workshop.plugin.network.packets.UpdateWardrobePacket;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.ListTag;
 import net.querz.nbt.tag.ShortTag;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 
+import java.lang.ref.WeakReference;
 import java.util.BitSet;
 import java.util.HashMap;
 
 public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
+
+    private static final int[] ES_TO_FLAGS = {0, 5, 1, 2, 3, 4};
 
     private final BitSet flags = new BitSet(6);
 
     private final HashMap<SkinSlotType, Integer> skinSlots = new HashMap<>();
 
     private final NonNullList<ItemStack> inventory = NonNullList.withSize(SkinSlotType.getTotalSize(), ItemStack.EMPTY);
+
+
+    private final int id;
+    private final WeakReference<Entity> entity;
+
+    public SkinWardrobe(Entity entity) {
+        this.id = entity.getEntityId();
+        this.entity = new WeakReference<>(entity);
+    }
+
+
+    public void broadcast() {
+        NetworkManager.sendToTracking(UpdateWardrobePacket.sync(this), getEntity());
+    }
+
+    public void broadcast(Player player) {
+        NetworkManager.sendTo(UpdateWardrobePacket.sync(this), player);
+    }
+
+
+    public boolean shouldRenderEquipment(EquipmentSlot slotType) {
+        return !flags.get(ES_TO_FLAGS[slotType.ordinal()]);
+    }
+
+    public void setRenderEquipment(EquipmentSlot slotType, boolean enable) {
+        if (enable) {
+            flags.clear(ES_TO_FLAGS[slotType.ordinal()]);
+        } else {
+            flags.set(ES_TO_FLAGS[slotType.ordinal()]);
+        }
+    }
+
+    public boolean shouldRenderExtra() {
+        return !flags.get(6);
+    }
+
+    public void setRenderExtra(boolean value) {
+        if (value) {
+            flags.clear(6);
+        } else {
+            flags.set(6);
+        }
+    }
 
     public int getFreeSlot(SkinSlotType slotType) {
         int unlockedSize = getUnlockedSize(slotType);
@@ -59,6 +110,13 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
         return slotType.getMaxSize();
     }
 
+    public Entity getEntity() {
+        return entity.get();
+    }
+
+    public int getId() {
+        return id;
+    }
 
     @Override
     public CompoundTag serializeNBT() {

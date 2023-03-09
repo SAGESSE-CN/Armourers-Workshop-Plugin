@@ -1,6 +1,6 @@
-package moe.plushie.armourers_workshop.plugin.data;
+package moe.plushie.armourers_workshop.plugin.core.skin;
 
-import moe.plushie.armourers_workshop.plugin.data.impl.ItemStack;
+import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import net.querz.nbt.tag.CompoundTag;
 
 public class SkinDescriptor {

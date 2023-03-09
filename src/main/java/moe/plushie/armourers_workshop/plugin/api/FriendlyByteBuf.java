@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.plugin.utils;
+package moe.plushie.armourers_workshop.plugin.api;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -40,6 +40,14 @@ public class FriendlyByteBuf extends ByteBuf {
 
     public ByteBuf getUnderlyingByteBuf() {
         return buf;
+    }
+
+    public <T extends Enum<T>> T readEnum(Class<T> clazz) {
+        return clazz.getEnumConstants()[readVarInt()];
+    }
+
+    public FriendlyByteBuf writeEnum(Enum<?> enum_) {
+        return this.writeVarInt(enum_.ordinal());
     }
 
     public FriendlyByteBuf writeByteArray(byte[] bs) {
