@@ -1,13 +1,12 @@
-package moe.plushie.armourers_workshop.plugin.network.packets;
+package moe.plushie.armourers_workshop.plugin.network;
 
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IEntitySerializer;
 import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
-import moe.plushie.armourers_workshop.plugin.network.AWDataAccessor;
-import moe.plushie.armourers_workshop.plugin.network.CustomPacket;
-import moe.plushie.armourers_workshop.plugin.network.DataSerializers;
+import moe.plushie.armourers_workshop.plugin.utils.DataAccessor;
+import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
 import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
 import net.querz.nbt.tag.CompoundTag;
 import org.bukkit.entity.Player;
@@ -148,7 +147,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         MANNEQUIN_TEXTURE(null/*MannequinEntity.DATA_TEXTURE*/);
 
         private final boolean broadcastChanges;
-        private final AWDataAccessor<SkinWardrobe, ?> dataAccessor;
+        private final DataAccessor<SkinWardrobe, ?> dataAccessor;
 
         Field(EquipmentSlot slotType) {
             this(w -> w.shouldRenderEquipment(slotType), (w, v) -> w.setRenderEquipment(slotType, v));
@@ -156,7 +155,7 @@ public class UpdateWardrobePacket extends CustomPacket {
 
         Field(Function<SkinWardrobe, Boolean> supplier, BiConsumer<SkinWardrobe, Boolean> applier) {
             this.broadcastChanges = true;
-            this.dataAccessor = AWDataAccessor
+            this.dataAccessor = DataAccessor
                     .withDataSerializer(SkinWardrobe.class, DataSerializers.BOOLEAN)
                     .withSupplier(supplier)
                     .withApplier(applier);
@@ -186,12 +185,12 @@ public class UpdateWardrobePacket extends CustomPacket {
         }
 
         public <T> void set(SkinWardrobe wardrobe, T value) {
-            AWDataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
+            DataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
             dataAccessor.set(wardrobe, value);
         }
 
         public <T> T get(SkinWardrobe wardrobe, T defaultValue) {
-            AWDataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
+            DataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
             T value = dataAccessor.get(wardrobe);
             if (value != null) {
                 return value;
@@ -199,12 +198,12 @@ public class UpdateWardrobePacket extends CustomPacket {
             return defaultValue;
         }
 
-        public <T> AWDataAccessor<SkinWardrobe, T> getDataAccessor() {
+        public <T> DataAccessor<SkinWardrobe, T> getDataAccessor() {
             return ObjectUtils.unsafeCast(dataAccessor);
         }
 
         public <T> IEntitySerializer<T> getDataSerializer() {
-            AWDataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
+            DataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
             return dataAccessor.dataSerializer;
         }
     }

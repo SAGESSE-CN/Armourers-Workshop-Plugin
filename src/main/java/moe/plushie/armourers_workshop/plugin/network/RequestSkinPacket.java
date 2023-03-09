@@ -1,10 +1,8 @@
-package moe.plushie.armourers_workshop.plugin.network.packets;
+package moe.plushie.armourers_workshop.plugin.network;
 
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.plugin.init.ModLog;
-import moe.plushie.armourers_workshop.plugin.network.CustomPacket;
 import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
-import moe.plushie.armourers_workshop.plugin.network.NetworkManager;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import org.bukkit.entity.Player;
 

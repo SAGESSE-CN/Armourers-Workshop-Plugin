@@ -1,9 +1,12 @@
-package moe.plushie.armourers_workshop.plugin.network.packets;
+package moe.plushie.armourers_workshop.plugin.network;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.plugin.init.ModConfig;
+import moe.plushie.armourers_workshop.plugin.init.ModConstants;
 import moe.plushie.armourers_workshop.plugin.init.ModContext;
+import moe.plushie.armourers_workshop.plugin.init.ModLog;
 import moe.plushie.armourers_workshop.plugin.network.CustomPacket;
 import org.bukkit.entity.Player;
 
@@ -27,6 +30,7 @@ public class UpdateContextPacket extends CustomPacket {
     public UpdateContextPacket(FriendlyByteBuf buffer) {
         if (buffer.readBoolean()) {
             ModContext.init(buffer.readUUID(), buffer.readUUID());
+            checkNetworkVersion(buffer.readUtf());
         }
         readConfigSpec(buffer);
     }
@@ -37,6 +41,7 @@ public class UpdateContextPacket extends CustomPacket {
             buffer.writeBoolean(true);
             buffer.writeUUID(ModContext.t2(token));
             buffer.writeUUID(ModContext.t3(token));
+            buffer.writeUtf(ModConstants.MOD_NET_ID);
         } else {
             buffer.writeBoolean(false);
         }
@@ -45,11 +50,7 @@ public class UpdateContextPacket extends CustomPacket {
 
     private void writeConfigSpec(FriendlyByteBuf buffer) {
         try {
-            Map<String, Object> fields = new HashMap<>();
-            // TODO: IMPL
-//            if (EnvironmentManager.isDedicatedServer()) {
-//                fields = ModConfigSpec.COMMON.snapshot();
-//            }
+            Map<String, Object> fields = ModConfig.snapshot();
             buffer.writeInt(fields.size());
             if (fields.size() == 0) {
                 return;
@@ -81,10 +82,15 @@ public class UpdateContextPacket extends CustomPacket {
                 fields.put(name, value);
             }
             oi.close();
-            // TODO: IMPL
-//            ModConfigSpec.COMMON.apply(fields);
+            ModConfig.apply(fields);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void checkNetworkVersion(String version) {
+        if (version.equals(ModConstants.MOD_NET_ID)) {
+            ModLog.warn("inconsistent network protocol version, server: {}, client: {}", version, ModConstants.MOD_NET_ID);
         }
     }
 }

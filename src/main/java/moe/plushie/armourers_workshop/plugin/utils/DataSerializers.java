@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.plugin.network;
+package moe.plushie.armourers_workshop.plugin.utils;
 
 
 import moe.plushie.armourers_workshop.plugin.api.IEntitySerializer;

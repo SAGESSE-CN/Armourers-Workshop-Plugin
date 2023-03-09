@@ -143,6 +143,14 @@ public class FriendlyByteBuf extends ByteBuf {
         return writeUtf(string, 32767);
     }
 
+    public TextComponent readComponent() {
+        return new TextComponent(readUtf(262144));
+    }
+
+    public FriendlyByteBuf writeComponent(TextComponent component) {
+        return writeUtf(component.value, 262144);
+    }
+
     public FriendlyByteBuf writeNbt(@Nullable CompoundTag tag) {
         if (tag == null) {
             this.writeByte(0);

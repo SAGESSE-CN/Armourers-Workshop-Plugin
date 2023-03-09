@@ -1,9 +1,11 @@
 package moe.plushie.armourers_workshop.plugin.init;
 
-import moe.plushie.armourers_workshop.plugin.network.DataSerializers;
+import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
+import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.util.Objects;
@@ -40,9 +42,34 @@ public class ModContext {
         apply(t0, t1);
     }
 
-//    public static void init(MinecraftServer server) {
-//        current = SavedData.load(ModContext::new, ModContext::new, server.overworld().getDataStorage(), Constants.Key.SKIN);
-//    }
+    public static void init(File file) {
+        // load from data.
+        if (file.exists()) {
+            try {
+                CompoundTag contextTag = (CompoundTag) NBTUtil.read(file, true).getTag();
+                contextTag = contextTag.getCompoundTag("data");
+                current = new ModContext(contextTag);
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        // save new context into world.
+        current = new ModContext();
+        CompoundTag tag1 = new CompoundTag();
+        CompoundTag tag = new CompoundTag();
+        current.save(tag);
+        tag1.put("data", tag);
+        tag1.putInt("DataVersion", 3120);
+        try {
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            NBTUtil.write(tag1, file, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void init(UUID t0, UUID t1) {
         current = new ModContext();

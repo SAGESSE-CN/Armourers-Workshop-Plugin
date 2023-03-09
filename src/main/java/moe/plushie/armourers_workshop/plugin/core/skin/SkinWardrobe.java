@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.plugin.api.ITagRepresentable;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.NonNullList;
 import moe.plushie.armourers_workshop.plugin.network.NetworkManager;
-import moe.plushie.armourers_workshop.plugin.network.packets.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.plugin.network.UpdateWardrobePacket;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.ListTag;
 import net.querz.nbt.tag.ShortTag;

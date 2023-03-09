@@ -2,9 +2,10 @@ package moe.plushie.armourers_workshop.plugin.network;
 
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.plugin.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.plugin.api.FMLPacket;
+import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.plugin.api.Packet;
-import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.utils.PacketSplitter;
 import moe.plushie.armourers_workshop.plugin.utils.Scheduler;
 import org.bukkit.Bukkit;
@@ -12,6 +13,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 public class NetworkManager {
 
@@ -45,14 +48,22 @@ public class NetworkManager {
     }
 
     public static void sendTo(final CustomPacket message, final Player player) {
-        // player.sendPluginMessage(ArmourersWorkshop.INSTANCE, CHANNEL, buf1.array());
-        splitter.split(message, Packet::new, 32000, packet -> {
-            player.sendPluginMessage(ArmourersWorkshop.INSTANCE, AW_CHANNEL, packet.getBytes());
-        });
+        split(message, packet -> player.sendPluginMessage(ArmourersWorkshop.INSTANCE, packet.getChannel(), packet.getBytes()));
     }
 
     public static void sendToTracking(final CustomPacket message, final Entity entity) {
 //        IMPL.sendToTracking(message, entity);
+    }
+
+
+    private static void split(final CustomPacket message, Consumer<Packet<?>> consumer) {
+        if (message instanceof FMLPacket) {
+            FriendlyByteBuf buf = new FriendlyByteBuf();
+            message.encode(buf);
+            consumer.accept(new Packet<>(FML_CHANNEL, buf));
+        } else {
+            splitter.split(message, buf -> new Packet<>(AW_CHANNEL, buf), 32000, consumer);
+        }
     }
 
 

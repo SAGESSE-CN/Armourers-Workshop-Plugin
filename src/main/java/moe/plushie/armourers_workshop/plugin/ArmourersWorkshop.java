@@ -3,13 +3,15 @@ package moe.plushie.armourers_workshop.plugin;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import moe.plushie.armourers_workshop.plugin.core.data.DataManager;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
+import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.init.ModPackets;
 import moe.plushie.armourers_workshop.plugin.network.NetworkManager;
+import moe.plushie.armourers_workshop.plugin.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.plugin.packet.PacketListener;
-import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,8 +32,10 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
     public void onEnable() {
         INSTANCE = this;
 
+        ModConfig.init();
         ModPackets.init();
         NetworkManager.init();
+        DataManager.start();
 
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(this, this);
@@ -44,6 +48,7 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        DataManager.stop();
     }
 
 
@@ -55,6 +60,8 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
             Method addChannel = senderClass.getDeclaredMethod("addChannel", String.class);
             addChannel.setAccessible(true);
             addChannel.invoke(player, CHANNEL);
+            // first join, send the context.
+            NetworkManager.sendTo(new UpdateContextPacket(player), player);
             sendSync(player);
         } catch (Exception e) {
             e.printStackTrace();
