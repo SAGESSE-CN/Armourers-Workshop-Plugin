@@ -3,27 +3,24 @@ package moe.plushie.armourers_workshop.plugin;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import moe.plushie.armourers_workshop.plugin.core.data.DataManager;
+import moe.plushie.armourers_workshop.plugin.command.MainCommand;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
-import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobeStorage;
-import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.init.ModPackets;
 import moe.plushie.armourers_workshop.plugin.network.NetworkManager;
-import moe.plushie.armourers_workshop.plugin.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.plugin.packet.PacketListener;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public final class ArmourersWorkshop extends JavaPlugin implements Listener {
 
@@ -35,23 +32,20 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
     public void onEnable() {
         INSTANCE = this;
 
-        ModConfig.init();
         ModPackets.init();
         NetworkManager.init();
-        DataManager.start();
 
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(this, this);
 
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         protocolManager.addPacketListener(new PacketListener(this, PacketType.Play.Client.WINDOW_CLICK));
-
+        Objects.requireNonNull(Bukkit.getPluginCommand("armourers")).setExecutor(new MainCommand());
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        DataManager.stop();
     }
 
 
@@ -63,17 +57,10 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
             Method addChannel = senderClass.getDeclaredMethod("addChannel", String.class);
             addChannel.setAccessible(true);
             addChannel.invoke(player, CHANNEL);
-            // first join, send the context.
-            NetworkManager.sendTo(new UpdateContextPacket(player), player);
             sendSync(player);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @EventHandler
-    public void onDeath(EntityDeathEvent event) {
-        SkinWardrobeStorage.invalidate(event.getEntity());
     }
 
     @EventHandler
@@ -97,12 +84,12 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
     }
 
     private void sendSync(Player player) {
-        SkinWardrobe wardrobe = SkinWardrobe.of(player);
-        if (wardrobe != null) {
-//            wardrobe.setItem(SkinSlotType.OUTFIT, 0, new SkinDescriptor("db:00001", "armourers:outfit").asItemStack());
-//            wardrobe.setItem(SkinSlotType.SWORD, 0, new SkinDescriptor("db:00002", "armourers:sword").asItemStack());
-//            wardrobe.save();
-            wardrobe.broadcast(player);
-        }
+
+        SkinWardrobe wardrobe = new SkinWardrobe(player);
+
+        wardrobe.setItem(SkinSlotType.OUTFIT, 0, new SkinDescriptor("db:00001", "armourers:outfit").asItemStack());
+        wardrobe.setItem(SkinSlotType.SWORD, 0, new SkinDescriptor("db:00002", "armourers:sword").asItemStack());
+
+        wardrobe.broadcast(player);
     }
 }
