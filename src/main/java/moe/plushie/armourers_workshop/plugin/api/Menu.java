@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class Menu {
 
-    private final String registryName;
-    private final Player player;
-    private final ArrayList<Slot> slots = new ArrayList<>();
+    protected final String registryName;
+    protected final Player player;
+    protected final ArrayList<Slot> slots = new ArrayList<>();
 
     public Menu(String registryName, Player player) {
         this.registryName = registryName;
@@ -50,6 +50,5 @@ public class Menu {
     public String getRegistryName() {
         return registryName;
     }
-
 }
 

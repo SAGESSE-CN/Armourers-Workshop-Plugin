@@ -54,6 +54,9 @@ public class ItemStack {
     }
 
     public boolean isEmpty() {
-        return this == EMPTY;
+        if (this == EMPTY) {
+            return true;
+        }
+        return count <= 0;
     }
 }

@@ -1,16 +1,15 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
-import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.plugin.api.ITagRepresentable;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.NonNullList;
+import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.plugin.network.NetworkManager;
 import moe.plushie.armourers_workshop.plugin.network.UpdateWardrobePacket;
 import net.querz.nbt.tag.CompoundTag;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -119,12 +118,6 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
             return Math.min(slotType.getMaxSize(), 10);
         }
         return slotType.getMaxSize();
-    }
-
-    public Inventory getInventory() {
-        // TODO:IMP
-//        return inventory;
-        return null;
     }
 
     public Entity getEntity() {

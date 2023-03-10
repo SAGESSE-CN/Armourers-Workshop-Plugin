@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
+import moe.plushie.armourers_workshop.plugin.api.InventorySlot;
 import moe.plushie.armourers_workshop.plugin.api.Menu;
-import moe.plushie.armourers_workshop.plugin.api.Slot;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -31,7 +31,7 @@ public class SkinWardrobeMenu extends Menu {
 
     private void addPlayerSlots(Inventory inventory) {
         for (int i = 0; i < 36; ++i) {
-            addSlot(new Slot(inventory, i));
+            addSlot(new InventorySlot(inventory, i));
         }
     }
 
@@ -61,11 +61,21 @@ public class SkinWardrobeMenu extends Menu {
     }
 
     private void addSkinSlots(SkinSlotType slotType) {
-        int index = slotType.getIndex();
-        Inventory inventory = wardrobe.getInventory();
         int size = wardrobe.getUnlockedSize(slotType);
         for (int i = 0; i < size; ++i) {
-            addSlot(new Slot(inventory, index + i));
+            addSlot(new SkinWardrobeSlot(wardrobe, slotType, i));
         }
+    }
+
+    private int getFreeSlot(SkinSlotType slotType) {
+//        for (Slot slot : slots) {
+//            if (slot instanceof SkinWardrobeSlot && !slot.hasItem()) {
+//                SkinWardrobeSlot slot1 = (SkinWardrobeSlot) slot;
+//                if (slot1.getSlotTypes().contains(slotType) || slot1.getSlotTypes().isEmpty()) {
+//                    return slot1.index;
+//                }
+//            }
+//        }
+        return 0;
     }
 }
