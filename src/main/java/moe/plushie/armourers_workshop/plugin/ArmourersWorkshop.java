@@ -42,7 +42,7 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
 
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        protocolManager.addPacketListener(new PacketListener(this, PacketType.Play.Client.WINDOW_CLICK));
+        protocolManager.addPacketListener(new PacketListener(this, PacketType.Play.Client.WINDOW_CLICK, PacketType.Play.Client.CLOSE_WINDOW));
         Objects.requireNonNull(Bukkit.getPluginCommand("armourers")).setExecutor(new MainCommand());
     }
 

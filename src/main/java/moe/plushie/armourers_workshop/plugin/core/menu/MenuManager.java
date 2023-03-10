@@ -27,4 +27,8 @@ public class MenuManager {
     public static Menu getMenu(int menuId) {
         return MENUS.get(menuId);
     }
+
+    public static void clearMenu(int menuId) {
+        MENUS.remove(menuId);
+    }
 }
