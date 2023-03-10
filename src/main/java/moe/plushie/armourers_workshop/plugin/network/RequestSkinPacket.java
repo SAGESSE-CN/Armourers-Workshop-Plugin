@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.plugin.network;
 
+import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.plugin.init.ModLog;
-import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
-import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import org.bukkit.entity.Player;
 
 public class RequestSkinPacket extends CustomPacket {

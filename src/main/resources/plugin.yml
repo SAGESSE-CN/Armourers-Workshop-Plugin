@@ -7,6 +7,6 @@ authors: [ SAGESSE, Happy_FZM ]
 description: Armourer's Workshop Plugin
 commands:
   armourers:
-    description: Armourer's Workshop main command
+    description: Armourer's Workshop Main Command
     aliases:
       - aw

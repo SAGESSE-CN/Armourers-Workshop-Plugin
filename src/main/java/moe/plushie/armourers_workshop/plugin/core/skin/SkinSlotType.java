@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
+import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,20 +58,20 @@ public enum SkinSlotType {
         return find(type -> Objects.equals(type.skinType, skinType));
     }
 
-//    @Nullable
-//    public static SkinSlotType of(ItemStack itemStack) {
-//        if (itemStack.isEmpty()) {
-//            return null;
-//        }
+    @Nullable
+    public static SkinSlotType of(ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
+            return null;
+        }
 //        if (itemStack.getItem() instanceof BottleItem) {
 //            return DYE;
 //        }
-//        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-//        if (!descriptor.isEmpty()) {
-//            return of(descriptor.getType());
-//        }
-//        return null;
-//    }
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (!descriptor.isEmpty()) {
+            return of(descriptor.getType());
+        }
+        return null;
+    }
 
     public static int getMaxSlotSize() {
         return 10;

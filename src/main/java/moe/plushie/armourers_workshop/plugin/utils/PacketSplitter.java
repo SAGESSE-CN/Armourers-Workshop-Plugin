@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.plugin.utils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
-import moe.plushie.armourers_workshop.plugin.network.CustomPacket;
 import moe.plushie.armourers_workshop.plugin.api.Packet;
+import moe.plushie.armourers_workshop.plugin.network.CustomPacket;
 
 import java.util.ArrayList;
 import java.util.HashMap;

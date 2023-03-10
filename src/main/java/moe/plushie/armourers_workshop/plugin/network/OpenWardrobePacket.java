@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.plugin.network;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.plugin.core.menu.MenuManager;
+import moe.plushie.armourers_workshop.plugin.core.menu.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
-import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ public class OpenWardrobePacket extends CustomPacket {
             SkinWardrobeMenu menu = new SkinWardrobeMenu(wardrobe, player);
             MenuManager.openMenu(menu, player, buf -> {
                 buf.writeInt(player.getEntityId());
-                buf.writeUtf("armourers_workshop:player");
+                buf.writeUtf(wardrobe.getProfile().getRegistryName().toString());
             });
         }
     }

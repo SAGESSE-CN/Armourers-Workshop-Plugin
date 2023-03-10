@@ -4,9 +4,13 @@ import moe.plushie.armourers_workshop.plugin.api.ITagRepresentable;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.NonNullList;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.plugin.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.plugin.network.NetworkManager;
 import moe.plushie.armourers_workshop.plugin.network.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
+import moe.plushie.armourers_workshop.plugin.utils.FastCache;
 import net.querz.nbt.tag.CompoundTag;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -28,6 +32,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
 
 
     private final int id;
+    private final EntityProfile profile = ModEntityProfiles.PLAYER;
     private final WeakReference<Entity> entity;
 
     public SkinWardrobe(Entity entity) {
@@ -38,13 +43,25 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
     @Nullable
     public static SkinWardrobe of(@Nullable Entity entity) {
         if (entity != null) {
-            return SkinWardrobeStorage.of(entity);
+            return FastCache.ENTITY_TO_SKIN_WARDROBE.computeIfAbsent(entity, it -> {
+                SkinWardrobe wardrobe = new SkinWardrobe(entity);
+                NamespacedKey key = SkinWardrobeStorage.getKey();
+                CompoundTag tag = entity.getPersistentDataContainer().get(key, DataSerializers.COMPOUND_TAG);
+                if (tag != null && tag.size() != 0) {
+                    wardrobe.deserializeNBT(tag);
+                }
+                return wardrobe;
+            });
         }
         return null;
     }
 
     public void save() {
-        SkinWardrobeStorage.saveToContainer(this);
+        Entity entity = getEntity();
+        if (entity != null) {
+            NamespacedKey key = SkinWardrobeStorage.getKey();
+            entity.getPersistentDataContainer().set(key, DataSerializers.COMPOUND_TAG, serializeNBT());
+        }
     }
 
     public void broadcast() {
@@ -114,14 +131,17 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
         }
         ISkinType type = slotType.getSkinType();
         if (type != null) {
-            //return Math.min(slotType.getMaxSize(), profile.getMaxCount(type));
-            return Math.min(slotType.getMaxSize(), 10);
+            return Math.min(slotType.getMaxSize(), profile.getMaxCount(type));
         }
         return slotType.getMaxSize();
     }
 
     public Entity getEntity() {
         return entity.get();
+    }
+
+    public EntityProfile getProfile() {
+        return profile;
     }
 
     public int getId() {

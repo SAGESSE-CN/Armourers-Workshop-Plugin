@@ -3,19 +3,16 @@ package moe.plushie.armourers_workshop.plugin.core.skin;
 import moe.plushie.armourers_workshop.plugin.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.NonNullList;
-import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.ListTag;
 import net.querz.nbt.tag.ShortTag;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Entity;
 
 import java.util.BitSet;
 import java.util.HashMap;
 
 public class SkinWardrobeStorage {
 
-    private static final HashMap<Integer, SkinWardrobe> SKIN_WARDROBE_CACHE = new HashMap<>();
     private static NamespacedKey SKIN_WARDROBE_KEY;
 
     public static NamespacedKey getKey() {
@@ -23,28 +20,6 @@ public class SkinWardrobeStorage {
             SKIN_WARDROBE_KEY = new NamespacedKey(ArmourersWorkshop.INSTANCE, "wardrobe");
         }
         return SKIN_WARDROBE_KEY;
-    }
-
-    public static SkinWardrobe of(Entity entity) {
-        return SKIN_WARDROBE_CACHE.computeIfAbsent(entity.getEntityId(), entityId -> {
-            SkinWardrobe wardrobe = new SkinWardrobe(entity);
-            CompoundTag tag = entity.getPersistentDataContainer().get(getKey(), DataSerializers.COMPOUND_TAG);
-            if (tag != null && tag.size() != 0) {
-                wardrobe.deserializeNBT(tag);
-            }
-            return wardrobe;
-        });
-    }
-
-    public static void invalidate(Entity entity) {
-        SKIN_WARDROBE_CACHE.remove(entity.getEntityId());
-    }
-
-    public static void saveToContainer(SkinWardrobe wardrobe) {
-        Entity entity = wardrobe.getEntity();
-        if (entity != null) {
-            entity.getPersistentDataContainer().set(getKey(), DataSerializers.COMPOUND_TAG, wardrobe.serializeNBT());
-        }
     }
 
     public static void saveDataFixer(SkinWardrobe wardrobe, CompoundTag nbt) {

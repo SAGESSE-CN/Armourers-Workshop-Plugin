@@ -1,12 +1,13 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
+import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
+
 public class Skin {
 
     public String path;
-    public String skinType;
+    public ISkinType type;
 
-
-    public String getType() {
-        return skinType;
+    public ISkinType getType() {
+        return type;
     }
 }

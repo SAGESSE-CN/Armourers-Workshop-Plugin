@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.plugin.api;
 
-import moe.plushie.armourers_workshop.plugin.init.ModLog;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,30 +8,13 @@ import java.util.ArrayList;
 public class Menu {
 
     protected final String registryName;
-    protected final Player player;
     protected final ArrayList<Slot> slots = new ArrayList<>();
 
-    public Menu(String registryName, Player player) {
+    public Menu(String registryName) {
         this.registryName = registryName;
-        this.player = player;
     }
 
-    public void handSlotClick(int slotId, String type) {
-        Slot slot = findSlot(slotId);
-        ModLog.info("你点击了容器, 槽位ID: {}, 类型: {}, 槽: {}", slotId, type, slot);
-//        if (slot != null && slot.getItem() != null) {
-//            player.getOpenInventory().setCursor(slot.getItem());
-//        }
-
-        //    PICKUP,
-        //    QUICK_MOVE,
-        //    SWAP,
-        //    CLONE,
-        //    THROW,
-        //    QUICK_CRAFT,
-        //    PICKUP_ALL;
-
-
+    public void handSlotClick(int slot, int button, ClickType type, Player player) {
     }
 
     @Nullable

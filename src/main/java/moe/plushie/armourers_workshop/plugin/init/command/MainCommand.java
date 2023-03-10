@@ -1,7 +1,7 @@
-package moe.plushie.armourers_workshop.plugin.command;
+package moe.plushie.armourers_workshop.plugin.init.command;
 
 import com.google.common.collect.Maps;
-import moe.plushie.armourers_workshop.plugin.command.sub.GiveSkinCommand;
+import moe.plushie.armourers_workshop.plugin.init.command.sub.GiveSkinCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;

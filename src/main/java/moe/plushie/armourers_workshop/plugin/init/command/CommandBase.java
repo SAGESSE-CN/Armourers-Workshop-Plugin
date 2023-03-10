@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.plugin.command;
+package moe.plushie.armourers_workshop.plugin.init.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

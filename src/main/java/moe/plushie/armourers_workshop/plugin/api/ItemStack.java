@@ -8,8 +8,7 @@ public class ItemStack {
 
     private String id;
     private int count;
-    private CompoundTag tag = new CompoundTag();
-
+    private final CompoundTag tag;
 
     public ItemStack(String id) {
         this(id, 1);
@@ -18,10 +17,11 @@ public class ItemStack {
     public ItemStack(String id, int count) {
         this.id = id;
         this.count = count;
+        this.tag = new CompoundTag();
     }
 
     public ItemStack(CompoundTag tag) {
-        CompoundTag itemTag = null;
+        CompoundTag itemTag = tag;
         if (tag.containsKey("tag")) {
             itemTag = tag.getCompoundTag("tag");
         }
@@ -29,15 +29,16 @@ public class ItemStack {
         if (itemTag != null && itemTag.containsKey("__redirected_id__")) {
             id = itemTag.getString("__redirected_id__");
         }
+        if (itemTag == null) {
+            itemTag = new CompoundTag();
+        }
         this.id = id;
         this.count = tag.getByte("Count");
-        if (itemTag != null) {
-            this.tag = itemTag;
-        }
+        this.tag = itemTag;
     }
 
     public CompoundTag save(CompoundTag tag) {
-        CompoundTag itemTag = this.tag.clone();
+        CompoundTag itemTag = getTag().clone();
         if (id.startsWith("minecraft:")) {
             tag.putString("id", id);
         } else {

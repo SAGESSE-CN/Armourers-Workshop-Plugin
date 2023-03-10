@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
 import moe.plushie.armourers_workshop.plugin.api.IResultHandler;
+import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 
 public class SkinLoader {
 
@@ -11,35 +12,35 @@ public class SkinLoader {
     }
 
     public Skin loadSkin(String identifier) {
-        String type = "";
+        ISkinType type = null;
         String filePath = "";
         if (identifier.equals("ws:/胡桃/胡桃.armour")) {
             filePath = "armourers_workshop/skin-library/胡桃/胡桃.armour";
-            type = "armourers:outfit";
+            type = SkinTypes.OUTFIT;
         }
         if (identifier.equals("ws:/胡桃/护摩之杖.armour")) {
             filePath = "armourers_workshop/skin-library/胡桃/护摩之杖.armour";
-            type = "armourers:sword";
+            type = SkinTypes.ITEM_SWORD;
         }
         if (filePath.isEmpty()) {
             return null;
         }
         Skin skin = new Skin();
         skin.path = filePath;
-        skin.skinType = type;
+        skin.type = type;
         return skin;
     }
 
     public void loadSkin(String identifier, IResultHandler<Skin> handler) {
-        String type = "";
+        ISkinType type = null;
         String filePath = "";
         if (identifier.equals("db:00001")) {
             filePath = "armourers_workshop/skin-library/胡桃/胡桃.armour";
-            type = "armourers:outfit";
+            type = SkinTypes.OUTFIT;
         }
         if (identifier.equals("db:00002")) {
             filePath = "armourers_workshop/skin-library/胡桃/护摩之杖.armour";
-            type = "armourers:sword";
+            type = SkinTypes.ITEM_SWORD;
         }
         if (filePath.isEmpty()) {
             handler.reject(new RuntimeException("not implement yet"));
@@ -47,7 +48,7 @@ public class SkinLoader {
         }
         Skin skin = new Skin();
         skin.path = filePath;
-        skin.skinType = type;
+        skin.type = type;
         handler.accept(skin);
     }
 

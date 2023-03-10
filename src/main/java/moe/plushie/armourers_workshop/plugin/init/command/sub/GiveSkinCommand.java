@@ -1,10 +1,10 @@
-package moe.plushie.armourers_workshop.plugin.command.sub;
+package moe.plushie.armourers_workshop.plugin.init.command.sub;
 
 
-import moe.plushie.armourers_workshop.plugin.command.CommandBase;
 import moe.plushie.armourers_workshop.plugin.core.skin.Skin;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.plugin.init.command.CommandBase;
 import moe.plushie.armourers_workshop.plugin.utils.BukkitStackUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

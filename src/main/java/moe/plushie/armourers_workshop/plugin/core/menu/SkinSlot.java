@@ -1,15 +1,17 @@
-package moe.plushie.armourers_workshop.plugin.core.skin;
+package moe.plushie.armourers_workshop.plugin.core.menu;
 
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.Slot;
+import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
+import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 
-public class SkinWardrobeSlot implements Slot {
+public class SkinSlot implements Slot {
 
     private final SkinWardrobe wardrobe;
     private final SkinSlotType slotType;
     private final int slot;
 
-    public SkinWardrobeSlot(SkinWardrobe wardrobe, SkinSlotType slotType, int slot) {
+    public SkinSlot(SkinWardrobe wardrobe, SkinSlotType slotType, int slot) {
         this.wardrobe = wardrobe;
         this.slotType = slotType;
         this.slot = slot;
@@ -29,5 +31,15 @@ public class SkinWardrobeSlot implements Slot {
     public void set(ItemStack itemStack) {
         wardrobe.setItem(slotType, slot, itemStack);
         setChanged();
+    }
+
+    @Override
+    public boolean mayPlace(ItemStack itemStack) {
+        // when slot type is not provide, we consider it is an unrestricted slot.
+        if (!slotType.equals(SkinSlotType.of(itemStack))) {
+            return false;
+        }
+        //return container.canPlaceItem(index, itemStack);
+        return true;
     }
 }

@@ -3,12 +3,11 @@ package moe.plushie.armourers_workshop.plugin;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import moe.plushie.armourers_workshop.plugin.command.MainCommand;
 import moe.plushie.armourers_workshop.plugin.core.data.DataManager;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
-import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobeStorage;
 import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.init.ModPackets;
+import moe.plushie.armourers_workshop.plugin.init.command.MainCommand;
 import moe.plushie.armourers_workshop.plugin.network.NetworkManager;
 import moe.plushie.armourers_workshop.plugin.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.plugin.packet.PacketListener;
@@ -17,7 +16,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -69,11 +67,6 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @EventHandler
-    public void onDeath(EntityDeathEvent event) {
-        SkinWardrobeStorage.invalidate(event.getEntity());
     }
 
     @EventHandler

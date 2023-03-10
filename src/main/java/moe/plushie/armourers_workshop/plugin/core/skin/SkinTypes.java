@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
+import moe.plushie.armourers_workshop.plugin.api.ResourceLocation;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 
 import java.util.ArrayList;
@@ -66,6 +67,10 @@ public final class SkinTypes {
     }
 
     private static ISkinType register(String name) {
-        return new ISkinType() {};
+        ResourceLocation registryName = new ResourceLocation("armourers", name);
+        ISkinType type = () -> registryName;
+        ALL_TYPES.put(registryName.toString(), type);
+        ALL_SORTED_TYPES.add(type);
+        return type;
     }
 }

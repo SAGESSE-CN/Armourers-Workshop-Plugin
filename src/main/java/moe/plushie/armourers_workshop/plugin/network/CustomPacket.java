@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.network;
 
-import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

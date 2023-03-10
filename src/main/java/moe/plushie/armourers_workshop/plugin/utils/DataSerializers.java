@@ -3,8 +3,11 @@ package moe.plushie.armourers_workshop.plugin.utils;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IEntitySerializer;
+import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
+import net.querz.nbt.io.SNBTParser;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.IntArrayTag;
+import net.querz.nbt.tag.StringTag;
 import net.querz.nbt.tag.Tag;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
@@ -63,7 +66,7 @@ public class DataSerializers {
         }
     };
 
-//    public static final IEntitySerializer<Float> FLOAT = of(EntityDataSerializers.FLOAT);
+    //    public static final IEntitySerializer<Float> FLOAT = of(EntityDataSerializers.FLOAT);
 //
 //    public static final IEntitySerializer<Vec3> VECTOR_3D = new IEntitySerializer<Vec3>() {
 //        @Override
@@ -263,16 +266,22 @@ public class DataSerializers {
 //            }
 //        };
 //    }
-//    public static CompoundTag parseCompoundTag(CompoundTag nbt, String key) {
-//        if (nbt.contains(key, Constants.TagFlags.COMPOUND)){
-//            return nbt.getCompound(key);
-//        }
-//        if (nbt.contains(key, Constants.TagFlags.STRING)) {
-//            return SkinFileUtils.readNBT(nbt.getString(key));
-//        }
-//        return null;
-//    }
-//
+    public static CompoundTag parseCompoundTag(CompoundTag nbt, String key) {
+        Tag<?> value = nbt.get(key);
+        if (value instanceof CompoundTag) {
+            return (CompoundTag) value;
+        }
+        if (value instanceof StringTag) {
+            SNBTParser parser = new SNBTParser(((StringTag) value).getValue());
+            try {
+                return (CompoundTag) parser.parse();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
 //    public static Vector3i getVector3i(CompoundTag nbt, String key) {
 //        ListTag listNBT = nbt.getList(key, Constants.TagFlags.INT);
 //        if (listNBT.size() >= 3) {
@@ -510,21 +519,21 @@ public class DataSerializers {
 //            nbt.put(key, value.serializeNBT());
 //        }
 //    }
-//
-//    public static void putSkinDescriptor(CompoundTag nbt, String key, SkinDescriptor value, SkinDescriptor defaultValue) {
-//        if (!value.equals(defaultValue)) {
-//            nbt.put(key, value.serializeNBT());
-//        }
-//    }
-//
-//    public static SkinDescriptor getSkinDescriptor(CompoundTag nbt, String key, SkinDescriptor defaultValue) {
-//        CompoundTag nbt1 = parseCompoundTag(nbt, key);
-//        if (nbt1 != null && !nbt1.isEmpty()) {
-//            return new SkinDescriptor(nbt1);
-//        }
-//        return defaultValue;
-//    }
-//
+
+    public static void putSkinDescriptor(CompoundTag nbt, String key, SkinDescriptor value, SkinDescriptor defaultValue) {
+        if (!value.equals(defaultValue)) {
+            nbt.put(key, value.serializeNBT());
+        }
+    }
+
+    public static SkinDescriptor getSkinDescriptor(CompoundTag nbt, String key, SkinDescriptor defaultValue) {
+        CompoundTag nbt1 = parseCompoundTag(nbt, key);
+        if (nbt1 != null && nbt1.size() != 0) {
+            return new SkinDescriptor(nbt1);
+        }
+        return defaultValue;
+    }
+
 //    public static void putSkinOptions(CompoundTag nbt, String key, SkinOptions value, SkinOptions defaultValue) {
 //        if (!value.equals(defaultValue)) {
 //            nbt.put(key, value.serializeNBT());

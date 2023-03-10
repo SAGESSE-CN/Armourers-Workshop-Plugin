@@ -15,7 +15,7 @@ public class ModConfig {
 
 
     public static void init() {
-
+        // TODO: IMPL
     }
 
 

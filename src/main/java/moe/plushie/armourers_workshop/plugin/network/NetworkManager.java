@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 public class NetworkManager {
@@ -36,25 +38,24 @@ public class NetworkManager {
 
 
     public static void sendToAll(final CustomPacket message) {
-
-        //        FriendlyByteBuf buf1 = new FriendlyByteBuf();
-//
-//        buf1.writeInt(4); //UPDATE_WARDROBE(0x04, UpdateWardrobePacket.class, UpdateWardrobePacket::new),
-//        buf1.writeVarInt(0); //UpdateWardrobePacket.SYNC.SYNC
-//        buf1.writeInt(player.getEntityId());
-//        buf1.writeNbt(wardrobe.serializeNBT());
-//
-//        player.sendPluginMessage(ArmourersWorkshop.INSTANCE, CHANNEL, buf1.array());
+        Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
+        send(message, players);
     }
 
     public static void sendTo(final CustomPacket message, final Player player) {
-        split(message, packet -> player.sendPluginMessage(ArmourersWorkshop.INSTANCE, packet.getChannel(), packet.getBytes()));
+        send(message, Collections.singleton(player));
     }
 
     public static void sendToTracking(final CustomPacket message, final Entity entity) {
+        // TODO: IMPL
+        Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
+        send(message, players);
 //        IMPL.sendToTracking(message, entity);
     }
 
+    private static void send(final CustomPacket message, final Collection<? extends Player> players) {
+        split(message, packet -> players.forEach(player -> player.sendPluginMessage(ArmourersWorkshop.INSTANCE, packet.getChannel(), packet.getBytes())));
+    }
 
     private static void split(final CustomPacket message, Consumer<Packet<?>> consumer) {
         if (message instanceof FMLPacket) {
