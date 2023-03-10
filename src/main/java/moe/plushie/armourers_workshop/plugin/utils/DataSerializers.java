@@ -1,14 +1,52 @@
 package moe.plushie.armourers_workshop.plugin.utils;
 
-
-import moe.plushie.armourers_workshop.plugin.api.IEntitySerializer;
+import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.plugin.api.IEntitySerializer;
+import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.IntArrayTag;
 import net.querz.nbt.tag.Tag;
+import org.bukkit.persistence.PersistentDataAdapterContext;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class DataSerializers {
+
+    public static final PersistentDataType<byte[], CompoundTag> COMPOUND_TAG = new PersistentDataType<byte[], CompoundTag>() {
+
+        @NotNull
+        @Override
+        public Class<byte[]> getPrimitiveType() {
+            return byte[].class;
+        }
+
+        @NotNull
+        @Override
+        public Class<CompoundTag> getComplexType() {
+            return CompoundTag.class;
+        }
+
+        @NotNull
+        @Override
+        public byte[] toPrimitive(@NotNull CompoundTag complex, @NotNull PersistentDataAdapterContext context) {
+            FriendlyByteBuf buf = new FriendlyByteBuf();
+            buf.writeNbt(complex);
+            return buf.array();
+        }
+
+        @NotNull
+        @Override
+        public CompoundTag fromPrimitive(@NotNull byte[] primitive, @NotNull PersistentDataAdapterContext context) {
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.wrappedBuffer(primitive));
+            CompoundTag tag = buf.readNbt();
+            if (tag != null) {
+                return tag;
+            }
+            return new CompoundTag();
+        }
+    };
 
     //    public static final IEntitySerializer<CompoundTag> COMPOUND_TAG = of(EntityDataSerializers.COMPOUND_TAG);
 //    public static final IEntitySerializer<Integer> INT = of(EntityDataSerializers.INT);
@@ -649,7 +687,7 @@ public class DataSerializers {
     }
 
     private static int[] leastMostToIntArray(long l, long m) {
-        return new int[]{(int)(l >> 32), (int)l, (int)(m >> 32), (int)m};
+        return new int[]{(int) (l >> 32), (int) l, (int) (m >> 32), (int) m};
     }
 
     public static IntArrayTag createUUID(UUID uUID) {
@@ -657,7 +695,7 @@ public class DataSerializers {
     }
 
     public static UUID uuidFromIntArray(int[] is) {
-        return new UUID((long)is[0] << 32 | (long)is[1] & 4294967295L, (long)is[2] << 32 | (long)is[3] & 4294967295L);
+        return new UUID((long) is[0] << 32 | (long) is[1] & 4294967295L, (long) is[2] << 32 | (long) is[3] & 4294967295L);
     }
 
     public static UUID loadUUID(Tag tag) {

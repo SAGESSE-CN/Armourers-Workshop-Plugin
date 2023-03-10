@@ -10,6 +10,7 @@ import io.netty.handler.codec.EncoderException;
 import io.netty.util.ByteProcessor;
 import net.querz.nbt.io.NBTInputStream;
 import net.querz.nbt.io.NBTOutputStream;
+import net.querz.nbt.io.NamedTag;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.Tag;
 import org.jetbrains.annotations.Nullable;
@@ -177,8 +178,8 @@ public class FriendlyByteBuf extends ByteBuf {
         try {
             ByteBufInputStream inputStream = new ByteBufInputStream(this);
             NBTInputStream nbtInputStream = new NBTInputStream(inputStream);
-            Tag<?> tag = nbtInputStream.readRawTag(Tag.DEFAULT_MAX_DEPTH);
-            return (CompoundTag) tag;
+            NamedTag tag = nbtInputStream.readTag(Tag.DEFAULT_MAX_DEPTH);
+            return (CompoundTag) tag.getTag();
         } catch (IOException var5) {
             throw new EncoderException(var5);
         }

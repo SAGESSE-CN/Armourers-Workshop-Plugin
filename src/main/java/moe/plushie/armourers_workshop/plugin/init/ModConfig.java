@@ -23,11 +23,6 @@ public class ModConfig {
         return VALUES;
     }
 
-    public static void apply(HashMap<String, Object> snapshot) {
-
-    }
-
-
     public static class Builder {
 
         String root = "";

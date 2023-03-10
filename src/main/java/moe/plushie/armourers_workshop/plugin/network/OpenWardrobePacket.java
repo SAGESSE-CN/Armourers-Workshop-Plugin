@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.plugin.network;
 
-import moe.plushie.armourers_workshop.plugin.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.plugin.api.TextComponent;
-import moe.plushie.armourers_workshop.plugin.network.CustomPacket;
-import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
+import moe.plushie.armourers_workshop.plugin.core.menu.MenuManager;
+import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
+import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobeMenu;
+import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class OpenWardrobePacket extends CustomPacket {
@@ -22,26 +24,14 @@ public class OpenWardrobePacket extends CustomPacket {
 
     @Override
     public void accept(IServerPacketHandler packetHandler, Player player) {
-//        Entity entity = player.level.getEntity(entityId);
-//        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-//        if (wardrobe != null && wardrobe.isEditable(player)) {
-//            MenuManager.openMenu(ModMenuTypes.WARDROBE, player, wardrobe);
-//        }
-        TextComponent title = TextComponent.translatable("inventory.armourers_workshop.wardrobe");
-        FriendlyByteBuf buf2 = new FriendlyByteBuf();
-        buf2.writeInt(player.getEntityId());
-        buf2.writeUtf("armourers_workshop:player");
-        NetworkManager.sendTo(new FMLOpenContainer(24, 100, title, buf2), player);
-//
-//        FriendlyByteBuf buf1 = new FriendlyByteBuf();
-//        buf1.writeByte(1);  // "fml:play" 打开容器标识
-//        buf1.writeVarInt(24); // UI 标识
-//        buf1.writeVarInt(100); //
-//        buf1.writeUtf("{\"translate\":\"inventory.armourers_workshop.wardrobe\"}");
-//
-//
-//        buf1.writeByteArray(buf2.array());
-//
-//        player.sendPluginMessage(ArmourersWorkshop.INSTANCE, "fml:play", buf1.array());
+        Entity entity = ObjectUtils.findEntity(player.getWorld(), entityId);
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        if (wardrobe != null && wardrobe.isEditable(player)) {
+            SkinWardrobeMenu menu = new SkinWardrobeMenu(wardrobe, player);
+            MenuManager.openMenu(menu, player, buf -> {
+                buf.writeInt(player.getEntityId());
+                buf.writeUtf("armourers_workshop:player");
+            });
+        }
     }
 }

@@ -1,18 +1,13 @@
 package moe.plushie.armourers_workshop.plugin.network;
 
-import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.init.ModConstants;
 import moe.plushie.armourers_workshop.plugin.init.ModContext;
-import moe.plushie.armourers_workshop.plugin.init.ModLog;
-import moe.plushie.armourers_workshop.plugin.network.CustomPacket;
 import org.bukkit.entity.Player;
 
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,11 +23,6 @@ public class UpdateContextPacket extends CustomPacket {
     }
 
     public UpdateContextPacket(FriendlyByteBuf buffer) {
-        if (buffer.readBoolean()) {
-            ModContext.init(buffer.readUUID(), buffer.readUUID());
-            checkNetworkVersion(buffer.readUtf());
-        }
-        readConfigSpec(buffer);
     }
 
     @Override
@@ -64,33 +54,6 @@ public class UpdateContextPacket extends CustomPacket {
             oo.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private void readConfigSpec(FriendlyByteBuf buffer) {
-        int size = buffer.readInt();
-        if (size == 0) {
-            return;
-        }
-        try {
-            HashMap<String, Object> fields = new HashMap<>();
-            ByteBufInputStream bi = new ByteBufInputStream(buffer);
-            ObjectInputStream oi = new ObjectInputStream(bi);
-            for (int i = 0; i < size; ++i) {
-                String name = oi.readUTF();
-                Object value = oi.readObject();
-                fields.put(name, value);
-            }
-            oi.close();
-            ModConfig.apply(fields);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void checkNetworkVersion(String version) {
-        if (version.equals(ModConstants.MOD_NET_ID)) {
-            ModLog.warn("inconsistent network protocol version, server: {}, client: {}", version, ModConstants.MOD_NET_ID);
         }
     }
 }
