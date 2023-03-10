@@ -5,3 +5,8 @@ api-version: 1.16
 depend: [ ProtocolLib ]
 authors: [ SAGESSE, Happy_FZM ]
 description: Armourer's Workshop Plugin
+commands:
+  armourers:
+    description: Armourer's Workshop main command
+    aliases:
+      - aw
