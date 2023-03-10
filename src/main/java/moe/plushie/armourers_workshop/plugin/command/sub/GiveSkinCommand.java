@@ -2,28 +2,54 @@ package moe.plushie.armourers_workshop.plugin.command.sub;
 
 
 import moe.plushie.armourers_workshop.plugin.command.CommandBase;
+import moe.plushie.armourers_workshop.plugin.core.skin.Skin;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
+import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.plugin.utils.BukkitStackUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class GiveSkinCommand extends CommandBase {
 
+    private SkinDescriptor loadSkinDescriptor(String[] args) {
+        String identifier = args[1];//("skin");
+        if (identifier.isEmpty()) {
+            return SkinDescriptor.EMPTY;
+        }
+//        ColorScheme scheme = ColorScheme.EMPTY;
+//        if (containsNode(context, "dying")) {
+//            scheme = ColorSchemeArgumentType.getColorScheme(context, "dying");
+//        }
+        boolean needCopy = false;
+        if (identifier.startsWith("/")) {
+            identifier = "ws:" + identifier;
+            needCopy = true; // save the skin to the database
+        }
+        Skin skin = SkinLoader.getInstance().loadSkin(identifier);
+        if (skin != null) {
+            if (needCopy) {
+                identifier = SkinLoader.getInstance().saveSkin(identifier, skin);
+            }
+            return new SkinDescriptor(identifier, skin.getType());
+        }
+        return SkinDescriptor.EMPTY;
+    }
+
     @Override
     public void onConsoleCommand(CommandSender sender, String[] args) {
-        String playerUUID = args[0];
-        String filePath = args[1];
-
-        // SkinDescriptor descriptor = new SkinDescriptor("db:00001", "armourers:outfit");
-        //  BukkitStackUtils.unwrap(descriptor.asItemStack());
-
-        // wardrobe.setItem(SkinSlotType.OUTFIT, 0, new SkinDescriptor("db:00001", "armourers:outfit").asItemStack());
-        // wardrobe.setItem(SkinSlotType.SWORD, 0, new SkinDescriptor("db:00002", "armourers:sword").asItemStack());
-
-
-//        sender.sendMessage("do something");
+        String playerSelector = args[0];
+        SkinDescriptor descriptor = loadSkinDescriptor(args);
+        if (descriptor.isEmpty()) {
+            return;
+        }
+        for (Entity entity : Bukkit.selectEntities(sender, playerSelector)) {
+            if (entity instanceof Player) {
+                BukkitStackUtils.giveItemTo(descriptor.asItemStack(), (Player) entity);
+                // context.getSource().sendSuccess(Component.translatable("commands.give.success.single", 1, itemStack.getDisplayName(), player.getDisplayName()), true);
+            }
+        }
     }
 
     @Override
@@ -33,7 +59,7 @@ public class GiveSkinCommand extends CommandBase {
 
     @Override
     public String getPermission() {
-        return "armourers.admin";
+        return "armourers_workshop.command.admin";
     }
 
     @Override

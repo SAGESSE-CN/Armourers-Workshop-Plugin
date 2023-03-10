@@ -5,12 +5,18 @@ import net.querz.nbt.tag.CompoundTag;
 
 public class SkinDescriptor {
 
+    public static final SkinDescriptor EMPTY = new SkinDescriptor("", "armourers:unknown");
+
     String id;
     String type;
 
     public SkinDescriptor(String id, String type) {
         this.id = id;
         this.type = type;
+    }
+
+    public boolean isEmpty() {
+        return this == EMPTY;
     }
 
     public ItemStack asItemStack() {

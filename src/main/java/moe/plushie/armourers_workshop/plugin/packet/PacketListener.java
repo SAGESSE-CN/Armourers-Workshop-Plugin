@@ -32,6 +32,9 @@ public class PacketListener extends PacketAdapter {
             return;
         }
         int slotId = packet.getIntegers().read(1);
+        if (slotId < 0) {
+            return; // is drop, ignored.
+        }
         String type = ((Enum<?>) packet.getStructures().read(1).getHandle()).name();
         menu.handSlotClick(slotId, type);
         event.setCancelled(true);
