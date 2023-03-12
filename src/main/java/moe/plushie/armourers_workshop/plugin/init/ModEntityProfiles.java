@@ -75,13 +75,11 @@ public class ModEntityProfiles {
 //    private static final HashMap<EntityType<?>, EntityProfile> PROFILES = new HashMap<>();
 
     private static int playerSlots(ISkinType type) {
-        return 3;
-//        return ModConfig.Common.prefersWardrobePlayerSlots;
+        return ModConfig.Common.prefersWardrobePlayerSlots;
     }
 
     private static int mobSlots(ISkinType type) {
-        return 3;
-//        return ModConfig.Common.prefersWardrobeMobSlots;
+        return ModConfig.Common.prefersWardrobeMobSlots;
     }
 
     public static void init() {

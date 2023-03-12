@@ -34,6 +34,11 @@ public class SkinSlot implements Slot {
     }
 
     @Override
+    public void setChanged() {
+        wardrobe.save();
+    }
+
+    @Override
     public boolean mayPlace(ItemStack itemStack) {
         // when slot type is not provide, we consider it is an unrestricted slot.
         if (!slotType.equals(SkinSlotType.of(itemStack))) {

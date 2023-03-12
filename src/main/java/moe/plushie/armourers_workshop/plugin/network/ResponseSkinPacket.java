@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.core.skin.Skin;
+import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.plugin.utils.StreamUtils;
 
@@ -27,8 +28,7 @@ public class ResponseSkinPacket extends CustomPacket {
         this.exp = exp;
         this.skin = skin;
         this.mode = skin != null ? Mode.STREAM : Mode.EXCEPTION;
-        // TODO: IMPL
-        this.compress = true;//ModConfig.Common.serverCompressesSkins;
+        this.compress = ModConfig.Common.enableServerCompressesSkins;
     }
 
     public ResponseSkinPacket(FriendlyByteBuf buffer) {

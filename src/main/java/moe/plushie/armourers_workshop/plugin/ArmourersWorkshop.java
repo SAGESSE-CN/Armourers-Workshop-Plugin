@@ -4,6 +4,8 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import moe.plushie.armourers_workshop.plugin.core.data.DataManager;
+import moe.plushie.armourers_workshop.plugin.core.data.LocalDataService;
+import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.init.ModPackets;
@@ -36,7 +38,10 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
         ModConfig.init();
         ModPackets.init();
         NetworkManager.init();
+
+        LocalDataService.start(getServer());
         DataManager.start();
+        SkinLoader.getInstance().setup();
 
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(this, this);
@@ -49,6 +54,7 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        LocalDataService.stop();
         DataManager.stop();
     }
 

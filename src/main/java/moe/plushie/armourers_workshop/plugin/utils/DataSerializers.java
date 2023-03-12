@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IEntitySerializer;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
 import net.querz.nbt.io.SNBTParser;
+import net.querz.nbt.io.SNBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.IntArrayTag;
 import net.querz.nbt.tag.StringTag;
@@ -272,9 +273,8 @@ public class DataSerializers {
             return (CompoundTag) value;
         }
         if (value instanceof StringTag) {
-            SNBTParser parser = new SNBTParser(((StringTag) value).getValue());
             try {
-                return (CompoundTag) parser.parse();
+                return (CompoundTag) SNBTUtil.fromSNBT(((StringTag) value).getValue());
             } catch (Exception e) {
                 e.printStackTrace();
             }

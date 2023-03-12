@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.init.command.sub;
 
 
+import moe.plushie.armourers_workshop.plugin.core.data.DataDomain;
 import moe.plushie.armourers_workshop.plugin.core.skin.Skin;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
@@ -24,7 +25,7 @@ public class GiveSkinCommand extends CommandBase {
 //        }
         boolean needCopy = false;
         if (identifier.startsWith("/")) {
-            identifier = "ws:" + identifier;
+            identifier = DataDomain.DEDICATED_SERVER.normalize(identifier);
             needCopy = true; // save the skin to the database
         }
         Skin skin = SkinLoader.getInstance().loadSkin(identifier);

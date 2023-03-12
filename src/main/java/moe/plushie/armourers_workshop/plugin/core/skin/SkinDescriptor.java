@@ -40,6 +40,10 @@ public class SkinDescriptor {
         return this == EMPTY;
     }
 
+    public String getIdentifier() {
+        return identifier;
+    }
+
     public ISkinType getType() {
         return type;
     }

@@ -9,7 +9,8 @@ public class ModLog {
     private static final Logger LOGGER = ArmourersWorkshop.INSTANCE.getLogger();
 
     public static void debug(String message, Object... params) {
-        LOGGER.finer(_format(message, params));
+        //LOGGER.finer(_format(message, params));
+        LOGGER.info(_format(message, params));
     }
 
     public static void info(String message, Object... params) {

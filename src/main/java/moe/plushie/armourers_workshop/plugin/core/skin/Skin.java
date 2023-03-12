@@ -5,9 +5,27 @@ import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 public class Skin {
 
     public String path;
-    public ISkinType type;
+
+    private ISkinType type;
+    private SkinProperties properties;
+
+    private byte[] bytes;
+
+    public Skin(ISkinType type, SkinProperties properties, byte[] bytes) {
+        this.type = type;
+        this.properties = properties;
+        this.bytes = bytes;
+    }
 
     public ISkinType getType() {
         return type;
+    }
+
+    public SkinProperties getProperties() {
+        return properties;
+    }
+
+    public byte[] getBytes() {
+        return bytes;
     }
 }

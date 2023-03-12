@@ -16,13 +16,15 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:23.0.0'
+    compileOnly "org.jetbrains:annotations:23.0.0"
+
     compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1+"
 
     compileOnly "io.netty:netty-buffer:4.1.80+"
     compileOnly "io.netty:netty-handler:4.1.80+"
     compileOnly "com.comphenix.protocol:ProtocolLib:4.8.0+"
 
+    implementation "commons-io:commons-io:2.11.0"
     implementation "com.github.Querz:NBT:6.1+"
 }
 
