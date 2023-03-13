@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.plugin.helper;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -23,7 +23,7 @@ public class ItemHelper {
 
 
     @Nullable
-    public static String getRedirectedId(CompoundNBT tag) {
+    public static String getRedirectedId(CompoundTag tag) {
         if (tag == null) {
             return null;
         }
@@ -38,8 +38,8 @@ public class ItemHelper {
         return id;
     }
 
-    public static void setRedirectedId(CompoundNBT tag, String id) {
-        CompoundNBT itemTag = tag.getCompound("tag");
+    public static void setRedirectedId(CompoundTag tag, String id) {
+        CompoundTag itemTag = tag.getCompound("tag");
         itemTag.putString(REDIRECT_KEY, id);
         if (!tag.contains("tag")) {
             tag.put("tag", itemTag);
@@ -47,7 +47,7 @@ public class ItemHelper {
     }
 
     @Nullable
-    public static Item getRedirectedItem(Item item, CompoundNBT itemTag) {
+    public static Item getRedirectedItem(Item item, CompoundTag itemTag) {
         if (itemTag == null) {
             return null;
         }
@@ -67,7 +67,7 @@ public class ItemHelper {
         if (rl == null || !shouldRedirectId(rl)) {
             return null;
         }
-        CompoundNBT tag = new CompoundNBT();
+        CompoundTag tag = new CompoundTag();
         tag.putString(REDIRECT_KEY, rl.toString());
         if (itemStack.getTag() != null) {
             tag.merge(itemStack.getTag());

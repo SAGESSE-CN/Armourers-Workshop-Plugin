@@ -16,6 +16,7 @@ repositories {
     maven { url "https://oss.sonatype.org/content/groups/public/" }
     maven { url "https://repo.dmulloy2.net/repository/public/" }
     maven { url "https://jitpack.io/" }
+    maven { url "https://repo.codemc.org/repository/maven-public/" }
 }
 
 dependencies {
@@ -28,7 +29,9 @@ dependencies {
     compileOnly "com.comphenix.protocol:ProtocolLib:4.8.0+"
 
     implementation "commons-io:commons-io:2.11.0"
+    implementation "commons-lang:commons-lang:2.6"
     implementation "com.github.Querz:NBT:6.1+"
+    implementation "dev.jorel:commandapi-shade:8.7+"
 }
 
 def targetJavaVersion = 8
@@ -69,6 +72,14 @@ shadowJar {
     archiveBaseName.set(project.getArchivesBaseName())
     archiveClassifier.set("")
     archiveVersion.set(project.getVersion())
+
+    exclude "META-INF/**"
+
+    def pkg = "moe.plushie.armourers_workshop.plugin.lib"
+    relocate("org.apache", pkg)
+    relocate("dev.jorel", pkg)
+    relocate("net.querz", pkg)
 }
+
 
 assemble.dependsOn shadowJar

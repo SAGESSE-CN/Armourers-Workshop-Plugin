@@ -7,13 +7,12 @@ import moe.plushie.armourers_workshop.plugin.core.data.DataManager;
 import moe.plushie.armourers_workshop.plugin.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
+import moe.plushie.armourers_workshop.plugin.init.ModCommands;
 import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.init.ModPackets;
-import moe.plushie.armourers_workshop.plugin.init.command.MainCommand;
 import moe.plushie.armourers_workshop.plugin.network.NetworkManager;
 import moe.plushie.armourers_workshop.plugin.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.plugin.packet.PacketListener;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,7 +22,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 
 public final class ArmourersWorkshop extends JavaPlugin implements Listener {
 
@@ -48,7 +46,9 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
 
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         protocolManager.addPacketListener(new PacketListener(this, PacketType.Play.Client.WINDOW_CLICK, PacketType.Play.Client.CLOSE_WINDOW));
-        Objects.requireNonNull(Bukkit.getPluginCommand("armourers")).setExecutor(new MainCommand());
+//        Objects.requireNonNull(Bukkit.getPluginCommand("armourers")).setExecutor(new MainCommand());
+
+        ModCommands.init();
     }
 
     @Override
