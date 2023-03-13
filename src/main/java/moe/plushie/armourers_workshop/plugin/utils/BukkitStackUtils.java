@@ -37,12 +37,21 @@ public class BukkitStackUtils {
     public static void giveItemTo(ItemStack itemStack, Player player) {
         Inventory inventory = player.getInventory();
         if (isFull(inventory)) {
-            org.bukkit.inventory.ItemStack itemStack1 = unwrap(itemStack);
-            if (itemStack1 != null) {
-                player.getWorld().dropItem(player.getLocation(), itemStack1);
-            }
+            drop(itemStack, player, true);
         } else {
             inventory.addItem(unwrap(itemStack));
+        }
+    }
+
+    public static void drop(ItemStack itemStack, Player player, boolean bl2) {
+        org.bukkit.inventory.ItemStack itemStack1 = unwrap(itemStack);
+        if (itemStack1 != null) {
+            Scheduler.run(() -> {
+                player.getWorld().dropItem(player.getLocation(), itemStack1);
+//            if (bl2) {
+//                itemEntity.setThrower(player.getUUID());
+//            }
+            });
         }
     }
 
@@ -58,6 +67,13 @@ public class BukkitStackUtils {
         public WrappedItemStack(org.bukkit.inventory.ItemStack itemStack) {
             super(realId(itemStack), itemStack.getAmount());
             this.itemStack = itemStack;
+            this.setMaxStackSize(itemStack.getMaxStackSize());
+        }
+
+        @Override
+        public void setCount(int count) {
+            super.setCount(count);
+            itemStack.setAmount(count);
         }
 
         @Override
@@ -65,16 +81,13 @@ public class BukkitStackUtils {
             if (lazyTag != null) {
                 return lazyTag;
             }
-            lazyTag = super.getTag();
-            try {
-                NBTEditor.NBTCompound tag = NBTEditor.getNBTCompound(itemStack, "tag");
-                if (tag != null) {
-                    lazyTag = (CompoundTag) SNBTUtil.fromSNBT(tag.toJson());
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
+            lazyTag = realTag(itemStack);
             return lazyTag;
+        }
+
+        @Override
+        public ItemStack copy() {
+            return new WrappedItemStack(itemStack.clone());
         }
 
         private static String realId(org.bukkit.inventory.ItemStack itemStack) {
@@ -86,5 +99,18 @@ public class BukkitStackUtils {
             return id;
         }
 
+        private static CompoundTag realTag(org.bukkit.inventory.ItemStack itemStack) {
+            try {
+                if (itemStack.hasItemMeta()) {
+                    NBTEditor.NBTCompound tag = NBTEditor.getNBTCompound(itemStack, "tag");
+                    if (tag != null) {
+                        return (CompoundTag) SNBTUtil.fromSNBT(tag.toJson());
+                    }
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            return new CompoundTag();
+        }
     }
 }

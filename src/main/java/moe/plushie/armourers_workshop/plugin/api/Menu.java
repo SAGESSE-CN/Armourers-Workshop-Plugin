@@ -14,11 +14,12 @@ public class Menu {
         this.registryName = registryName;
     }
 
-    public void handSlotClick(int slot, int button, ClickType type, Player player) {
+    public boolean handSlotClick(int slot, int button, ClickType type, Player player) {
+        return false;
     }
 
     @Nullable
-    public Slot findSlot(int slotId) {
+    public Slot safeGetSlot(int slotId) {
         if (slotId >= 0 && slotId < slots.size()) {
             return slots.get(slotId);
         }
@@ -26,6 +27,7 @@ public class Menu {
     }
 
     public void addSlot(Slot slot) {
+        slot.setIndex(slots.size());
         slots.add(slot);
     }
 

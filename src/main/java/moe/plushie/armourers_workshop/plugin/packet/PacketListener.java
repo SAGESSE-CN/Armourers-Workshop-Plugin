@@ -40,8 +40,10 @@ public class PacketListener extends PacketAdapter {
                 return; // is drop, ignored.
             }
             String type = ((Enum<?>) packet.getStructures().read(1).getHandle()).name();
-            menu.handSlotClick(slot, button, ClickType.valueOf(type), player);
-            event.setCancelled(true);
+            boolean results = menu.handSlotClick(slot, button, ClickType.valueOf(type), player);
+            if (results) {
+                event.setCancelled(results);
+            }
         }
         if (event.getPacketType().equals(PacketType.Play.Client.CLOSE_WINDOW)) {
             PacketContainer packet = event.getPacket();

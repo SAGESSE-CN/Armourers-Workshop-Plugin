@@ -4,8 +4,11 @@ plugins {
 }
 
 group = "moe.plushie.armourers_workshop.plugin"
-version = "${project.plugin_version}-homebaked"
 archivesBaseName = "armourersworkshop-plugin"
+
+if (version == "unspecified") {
+    version = "2.0.0-homebaked"
+}
 
 repositories {
     mavenCentral()

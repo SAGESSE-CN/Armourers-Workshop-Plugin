@@ -5,6 +5,8 @@ import org.bukkit.inventory.Inventory;
 
 public class InventorySlot implements Slot {
 
+    private int index;
+
     private final Inventory inventory;
     private final int slot;
 
@@ -13,6 +15,15 @@ public class InventorySlot implements Slot {
         this.slot = slot;
     }
 
+    @Override
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    @Override
+    public int getIndex() {
+        return index;
+    }
 
     @Override
     public ItemStack getItem() {
@@ -25,7 +36,12 @@ public class InventorySlot implements Slot {
     }
 
     @Override
-    public void set(ItemStack itemStack) {
+    public int getMaxStackSize() {
+        return inventory.getMaxStackSize();
+    }
+
+    @Override
+    public void setItem(ItemStack itemStack) {
         inventory.setItem(slot, BukkitStackUtils.unwrap(itemStack));
         setChanged();
     }
