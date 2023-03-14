@@ -14,10 +14,10 @@ public abstract class ItemStackMixin {
 
     @ModifyVariable(method = "<init>(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("HEAD"), argsOnly = true)
     private static CompoundTag aw$read(CompoundTag tag) {
-        String id = ItemHelper.getRedirectedId(tag);
-        if (id != null) {
+        String targetId = ItemHelper.getId(tag, 0);
+        if (targetId != null) {
             CompoundTag newTag = tag.copy();
-            newTag.putString("id", id);
+            newTag.putString("id", targetId);
             return newTag;
         }
         return tag;
@@ -26,10 +26,14 @@ public abstract class ItemStackMixin {
     @Inject(method = "save", at = @At("RETURN"))
     public void aw$save(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
         CompoundTag itemTag = cir.getReturnValue();
-        String id = itemTag.getString("id");
-        if (ItemHelper.shouldRedirectId(id)) {
-            itemTag.putString("id", "minecraft:paper");
-            ItemHelper.setRedirectedId(tag, id);
+        String targetId = itemTag.getString("id");
+        if (ItemHelper.shouldRedirectId(targetId)) {
+            String sourceId = ItemHelper.getId(tag, 1);
+            if (sourceId == null) {
+                sourceId = ItemHelper.getMatchIdBySize(targetId);
+            }
+            itemTag.putString("id", sourceId);
+            ItemHelper.setId(tag, sourceId, targetId);
         }
     }
 }

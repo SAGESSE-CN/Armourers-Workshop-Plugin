@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.plugin.api.HandleResult;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.Menu;
 import moe.plushie.armourers_workshop.plugin.api.Slot;
-import moe.plushie.armourers_workshop.plugin.init.ModLog;
 import moe.plushie.armourers_workshop.plugin.utils.BukkitStackUtils;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -22,7 +21,7 @@ public abstract class ContainerMenu extends Menu {
     private Player player;
 
     private int quickcraftType;
-    private int quickcraftStatus = -1;
+    private int quickcraftStatus = 0;
     private final HashSet<Slot> quickcraftSlots = new HashSet<>();
 
     public ContainerMenu(String registryName) {
@@ -31,7 +30,6 @@ public abstract class ContainerMenu extends Menu {
 
     @Override
     public HandleResult handSlotClick(int slotIndex, int button, ClickType clickType, Player player) {
-        ModLog.info("slot: {}, button: {}, click: {}", slotIndex, button, clickType);
         this.player = player;
         switch (clickType) {
             case QUICK_CRAFT: {
@@ -98,7 +96,7 @@ public abstract class ContainerMenu extends Menu {
                                 }
 
                                 m -= itemStack4.getCount() - n;
-                                slot2.setItem(itemStack4);
+                                slot2.set(itemStack4);
                             }
                         }
                     }
@@ -154,7 +152,7 @@ public abstract class ContainerMenu extends Menu {
                             setCarried(slot.safeInsert(itemStack5, p));
                         } else if (itemStack5.getCount() <= slot.getMaxStackSize(itemStack5)) {
                             setCarried(itemStack);
-                            slot.setItem(itemStack5);
+                            slot.set(itemStack5);
                         }
                     } else if (ItemStack.isSameItemSameTags(itemStack, itemStack5)) {
                         Optional<ItemStack> optional2 = slot.tryRemove(itemStack.getCount(), itemStack5.getMaxStackSize() - itemStack5.getCount(), player);
@@ -204,30 +202,30 @@ public abstract class ContainerMenu extends Menu {
                 if (!itemStack2.isEmpty() || !itemStack.isEmpty()) {
                     if (itemStack2.isEmpty()) {
                         if (slot3.mayPickup(player)) {
-                            slot1.setItem(itemStack);
+                            slot1.set(itemStack);
                             slot3.onSwapCraft(itemStack.getCount());
-                            slot3.setItem(ItemStack.EMPTY);
+                            slot3.set(ItemStack.EMPTY);
                             slot3.onTake(player, itemStack);
                         }
                     } else if (itemStack.isEmpty()) {
                         if (slot3.mayPlace(itemStack2)) {
                             int q = slot3.getMaxStackSize(itemStack2);
                             if (itemStack2.getCount() > q) {
-                                slot3.setItem(itemStack2.split(q));
+                                slot3.set(itemStack2.split(q));
                             } else {
-                                slot1.setItem(ItemStack.EMPTY);
-                                slot3.setItem(itemStack2);
+                                slot1.set(ItemStack.EMPTY);
+                                slot3.set(itemStack2);
                             }
                         }
                     } else if (slot3.mayPickup(player) && slot3.mayPlace(itemStack2)) {
                         int q = slot3.getMaxStackSize(itemStack2);
                         if (itemStack2.getCount() > q) {
-                            slot3.setItem(itemStack2.split(q));
+                            slot3.set(itemStack2.split(q));
                             slot3.onTake(player, itemStack);
                             BukkitStackUtils.giveItemTo(itemStack, player);
                         } else {
-                            slot1.setItem(itemStack);
-                            slot3.setItem(itemStack2);
+                            slot1.set(itemStack);
+                            slot3.set(itemStack2);
                             slot3.onTake(player, itemStack);
                         }
                     }
@@ -282,7 +280,7 @@ public abstract class ContainerMenu extends Menu {
             if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
                 return ItemStack.EMPTY;
             }
-            slot.setItem(ItemStack.EMPTY);
+            slot.set(ItemStack.EMPTY);
             return itemStack.copy();
         }
         if (!moveItemStackTo(itemStack, 36, slotSize, false)) {
@@ -356,9 +354,9 @@ public abstract class ContainerMenu extends Menu {
                 itemStack2 = slot.getItem();
                 if (itemStack2.isEmpty() && slot.mayPlace(itemStack)) {
                     if (itemStack.getCount() > slot.getMaxStackSize()) {
-                        slot.setItem(itemStack.split(slot.getMaxStackSize()));
+                        slot.set(itemStack.split(slot.getMaxStackSize()));
                     } else {
-                        slot.setItem(itemStack.split(itemStack.getCount()));
+                        slot.set(itemStack.split(itemStack.getCount()));
                     }
 
                     slot.setChanged();
@@ -402,13 +400,11 @@ public abstract class ContainerMenu extends Menu {
     protected void resetQuickCraft() {
         this.quickcraftStatus = 0;
         this.quickcraftSlots.clear();
-        ModLog.info("quick craft: reset");
     }
 
-    //    public void broadcastChanges() {
-//    }
-//
-//
+    public void broadcastChanges() {
+    }
+
     public void setCarried(ItemStack itemStack) {
         if (player != null) {
             player.setItemOnCursor(BukkitStackUtils.unwrap(itemStack));

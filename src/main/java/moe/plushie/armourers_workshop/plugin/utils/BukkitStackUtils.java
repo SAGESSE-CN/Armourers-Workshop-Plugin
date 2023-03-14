@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.utils;
 
+import moe.plushie.armourers_workshop.plugin.api.Item;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import net.querz.nbt.io.SNBTUtil;
 import net.querz.nbt.tag.CompoundTag;
@@ -98,7 +99,10 @@ public class BukkitStackUtils {
             String id = itemStack.getType().getKey().toString();
             String redirectedId = NBTEditor.getString(itemStack, "__redirected_id__");
             if (redirectedId != null && !redirectedId.isEmpty()) {
-                return redirectedId;
+                String newId = Item.getRealId(redirectedId);
+                if (newId != null) {
+                    return newId;
+                }
             }
             return id;
         }

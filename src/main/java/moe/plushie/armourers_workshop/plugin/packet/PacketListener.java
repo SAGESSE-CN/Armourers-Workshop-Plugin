@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.plugin.api.ClickType;
 import moe.plushie.armourers_workshop.plugin.api.HandleResult;
 import moe.plushie.armourers_workshop.plugin.api.Menu;
 import moe.plushie.armourers_workshop.plugin.core.menu.MenuManager;
+import moe.plushie.armourers_workshop.plugin.init.ModLog;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -38,7 +39,9 @@ public class PacketListener extends PacketAdapter {
             int slot = packet.getIntegers().read(1);
             int button = packet.getIntegers().read(2);
             String type = ((Enum<?>) packet.getStructures().read(1).getHandle()).name();
-            HandleResult result = menu.handSlotClick(slot, button, ClickType.valueOf(type), player);
+            ClickType clickType = ClickType.valueOf(type);
+            HandleResult result = menu.handSlotClick(slot, button, clickType, player);
+            ModLog.info("slot: {}, button: {}, click: {} => {}/{}", slot, button, clickType, result, player.getItemOnCursor());
             if (result != HandleResult.PASS) {
                 event.setCancelled(true);
             }

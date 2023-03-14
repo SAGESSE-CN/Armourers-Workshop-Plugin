@@ -45,7 +45,7 @@ public class SkinSlot implements Slot {
     }
 
     @Override
-    public void setItem(ItemStack itemStack) {
+    public void set(ItemStack itemStack) {
         wardrobe.setItem(slotType, slot, itemStack);
         setChanged();
     }

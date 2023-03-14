@@ -17,11 +17,11 @@ public interface Slot {
         if (itemStack.getCount() > i) {
             return itemStack.split(i);
         }
-        setItem(ItemStack.EMPTY);
+        set(ItemStack.EMPTY);
         return itemStack;
     }
 
-    void setItem(ItemStack itemStack);
+    void set(ItemStack itemStack);
 
     boolean hasItem();
 
@@ -65,7 +65,7 @@ public interface Slot {
             return Optional.empty();
         }
         if (this.getItem().isEmpty()) {
-            this.setItem(ItemStack.EMPTY);
+            this.set(ItemStack.EMPTY);
         }
         return Optional.of(itemStack);
     }
@@ -87,11 +87,11 @@ public interface Slot {
             ItemStack itemStack2 = this.getItem();
             int j = Math.min(Math.min(i, itemStack.getCount()), this.getMaxStackSize(itemStack) - itemStack2.getCount());
             if (itemStack2.isEmpty()) {
-                this.setItem(itemStack.split(j));
+                this.set(itemStack.split(j));
             } else if (ItemStack.isSameItemSameTags(itemStack2, itemStack)) {
                 itemStack.shrink(j);
                 itemStack2.grow(j);
-                this.setItem(itemStack2);
+                this.set(itemStack2);
             }
 
             return itemStack;

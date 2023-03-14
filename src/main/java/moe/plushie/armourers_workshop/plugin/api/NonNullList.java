@@ -15,11 +15,11 @@ public class NonNullList<E> extends AbstractList<E> {
     private final E defaultValue;
 
     public static <E> NonNullList<E> create() {
-        return new NonNullList(Lists.newArrayList(), (Object)null);
+        return new NonNullList(Lists.newArrayList(), (Object) null);
     }
 
     public static <E> NonNullList<E> createWithCapacity(int i) {
-        return new NonNullList(Lists.newArrayListWithCapacity(i), (Object)null);
+        return new NonNullList(Lists.newArrayListWithCapacity(i), (Object) null);
     }
 
     public static <E> NonNullList<E> withSize(int i, E object) {
@@ -66,7 +66,7 @@ public class NonNullList<E> extends AbstractList<E> {
         if (this.defaultValue == null) {
             super.clear();
         } else {
-            for(int i = 0; i < this.size(); ++i) {
+            for (int i = 0; i < this.size(); ++i) {
                 this.set(i, this.defaultValue);
             }
         }

@@ -6,9 +6,10 @@ public class ItemStack {
 
     public static final ItemStack EMPTY = new ItemStack("minecraft:air", 0);
 
-    private String id;
-    private int count;
-    private final CompoundTag tag;
+    protected final String id;
+    protected final CompoundTag tag;
+
+    protected int count;
 
     public ItemStack(String id) {
         this(id, 1);
@@ -29,14 +30,17 @@ public class ItemStack {
         if (tag.containsKey("tag")) {
             itemTag = tag.getCompoundTag("tag");
         }
-        String id = tag.getString("id");
-        if (itemTag != null && itemTag.containsKey("__redirected_id__")) {
-            id = itemTag.getString("__redirected_id__");
+        String targetId = tag.getString("id");
+        if (itemTag != null) {
+            String newId = Item.getRealId(itemTag.getString("__redirected_id__"));
+            if (newId != null) {
+                targetId = newId;
+            }
         }
         if (itemTag == null) {
             itemTag = new CompoundTag();
         }
-        this.id = id;
+        this.id = targetId;
         this.count = tag.getByte("Count");
         this.tag = itemTag;
     }
@@ -46,8 +50,12 @@ public class ItemStack {
         if (id.startsWith("minecraft:")) {
             tag.putString("id", id);
         } else {
-            itemTag.putString("__redirected_id__", id);
-            tag.putString("id", "minecraft:paper");
+            String sourceId = Item.getWrapperId(itemTag.getString("__redirected_id__"));
+            if (sourceId == null) {
+                sourceId = Item.matchIdBySize(getMaxStackSize());
+            }
+            itemTag.putString("__redirected_id__", id + "/" + sourceId);
+            tag.putString("id", sourceId);
         }
         tag.putByte("Count", (byte) count);
         tag.put("tag", itemTag);

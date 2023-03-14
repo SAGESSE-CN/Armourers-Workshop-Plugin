@@ -93,15 +93,18 @@ public class SkinWardrobeMenu extends ContainerMenu {
             if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
                 return ItemStack.EMPTY;
             }
-            slot.setItem(ItemStack.EMPTY);
+            slot.set(ItemStack.EMPTY);
             return itemStack.copy();
         }
         SkinSlotType slotType = SkinSlotType.of(itemStack);
-        int startIndex = getFreeSlot(slotType);
-        if (!moveItemStackTo(itemStack, startIndex, startIndex + 1, false)) {
-            return ItemStack.EMPTY;
+        if (slotType != null) {
+            int startIndex = getFreeSlot(slotType);
+            if (!moveItemStackTo(itemStack, startIndex, startIndex + 1, false)) {
+                return ItemStack.EMPTY;
+            }
+            slot.set(ItemStack.EMPTY);
+            return itemStack.copy();
         }
-        slot.setItem(ItemStack.EMPTY);
         return ItemStack.EMPTY;
     }
 }
