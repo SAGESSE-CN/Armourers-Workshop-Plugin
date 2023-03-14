@@ -12,7 +12,7 @@ public class BukkitStackUtils {
         if (itemStack == null || itemStack.getAmount() <= 0) {
             return ItemStack.EMPTY;
         }
-        return FastCache.BUKKIT_ITEM_TO_ITEM.computeIfAbsent(itemStack, WrappedItemStack::new);
+        return new WrappedItemStack(itemStack);
     }
 
     public static org.bukkit.inventory.ItemStack unwrap(ItemStack itemStack) {
@@ -67,7 +67,6 @@ public class BukkitStackUtils {
         public WrappedItemStack(org.bukkit.inventory.ItemStack itemStack) {
             super(realId(itemStack), itemStack.getAmount());
             this.itemStack = itemStack;
-            this.setMaxStackSize(itemStack.getMaxStackSize());
         }
 
         @Override
@@ -83,6 +82,11 @@ public class BukkitStackUtils {
             }
             lazyTag = realTag(itemStack);
             return lazyTag;
+        }
+
+        @Override
+        public int getMaxStackSize() {
+            return itemStack.getMaxStackSize();
         }
 
         @Override

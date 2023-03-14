@@ -14,14 +14,11 @@ public interface Slot {
 
     default ItemStack removeItem(int i) {
         ItemStack itemStack = getItem();
-        ItemStack itemStack1 = itemStack;
         if (itemStack.getCount() > i) {
-            itemStack1 = itemStack.split(i);
-            setItem(itemStack);
-        } else {
-            setItem(ItemStack.EMPTY);
+            return itemStack.split(i);
         }
-        return itemStack1;
+        setItem(ItemStack.EMPTY);
+        return itemStack;
     }
 
     void setItem(ItemStack itemStack);
@@ -35,7 +32,9 @@ public interface Slot {
         this.setChanged();
     }
 
-    int getMaxStackSize();
+    default int getMaxStackSize() {
+        return 64;
+    }
 
     default int getMaxStackSize(ItemStack itemStack) {
         return Math.min(getMaxStackSize(), itemStack.getMaxStackSize());
@@ -54,23 +53,21 @@ public interface Slot {
     }
 
     default Optional<ItemStack> tryRemove(int i, int j, Player player) {
-        if (!this.mayPickup(player)) {
+        if (!mayPickup(player)) {
             return Optional.empty();
-        } else if (!this.allowModification(player) && j < this.getItem().getCount()) {
-            return Optional.empty();
-        } else {
-            i = Math.min(i, j);
-            ItemStack itemStack = removeItem(i);
-            if (itemStack.isEmpty()) {
-                return Optional.empty();
-            } else {
-                if (this.getItem().isEmpty()) {
-                    this.setItem(ItemStack.EMPTY);
-                }
-
-                return Optional.of(itemStack);
-            }
         }
+        if (!allowModification(player) && j < getItem().getCount()) {
+            return Optional.empty();
+        }
+        i = Math.min(i, j);
+        ItemStack itemStack = removeItem(i);
+        if (itemStack.isEmpty()) {
+            return Optional.empty();
+        }
+        if (this.getItem().isEmpty()) {
+            this.setItem(ItemStack.EMPTY);
+        }
+        return Optional.of(itemStack);
     }
 
     default ItemStack safeTake(int i, int j, Player player) {

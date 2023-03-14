@@ -4,11 +4,10 @@ import net.querz.nbt.tag.CompoundTag;
 
 public class ItemStack {
 
-    public static final ItemStack EMPTY = new ItemStack("minecraft:air");
+    public static final ItemStack EMPTY = new ItemStack("minecraft:air", 0);
 
     private String id;
     private int count;
-    private int maxStackSize = 64;
     private final CompoundTag tag;
 
     public ItemStack(String id) {
@@ -68,9 +67,7 @@ public class ItemStack {
 
 
     public ItemStack copy() {
-        ItemStack itemStack = new ItemStack(id, count, tag.clone());
-        itemStack.setMaxStackSize(getMaxStackSize());
-        return itemStack;
+        return new ItemStack(id, count, tag.clone());
     }
 
     public ItemStack split(int i) {
@@ -98,12 +95,8 @@ public class ItemStack {
         this.grow(-i);
     }
 
-    public void setMaxStackSize(int maxStackSize) {
-        this.maxStackSize = maxStackSize;
-    }
-
     public int getMaxStackSize() {
-        return maxStackSize;
+        return Item.getMaxStackSizeById(id);
     }
 
     public boolean isStackable() {
@@ -188,4 +181,9 @@ public class ItemStack {
 //        return false;
 //    }
 
+
+    @Override
+    public String toString() {
+        return "" + count + " " + id;
+    }
 }

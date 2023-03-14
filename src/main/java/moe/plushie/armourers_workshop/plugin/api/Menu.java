@@ -14,8 +14,8 @@ public class Menu {
         this.registryName = registryName;
     }
 
-    public boolean handSlotClick(int slot, int button, ClickType type, Player player) {
-        return false;
+    public HandleResult handSlotClick(int slot, int button, ClickType type, Player player) {
+        return HandleResult.PASS;
     }
 
     @Nullable

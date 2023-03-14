@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import moe.plushie.armourers_workshop.plugin.api.ClickType;
+import moe.plushie.armourers_workshop.plugin.api.HandleResult;
 import moe.plushie.armourers_workshop.plugin.api.Menu;
 import moe.plushie.armourers_workshop.plugin.core.menu.MenuManager;
 import org.bukkit.entity.Player;
@@ -36,13 +37,10 @@ public class PacketListener extends PacketAdapter {
             }
             int slot = packet.getIntegers().read(1);
             int button = packet.getIntegers().read(2);
-            if (slot < 0) {
-                return; // is drop, ignored.
-            }
             String type = ((Enum<?>) packet.getStructures().read(1).getHandle()).name();
-            boolean results = menu.handSlotClick(slot, button, ClickType.valueOf(type), player);
-            if (results) {
-                event.setCancelled(results);
+            HandleResult result = menu.handSlotClick(slot, button, ClickType.valueOf(type), player);
+            if (result != HandleResult.PASS) {
+                event.setCancelled(true);
             }
         }
         if (event.getPacketType().equals(PacketType.Play.Client.CLOSE_WINDOW)) {

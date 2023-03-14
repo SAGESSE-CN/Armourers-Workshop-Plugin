@@ -45,11 +45,6 @@ public class SkinSlot implements Slot {
     }
 
     @Override
-    public int getMaxStackSize() {
-        return 1;
-    }
-
-    @Override
     public void setItem(ItemStack itemStack) {
         wardrobe.setItem(slotType, slot, itemStack);
         setChanged();
