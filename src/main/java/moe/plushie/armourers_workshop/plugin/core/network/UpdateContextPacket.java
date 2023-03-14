@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.plugin.network;
+package moe.plushie.armourers_workshop.plugin.core.network;
 
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;

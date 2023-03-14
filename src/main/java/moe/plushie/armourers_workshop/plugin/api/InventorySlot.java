@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.api;
 
-import moe.plushie.armourers_workshop.plugin.utils.BukkitStackUtils;
-import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import org.bukkit.inventory.Inventory;
 
 public class InventorySlot implements Slot {
@@ -28,7 +27,7 @@ public class InventorySlot implements Slot {
 
     @Override
     public ItemStack getItem() {
-        return BukkitStackUtils.wrap(inventory.getItem(slot));
+        return BukkitUtils.wrap(inventory.getItem(slot));
     }
 
     @Override
@@ -43,7 +42,7 @@ public class InventorySlot implements Slot {
 
     @Override
     public void set(ItemStack itemStack) {
-        inventory.setItem(slot, BukkitStackUtils.unwrap(itemStack));
+        inventory.setItem(slot, BukkitUtils.unwrap(itemStack));
         setChanged();
     }
 

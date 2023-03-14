@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.plugin.core.skin.Skin;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinProperties;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.plugin.init.EnvironmentManager;
+import moe.plushie.armourers_workshop.plugin.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.plugin.init.ModLog;
 import moe.plushie.armourers_workshop.plugin.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.plugin.utils.SkinIOUtils;

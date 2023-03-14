@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.plugin.api.HandleResult;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.Menu;
 import moe.plushie.armourers_workshop.plugin.api.Slot;
-import moe.plushie.armourers_workshop.plugin.utils.BukkitStackUtils;
+import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -222,7 +222,7 @@ public abstract class ContainerMenu extends Menu {
                         if (itemStack2.getCount() > q) {
                             slot3.set(itemStack2.split(q));
                             slot3.onTake(player, itemStack);
-                            BukkitStackUtils.giveItemTo(itemStack, player);
+                            BukkitUtils.giveItemTo(itemStack, player);
                         } else {
                             slot1.set(itemStack);
                             slot3.set(itemStack2);
@@ -261,7 +261,7 @@ public abstract class ContainerMenu extends Menu {
                 Slot slot3 = slots.get(slotIndex);
                 int l = button == 0 ? 1 : slot3.getItem().getCount();
                 itemStack = slot3.safeTake(l, Integer.MAX_VALUE, player);
-                BukkitStackUtils.drop(itemStack, player, true);
+                BukkitUtils.drop(itemStack, player, true);
                 break;
             }
         }
@@ -407,13 +407,13 @@ public abstract class ContainerMenu extends Menu {
 
     public void setCarried(ItemStack itemStack) {
         if (player != null) {
-            player.setItemOnCursor(BukkitStackUtils.unwrap(itemStack));
+            player.setItemOnCursor(BukkitUtils.unwrap(itemStack));
         }
     }
 
     public ItemStack getCarried() {
         if (player != null) {
-            return BukkitStackUtils.wrap(player.getItemOnCursor());
+            return BukkitUtils.wrap(player.getItemOnCursor());
         }
         return ItemStack.EMPTY;
     }

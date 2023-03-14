@@ -1,11 +1,11 @@
-package moe.plushie.armourers_workshop.plugin.network;
+package moe.plushie.armourers_workshop.plugin.core.network;
 
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.plugin.core.menu.MenuManager;
 import moe.plushie.armourers_workshop.plugin.core.menu.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
-import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -24,7 +24,7 @@ public class OpenWardrobePacket extends CustomPacket {
 
     @Override
     public void accept(IServerPacketHandler packetHandler, Player player) {
-        Entity entity = ObjectUtils.findEntity(player.getWorld(), entityId);
+        Entity entity = BukkitUtils.findEntity(player.getWorld(), entityId);
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null && wardrobe.isEditable(player)) {
             SkinWardrobeMenu menu = new SkinWardrobeMenu(wardrobe, player);

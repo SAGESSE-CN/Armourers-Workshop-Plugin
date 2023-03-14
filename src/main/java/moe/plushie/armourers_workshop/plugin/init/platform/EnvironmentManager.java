@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.plugin.init;
+package moe.plushie.armourers_workshop.plugin.init.platform;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;

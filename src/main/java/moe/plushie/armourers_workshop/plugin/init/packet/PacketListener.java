@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.plugin.packet;
+package moe.plushie.armourers_workshop.plugin.init.packet;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;

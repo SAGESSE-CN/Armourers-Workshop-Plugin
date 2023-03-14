@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.plugin.utils;
 
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -83,12 +81,4 @@ public class ObjectUtils {
 //        matrixOut.load(buffer);
 //    }
 
-    public static Entity findEntity(World world, int entityId){
-        for (Entity entity : world.getEntities()) {
-            if (entity.getEntityId() == entityId) {
-                return entity;
-            }
-        }
-        return null;
-    }
 }

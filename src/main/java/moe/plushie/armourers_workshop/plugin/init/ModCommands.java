@@ -16,7 +16,7 @@ import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
-import moe.plushie.armourers_workshop.plugin.utils.BukkitStackUtils;
+import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -94,7 +94,7 @@ public class ModCommands {
             }
             Collection<Player> players = ObjectUtils.unsafeCast(args[0]);
             for (Player entity : players) {
-                BukkitStackUtils.giveItemTo(descriptor.asItemStack(), entity);
+                BukkitUtils.giveItemTo(descriptor.asItemStack(), entity);
                 // context.getSource().sendSuccess(Component.translatable("commands.give.success.single", 1, itemStack.getDisplayName(), player.getDisplayName()), true);
             }
         }

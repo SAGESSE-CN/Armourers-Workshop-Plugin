@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.core.data;
 
-import moe.plushie.armourers_workshop.plugin.init.EnvironmentManager;
+import moe.plushie.armourers_workshop.plugin.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.plugin.init.ModContext;
 import moe.plushie.armourers_workshop.plugin.init.ModLog;
 import moe.plushie.armourers_workshop.plugin.utils.SkinFileUtils;

@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.NonNullList;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.plugin.init.ModEntityProfiles;
-import moe.plushie.armourers_workshop.plugin.network.NetworkManager;
-import moe.plushie.armourers_workshop.plugin.network.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.plugin.core.network.NetworkManager;
+import moe.plushie.armourers_workshop.plugin.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
 import moe.plushie.armourers_workshop.plugin.utils.FastCache;
 import net.querz.nbt.tag.CompoundTag;
@@ -134,6 +134,10 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
             return Math.min(slotType.getMaxSize(), profile.getMaxCount(type));
         }
         return slotType.getMaxSize();
+    }
+
+    public NonNullList<ItemStack> getInventory() {
+        return inventory;
     }
 
     public Entity getEntity() {

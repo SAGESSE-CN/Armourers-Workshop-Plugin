@@ -45,6 +45,10 @@ public class ItemStack {
         this.tag = itemTag;
     }
 
+    public static ItemStack of(CompoundTag tag) {
+        return new ItemStack(tag);
+    }
+
     public CompoundTag save(CompoundTag tag) {
         CompoundTag itemTag = getTag().clone();
         if (id.startsWith("minecraft:")) {
@@ -60,6 +64,10 @@ public class ItemStack {
         tag.putByte("Count", (byte) count);
         tag.put("tag", itemTag);
         return tag;
+    }
+
+    public String getItem() {
+        return id;
     }
 
     public CompoundTag getTag() {

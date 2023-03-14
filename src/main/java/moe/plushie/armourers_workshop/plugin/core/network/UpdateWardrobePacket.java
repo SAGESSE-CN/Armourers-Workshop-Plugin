@@ -1,14 +1,19 @@
-package moe.plushie.armourers_workshop.plugin.network;
+package moe.plushie.armourers_workshop.plugin.core.network;
 
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IEntitySerializer;
 import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
+import moe.plushie.armourers_workshop.plugin.api.NonNullList;
+import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
+import moe.plushie.armourers_workshop.plugin.init.ModLog;
+import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import moe.plushie.armourers_workshop.plugin.utils.DataAccessor;
 import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
 import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
 import net.querz.nbt.tag.CompoundTag;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.Nullable;
@@ -78,48 +83,78 @@ public class UpdateWardrobePacket extends CustomPacket {
 
     @Override
     public void accept(IServerPacketHandler packetHandler, Player player) {
-        // TODO: IMPL
-//        // We can't allow wardrobe updates without container.
-//        String playerName = player.getDisplayName().getString();
+        // We can't allow wardrobe updates without container.
+        String playerName = player.getDisplayName();
 //        if (!(player.containerMenu instanceof SkinWardrobeMenu)) {
 //            ModLog.info("the wardrobe {} operation rejected for '{}'", field, playerName);
 //            return;
 //        }
-//        ModLog.debug("the wardrobe {} operation accepted for '{}'", field, playerName);
-//        SkinWardrobe wardrobe = apply(player);
-//        if (wardrobe != null) {
-//            NetworkManager.sendToTracking(this, player);
-//        }
+        if (!checkSecurityByServer()) {
+            ModLog.info("the wardrobe {} operation rejected for '{}', for security reasons.", field, playerName);
+            return;
+        }
+        ModLog.debug("the wardrobe {} operation accepted for '{}'", field, playerName);
+        SkinWardrobe wardrobe = apply(player);
+        if (wardrobe != null) {
+            NetworkManager.sendToTracking(this, player);
+        }
     }
 
     @Nullable
     private SkinWardrobe apply(Player player) {
-        // TODO: IMPL
-//        SkinWardrobe wardrobe = SkinWardrobe.of(player.level.getEntity(entityId));
-//        if (wardrobe == null) {
-//            return null;
-//        }
-//        switch (mode) {
-//            case SYNC:
-//                wardrobe.deserializeNBT(compoundNBT);
-//                return wardrobe;
-//
-//            case SYNC_ITEM:
-//                Container inventory = wardrobe.getInventory();
-//                int slot = compoundNBT.getInt("Slot");
-//                if (slot < inventory.getContainerSize()) {
-//                    inventory.setItem(slot, ItemStack.of(compoundNBT.getCompound("Item")));
-//                    return wardrobe;
-//                }
-//                break;
-//
-//            case SYNC_OPTION:
-//                if (field != null) {
-//                    field.set(wardrobe, fieldValue);
-//                    return wardrobe;
-//                }
-//        }
+        Entity entity = BukkitUtils.findEntity(player.getWorld(), entityId);
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        if (wardrobe == null) {
+            return null;
+        }
+        switch (mode) {
+            case SYNC: {
+                wardrobe.deserializeNBT(compoundNBT);
+                return wardrobe;
+            }
+            case SYNC_ITEM: {
+                NonNullList<ItemStack> inventory = wardrobe.getInventory();
+                int slot = compoundNBT.getInt("Slot");
+                if (slot < inventory.size()) {
+                    inventory.set(slot, ItemStack.of(compoundNBT.getCompoundTag("Item")));
+                    wardrobe.save();
+                    return wardrobe;
+                }
+                break;
+            }
+            case SYNC_OPTION: {
+                if (field != null) {
+                    field.set(wardrobe, fieldValue);
+                    return wardrobe;
+                }
+                break;
+            }
+        }
         return null;
+    }
+
+    private boolean checkSecurityByServer() {
+        switch (mode) {
+            case SYNC: {
+                // the server side never accept sync request.
+                return false;
+            }
+            case SYNC_ITEM: {
+                int slot = compoundNBT.getInt("Slot");
+                // for security reasons we need to check the position of the slot.
+                int index = slot - SkinSlotType.DYE.getIndex();
+                if (index < 8 || index >= SkinSlotType.DYE.getMaxSize()) {
+                    return false;
+                }
+                // for security reasons we only allows the player upload the bottle item.
+                ItemStack itemStack = ItemStack.of(compoundNBT.getCompoundTag("Item"));
+                return itemStack.getItem().equals("armourers_workshop:bottle");
+            }
+            case SYNC_OPTION: {
+                return true;
+            }
+        }
+        return true;
     }
 
     public enum Mode {
@@ -161,7 +196,7 @@ public class UpdateWardrobePacket extends CustomPacket {
                     .withApplier(applier);
         }
 
-//        <S extends Entity, T> Field(IEntitySerializer<T> dataSerializer, Function<S, T> supplier, BiConsumer<S, T> applier) {
+        //        <S extends Entity, T> Field(IEntitySerializer<T> dataSerializer, Function<S, T> supplier, BiConsumer<S, T> applier) {
 //            this.broadcastChanges = false;
 //            this.dataAccessor = AWDataAccessor
 //                    .withDataSerializer(SkinWardrobe.class, dataSerializer)

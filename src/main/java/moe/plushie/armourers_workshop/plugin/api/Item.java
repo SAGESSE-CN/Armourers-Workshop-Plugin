@@ -16,6 +16,12 @@ public class Item {
             .put("armourers_workshop:skin", 1)
             .build();
 
+    private final String id;
+
+    public Item(String id) {
+        this.id = id;
+    }
+
     @Nullable
     public static String getIdByMaterial(Material material) {
         return MATERIAL_TO_IDS.get(material);

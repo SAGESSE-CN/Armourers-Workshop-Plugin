@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.plugin.core.menu;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.Menu;
 import moe.plushie.armourers_workshop.plugin.api.TextComponent;
-import moe.plushie.armourers_workshop.plugin.network.FMLOpenContainer;
-import moe.plushie.armourers_workshop.plugin.network.NetworkManager;
+import moe.plushie.armourers_workshop.plugin.core.network.FMLOpenContainer;
+import moe.plushie.armourers_workshop.plugin.core.network.NetworkManager;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

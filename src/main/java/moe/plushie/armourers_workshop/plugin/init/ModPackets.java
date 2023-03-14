@@ -2,12 +2,12 @@ package moe.plushie.armourers_workshop.plugin.init;
 
 
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
-import moe.plushie.armourers_workshop.plugin.network.CustomPacket;
-import moe.plushie.armourers_workshop.plugin.network.OpenWardrobePacket;
-import moe.plushie.armourers_workshop.plugin.network.RequestSkinPacket;
-import moe.plushie.armourers_workshop.plugin.network.ResponseSkinPacket;
-import moe.plushie.armourers_workshop.plugin.network.UpdateContextPacket;
-import moe.plushie.armourers_workshop.plugin.network.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.plugin.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.plugin.core.network.OpenWardrobePacket;
+import moe.plushie.armourers_workshop.plugin.core.network.RequestSkinPacket;
+import moe.plushie.armourers_workshop.plugin.core.network.ResponseSkinPacket;
+import moe.plushie.armourers_workshop.plugin.core.network.UpdateContextPacket;
+import moe.plushie.armourers_workshop.plugin.core.network.UpdateWardrobePacket;
 
 import java.util.function.Function;
 

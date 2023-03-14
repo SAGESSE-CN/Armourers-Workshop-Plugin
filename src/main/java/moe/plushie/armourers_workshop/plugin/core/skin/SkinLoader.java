@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.plugin.api.skin.ISkinLibraryLoader;
 import moe.plushie.armourers_workshop.plugin.core.data.DataDomain;
 import moe.plushie.armourers_workshop.plugin.core.data.DataManager;
 import moe.plushie.armourers_workshop.plugin.core.data.LocalDataService;
-import moe.plushie.armourers_workshop.plugin.init.EnvironmentManager;
+import moe.plushie.armourers_workshop.plugin.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.init.ModContext;
 import moe.plushie.armourers_workshop.plugin.init.ModLog;

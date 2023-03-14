@@ -4,10 +4,12 @@ import moe.plushie.armourers_workshop.plugin.api.Item;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import net.querz.nbt.io.SNBTUtil;
 import net.querz.nbt.tag.CompoundTag;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public class BukkitStackUtils {
+public class BukkitUtils {
 
     public static ItemStack wrap(org.bukkit.inventory.ItemStack itemStack) {
         if (itemStack == null || itemStack.getAmount() <= 0) {
@@ -120,5 +122,14 @@ public class BukkitStackUtils {
             }
             return new CompoundTag();
         }
+    }
+
+    public static Entity findEntity(World world, int entityId) {
+        for (Entity entity : world.getEntities()) {
+            if (entity.getEntityId() == entityId) {
+                return entity;
+            }
+        }
+        return null;
     }
 }
