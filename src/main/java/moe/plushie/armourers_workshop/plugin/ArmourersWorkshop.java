@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import moe.plushie.armourers_workshop.plugin.core.data.DataManager;
 import moe.plushie.armourers_workshop.plugin.core.data.LocalDataService;
+import moe.plushie.armourers_workshop.plugin.core.listener.ModItemsListener;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.init.ModCommands;
@@ -43,6 +44,7 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
 
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(this, this);
+        getServer().getPluginManager().registerEvents(new ModItemsListener(), this);
 
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         protocolManager.addPacketListener(new PacketListener(this, PacketType.Play.Client.WINDOW_CLICK, PacketType.Play.Client.CLOSE_WINDOW));

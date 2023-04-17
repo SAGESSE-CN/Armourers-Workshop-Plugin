@@ -31,7 +31,7 @@ dependencies {
     implementation "commons-io:commons-io:2.11.0"
     implementation "commons-lang:commons-lang:2.6"
     implementation "com.github.Querz:NBT:6.1+"
-    implementation "dev.jorel:commandapi-shade:8.7+"
+    implementation "dev.jorel:commandapi-shade:8.8.0"
 }
 
 def targetJavaVersion = 8
