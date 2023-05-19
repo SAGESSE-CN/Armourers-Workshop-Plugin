@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.helper;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -12,10 +13,23 @@ import java.util.HashMap;
 
 public class ItemHelper {
 
+    private static boolean ENABLE_REDIRECT = true;
+
     private static final HashMap<String, Item> ID_TO_ITEMS = new HashMap<>();
     private static final HashMap<Item, String> ITEM_TO_IDS = new HashMap<>();
 
     public static final String REDIRECT_KEY = "__redirected_id__";
+
+    public static boolean isEnableRedirect() {
+        if (Minecraft.getInstance().hasSingleplayerServer()) {
+            return false;
+        }
+        return ENABLE_REDIRECT;
+    }
+
+    public static void setEnableRedirect(boolean enableRedirect) {
+        ENABLE_REDIRECT = enableRedirect;
+    }
 
     public static Item findItem(String id) {
         return ID_TO_ITEMS.computeIfAbsent(id, it -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(id)));

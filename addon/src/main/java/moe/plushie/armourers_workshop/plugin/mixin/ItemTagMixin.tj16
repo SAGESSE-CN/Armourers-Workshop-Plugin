@@ -1,5 +1,6 @@
-package moe.plushie.armourers_workshop.plugin.compatibility.mixin;
+package moe.plushie.armourers_workshop.plugin.mixin;
 
+import moe.plushie.armourers_workshop.plugin.annotation.Available;
 import net.minecraft.tags.Tag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -7,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@Available("[1.16, 1.18)")
 @Mixin(targets = "net.minecraft.tags.StaticTagHelper$Wrapper")
 public class ItemTagMixin<T> {
 

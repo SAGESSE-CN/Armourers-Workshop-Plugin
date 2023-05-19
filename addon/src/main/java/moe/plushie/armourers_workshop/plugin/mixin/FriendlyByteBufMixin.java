@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.mixin;
 
+import moe.plushie.armourers_workshop.plugin.helper.ItemHelper;
 import moe.plushie.armourers_workshop.plugin.helper.ItemMixinHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
@@ -14,16 +15,24 @@ public abstract class FriendlyByteBufMixin {
 
     @Inject(method = "readItem", at = @At("RETURN"), cancellable = true)
     public void aw$readItem(CallbackInfoReturnable<ItemStack> cir) {
-        ItemMixinHelper.readItem(cir);
+        if (ItemHelper.isEnableRedirect()) {
+            ItemMixinHelper.readItem(cir);
+        }
     }
 
     @ModifyVariable(method = "writeItem", at = @At("HEAD"), argsOnly = true)
     public ItemStack aw$writeItem(ItemStack itemStack) {
-        return ItemMixinHelper.writeItem(itemStack);
+        if (ItemHelper.isEnableRedirect()) {
+            return ItemMixinHelper.writeItem(itemStack);
+        }
+        return itemStack;
     }
 
     @ModifyVariable(method = "writeItemStack", at = @At("HEAD"), argsOnly = true, remap = false)
     public ItemStack aw$writeItemStack(ItemStack originItemStack, ItemStack itemStack, boolean flag) {
-        return ItemMixinHelper.writeItem(itemStack);
+        if (ItemHelper.isEnableRedirect()) {
+            return ItemMixinHelper.writeItem(itemStack);
+        }
+        return itemStack;
     }
 }

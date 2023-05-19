@@ -14,26 +14,30 @@ public abstract class ItemStackMixin {
 
     @ModifyVariable(method = "<init>(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("HEAD"), argsOnly = true)
     private static CompoundTag aw$read(CompoundTag tag) {
-        String targetId = ItemHelper.getId(tag, 0);
-        if (targetId != null) {
-            CompoundTag newTag = tag.copy();
-            newTag.putString("id", targetId);
-            return newTag;
+        if (ItemHelper.isEnableRedirect()) {
+            String targetId = ItemHelper.getId(tag, 0);
+            if (targetId != null) {
+                CompoundTag newTag = tag.copy();
+                newTag.putString("id", targetId);
+                return newTag;
+            }
         }
         return tag;
     }
 
     @Inject(method = "save", at = @At("RETURN"))
     public void aw$save(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
-        CompoundTag itemTag = cir.getReturnValue();
-        String targetId = itemTag.getString("id");
-        if (ItemHelper.shouldRedirectId(targetId)) {
-            String sourceId = ItemHelper.getId(tag, 1);
-            if (sourceId == null) {
-                sourceId = ItemHelper.getMatchIdBySize(targetId);
+        if (ItemHelper.isEnableRedirect()) {
+            CompoundTag itemTag = cir.getReturnValue();
+            String targetId = itemTag.getString("id");
+            if (ItemHelper.shouldRedirectId(targetId)) {
+                String sourceId = ItemHelper.getId(tag, 1);
+                if (sourceId == null) {
+                    sourceId = ItemHelper.getMatchIdBySize(targetId);
+                }
+                itemTag.putString("id", sourceId);
+                ItemHelper.setId(tag, sourceId, targetId);
             }
-            itemTag.putString("id", sourceId);
-            ItemHelper.setId(tag, sourceId, targetId);
         }
     }
 }

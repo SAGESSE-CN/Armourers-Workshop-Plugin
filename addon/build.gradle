@@ -1,5 +1,5 @@
 plugins {
-    id "dev.architectury.loom" version "0.12.0-SNAPSHOT"
+    id "dev.architectury.loom" version "1.2+"
     id "maven-publish"
 }
 
@@ -12,9 +12,17 @@ if (version == "unspecified") {
     version = project.mod_version
 }
 
-sourceSets.forEach {
-    it.java.srcDirs "versions/${project.minecraft_version}/src/${it.name}/java"
-    it.resources.srcDirs "versions/${project.minecraft_version}/src/${it.name}/resources"
+def allMixinConfigs = ["armourersworkshop-plugin.mixin.json"]
+def allVersions = [:]
+
+// build fat jar only in command line.
+if (gradle.startParameter.taskNames.contains("buildFat")) {
+    def targets = ["1.16", "1.18"]
+    allVersions = targets.collectEntries {
+        def (major, minor, patch) = it.tokenize('-')[0].tokenize('.')
+        return [it, "${major}${minor.padLeft(2, '0')}${(patch ?: '').padLeft(2, '0')}"]
+    }
+    allMixinConfigs = allVersions.values().collect { "mc${it}/armourersworkshop-plugin.mixin.json" }
 }
 
 loom {
@@ -28,37 +36,7 @@ loom {
     forge {
         // specify the mixin configs used in this mod
         // this will be added to the jar manifest as well!
-        mixinConfigs = [
-                "armourersworkshop-plugin.mixin.json",
-                "armourersworkshop-plugin-compatibility.mixin.json"
-        ]
-
-        // missing access transformers?
-        // don't worry, you can still use them!
-        // note that your AT *MUST* be located at
-        // src/main/resources/META-INF/accesstransformer.cfg
-        // to work as there is currently no config option to change this.
-        // also, any names used in your access transformer will need to be
-        // in SRG mapped ("func_" / "field_" with MCP class names) to work!
-        // (both of these things may be subject to change in the future)
-
-        // this will create a data generator configuration
-        // that you can use to automatically generate assets and data
-        // using architectury loom. Note that this currently *only* works
-        // for forge projects made with architectury loom!
-        dataGen {
-            mod project.mod_id
-        }
-    }
-
-    // This allows you to modify your launch configurations,
-    // for example to add custom arguments. In this case, we want
-    // the data generator to check our resources directory for
-    // existing files. (see Forge's ExistingFileHelper for more info)
-    launches {
-        data {
-            arg "--existing", file("src/main/resources").absolutePath
-        }
+        mixinConfigs = allMixinConfigs
     }
 }
 
@@ -105,11 +83,42 @@ dependencies {
 processResources {
     // define properties that can be used during resource processing
     inputs.property "version", project.version
+    inputs.property "mcVersion", project.minecraft_version
 
     // this will replace the property "${version}" in your mods.toml
     // with the version you've defined in your gradle.properties
     filesMatching("META-INF/mods.toml") {
         expand "version": project.version
+    }
+
+    // replace to valid mixin.
+    filesMatching("armourersworkshop-plugin.mixin.json") {
+        var mixins = ""
+        sourceSets.each {
+            it.allSource.each {
+                if (it.path.matches(/.*\/mixin\/[^\/]*.java$/)) {
+                    def val = it.name.replaceAll(/(.+)\.(.+?)$/, /"$1"/)
+                    if (!mixins.isEmpty()) {
+                        mixins += ", "
+                    }
+                    mixins += val
+                }
+            }
+        }
+        def results = ""
+        it.filter {
+            if (results.isEmpty()) {
+                results += it
+                return ""
+            } else {
+                results += "\n"
+                results += it
+                return null
+            }
+        }
+        it.filter {
+            results.replaceAll(/(?sim)("client"\s*:\s*\[\s*)(.+?)(\s*\])/, /$1/ + mixins + /$3/)
+        }
     }
 }
 
@@ -128,6 +137,102 @@ tasks.withType(JavaCompile) {
         options.release = targetVersion
     }
 }
+
+tasks.register("buildFat") {
+    dependsOn build
+    def projectVersion = version
+    def names = ["${archivesBaseName}-${version}", "${archivesBaseName}-${version}-sources"]
+    def clean = {
+        // clean build environments.
+        delete allVersions.keySet().collect { "build/generated/${it}" }
+        delete names.collect { "build/libs/${it}" }
+    }
+    doFirst {
+        clean()
+        allVersions.each {
+            def target = it.key as String
+            def version = it.value as String
+            // copy source
+            copy {
+                from(".") {
+                    exclude "build", "run"
+                    exclude ".gradle", ".idea"
+                }
+                into("build/generated/${target}")
+                filesMatching("src/**") {
+                    filter {
+                        it.replaceAll(/(moe\.plushie\.armourers_workshop\.plugin)/, /$1.mc${version}/)
+                    }
+                }
+                filesMatching("**/ConfigHelper.java") {
+                    def nextVersion = ""
+                    for (String v2 : allVersions.values()) {
+                        if (v2 > version && nextVersion < v2) {
+                            nextVersion = v2
+                        }
+                    }
+                    filter {
+                        def val = it as String
+                        val = val.replaceAll(/(String supportedVersion) = ""/, /$1 = "${version}"/)
+                        val = val.replaceAll(/(String nextSupportedVersion) = ""/, /$1 = "${nextVersion}"/)
+                        return val
+                    }
+                }
+            }
+            // switch and build jar
+            exec {
+                workingDir "build/generated/${target}/"
+                commandLine "./gradlew", "-p", "versions/${target}"
+            }
+            exec {
+                workingDir "build/generated/${target}/"
+                commandLine "./gradlew", "-Pversion=${projectVersion}", "build"
+            }
+            // copy thin jar into fat jar.
+            names.each { name ->
+                copy {
+                    from zipTree("build/generated/${target}/build/libs/${name}.jar")
+                    into "build/libs/${name}/"
+                    exclude "**/ArmourersWorkshop.java"
+                    exclude "**/ArmourersWorkshop.class"
+                    rename(/(armourersworkshop-plugin\.mixin\.json)/, /mc${version}\/$1/)
+                    rename(/(armourersworkshop-plugin-mod-refmap\.json)/, /mc${version}\/$1/)
+                    filesMatching("armourersworkshop-plugin.mixin.json") {
+                        filter {
+                            it.replaceAll(/(armourersworkshop-plugin-mod-refmap\.json)/, /mc${version}\/$1/)
+                        }
+                    }
+                    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+                }
+            }
+        }
+
+        // create a fat jar.
+        names.each { name ->
+            // copy base jar into fat jar.
+            copy {
+                from zipTree("build/libs/${name}.jar")
+                into "build/libs/${name}/"
+                duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            }
+            // archive all jar files into fat jar.
+            delete "build/libs/${name}.jar"
+            def t = jar {
+                from files("build/libs/${name}")
+                manifest {
+                    from "build/libs/${name}/META-INF/MANIFEST.MF"
+                }
+                duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+                archiveFile.fileValue(file("build/libs/${name}.jar"));
+            }
+            t.actions.each { it.execute(t) }
+        }
+    }
+    doLast {
+        clean()
+    }
+}
+
 
 java {
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
