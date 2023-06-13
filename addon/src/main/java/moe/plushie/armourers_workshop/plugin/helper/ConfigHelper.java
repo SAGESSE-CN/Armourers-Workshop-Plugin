@@ -57,14 +57,14 @@ public class ConfigHelper implements IMixinConfigPlugin {
     }
 
     private boolean isEnabled() {
-        getMinecraftVersion();
+        String version = getMinecraftVersion();
         if (isChecked) {
             return isValid;
         }
         try {
             int min = parseInt(supportedVersion, 10000);
             int max = parseInt(nextSupportedVersion, 99999);
-            int cur = parseInt(getRefMapperConfig(), 10000);
+            int cur = parseInt(version, 10000);
             isValid = cur >= min && cur <= max;
         } catch (Exception ignored) {
             // ignored all exception.

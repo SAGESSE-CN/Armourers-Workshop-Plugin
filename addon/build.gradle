@@ -1,5 +1,5 @@
 plugins {
-    id "dev.architectury.loom" version "1.2+"
+    id "dev.architectury.loom" version "1.2.343"
     id "maven-publish"
 }
 
@@ -17,7 +17,7 @@ def allVersions = [:]
 
 // build fat jar only in command line.
 if (gradle.startParameter.taskNames.contains("buildFat")) {
-    def targets = ["1.16", "1.18"]
+    def targets = ["1.16", "1.18", "1.19"]
     allVersions = targets.collectEntries {
         def (major, minor, patch) = it.tokenize('-')[0].tokenize('.')
         return [it, "${major}${minor.padLeft(2, '0')}${(patch ?: '').padLeft(2, '0')}"]
