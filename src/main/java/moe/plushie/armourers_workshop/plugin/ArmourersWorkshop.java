@@ -1,19 +1,15 @@
 package moe.plushie.armourers_workshop.plugin;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import moe.plushie.armourers_workshop.plugin.core.data.DataManager;
 import moe.plushie.armourers_workshop.plugin.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.plugin.core.listener.ModItemsListener;
+import moe.plushie.armourers_workshop.plugin.core.network.NetworkManager;
+import moe.plushie.armourers_workshop.plugin.core.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.init.ModCommands;
 import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.init.ModPackets;
-import moe.plushie.armourers_workshop.plugin.core.network.NetworkManager;
-import moe.plushie.armourers_workshop.plugin.core.network.UpdateContextPacket;
-import moe.plushie.armourers_workshop.plugin.init.packet.PacketListener;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -45,10 +41,6 @@ public final class ArmourersWorkshop extends JavaPlugin implements Listener {
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new ModItemsListener(), this);
-
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-//        protocolManager.addPacketListener(new PacketListener(this, PacketType.Play.Client.WINDOW_CLICK, PacketType.Play.Client.CLOSE_WINDOW));
-//        Objects.requireNonNull(Bukkit.getPluginCommand("armourers")).setExecutor(new MainCommand());
 
         ModCommands.init();
     }

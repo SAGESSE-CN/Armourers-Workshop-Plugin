@@ -80,7 +80,7 @@ public class NetworkManager {
 //                }
                 IServerPacketHandler packetHandler = this;
                 FriendlyByteBuf payload = new FriendlyByteBuf(Unpooled.wrappedBuffer(message));
-                splitter.merge(player.getUniqueId(), payload, packet -> Scheduler.runAsync(() -> packet.accept(packetHandler, player)));
+                splitter.merge(player.getUniqueId(), payload, packet -> Scheduler.run(() -> packet.accept(packetHandler, player)));
 //                context.setPacketHandled(true);
             }
             if (channel.equals(FML_CHANNEL)) {

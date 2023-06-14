@@ -4,7 +4,7 @@
     <option name="PROGRAM_PARAMETERS" value="nogui" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <option name="ALTERNATIVE_JRE_PATH" value="/Library/Java/JavaVirtualMachines/jdk-16.0.1.jdk/Contents/Home" />
+    <option name="ALTERNATIVE_JRE_PATH" value="17" />
     <method v="2">
       <option name="Gradle.BeforeRunTask" enabled="false" tasks="prepareRun" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
     </method>

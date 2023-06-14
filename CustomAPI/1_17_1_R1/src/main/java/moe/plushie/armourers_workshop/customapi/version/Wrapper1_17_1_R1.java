@@ -206,10 +206,10 @@ public class Wrapper1_17_1_R1 implements CustomAPI {
     }
 
     private static ItemStack toNMS(org.bukkit.inventory.ItemStack itemStack) {
-        return CraftItemStack.asNMSCopy(itemStack);
+        return Proxy.of(itemStack, CraftItemStack::asNMSCopy);
     }
 
     private static org.bukkit.inventory.ItemStack fromNMS(ItemStack itemStack) {
-        return CraftItemStack.asBukkitCopy(itemStack);
+        return Proxy.of(itemStack, CraftItemStack::asCraftMirror);
     }
 }

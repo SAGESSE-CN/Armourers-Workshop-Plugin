@@ -59,8 +59,13 @@ public class Wrapper1_19_R2 implements CustomAPI {
         }
 
         @Override
+        public void e(ItemStack itemStack) {
+            impl.set(fromNMS(itemStack));
+        }
+
+        @Override
         public void setContents(org.bukkit.inventory.ItemStack itemStack) {
-            super.d(toNMS(itemStack));
+            super.e(toNMS(itemStack));
         }
 
         @Override
@@ -206,10 +211,10 @@ public class Wrapper1_19_R2 implements CustomAPI {
     }
 
     private static ItemStack toNMS(org.bukkit.inventory.ItemStack itemStack) {
-        return CraftItemStack.asNMSCopy(itemStack);
+        return Proxy.of(itemStack, CraftItemStack::asNMSCopy);
     }
 
     private static org.bukkit.inventory.ItemStack fromNMS(ItemStack itemStack) {
-        return CraftItemStack.asBukkitCopy(itemStack);
+        return Proxy.of(itemStack, CraftItemStack::asCraftMirror);
     }
 }

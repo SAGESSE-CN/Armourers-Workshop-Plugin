@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.core.menu;
 
 import moe.plushie.armourers_workshop.customapi.CustomSlot;
+import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.init.ModLog;
@@ -19,7 +20,11 @@ public class SkinWardrobeMenu extends ContainerMenu {
     private final ArrayList<ItemStack> lastSyncSlot = new ArrayList<>();
 
     public SkinWardrobeMenu(SkinWardrobe wardrobe, Player player) {
-        super("armourers_workshop:wardrobe", player, SkinSlotType.getTotalSize());
+        this("armourers_workshop:wardrobe", wardrobe, player);
+    }
+
+    public SkinWardrobeMenu(String registryName, SkinWardrobe wardrobe, Player player) {
+        super(registryName, player, SkinSlotType.getTotalSize());
         this.wardrobe = wardrobe;
         this.inventory = getInventory();
 
@@ -90,6 +95,15 @@ public class SkinWardrobeMenu extends ContainerMenu {
         return 0;
     }
 
+//    @Override
+//    public boolean stillValid(Player player) {
+//        Entity entity = getEntity();
+//        if (entity == null || !entity.isAlive() || !wardrobe.isEditable(player)) {
+//            return false;
+//        }
+//        return entity.distanceToSqr(player.getX(), player.getY(), player.getZ()) <= 64.0;
+//    }
+
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         CustomSlot slot = slots.get(index);
@@ -142,5 +156,11 @@ public class SkinWardrobeMenu extends ContainerMenu {
             ModLog.debug("observer slots has {} changes, sync to players", changes);
             wardrobe.broadcast();
         }
+    }
+
+    @Override
+    public void serialize(FriendlyByteBuf buffer) {
+        buffer.writeInt(wardrobe.getId());
+        buffer.writeUtf(wardrobe.getProfile().getRegistryName().toString());
     }
 }

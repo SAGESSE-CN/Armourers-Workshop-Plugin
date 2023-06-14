@@ -13,6 +13,9 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import moe.plushie.armourers_workshop.plugin.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.core.data.DataDomain;
+import moe.plushie.armourers_workshop.plugin.core.menu.MenuManager;
+import moe.plushie.armourers_workshop.plugin.core.menu.SkinWardrobeMenu;
+import moe.plushie.armourers_workshop.plugin.core.menu.SkinWardrobeOpMenu;
 import moe.plushie.armourers_workshop.plugin.core.skin.Skin;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
@@ -34,6 +37,8 @@ public class ModCommands {
         new CommandTree("armourers")
                 .then(literal("setSkin").then(entities().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
                 .then(literal("giveSkin").then(players().then(skins().executes(Executor::giveSkin))))
+                .then(literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
+                .then(literal("openWardrobe").then(entities().executes(Executor::openWardrobe)))
                 .register();
     }
 
@@ -100,6 +105,34 @@ public class ModCommands {
             for (Player entity : players) {
                 BukkitUtils.giveItemTo(descriptor.asItemStack(), entity);
                 // context.getSource().sendSuccess(Component.translatable("commands.give.success.single", 1, itemStack.getDisplayName(), player.getDisplayName()), true);
+            }
+        }
+
+        static void resyncWardrobe(CommandSender sender, CommandArguments commandArguments) {
+            Object[] args = commandArguments.args();
+            Collection<Player> players = ObjectUtils.unsafeCast(args[0]);
+            for (Player player : players) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+                if (wardrobe != null) {
+                    wardrobe.broadcast();
+                }
+            }
+        }
+
+        static void openWardrobe(CommandSender sender, CommandArguments commandArguments) {
+            if (!(sender instanceof Player)) {
+                return;
+            }
+            Object[] args = commandArguments.args();
+            Collection<Entity> entities = ObjectUtils.unsafeCast(args[0]);
+            Player player = (Player) sender;
+            for (Entity entity : entities) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+                if (wardrobe != null) {
+                    SkinWardrobeMenu menu = new SkinWardrobeOpMenu(wardrobe, player);
+                    MenuManager.openMenu(menu, player);
+                    break;
+                }
             }
         }
 

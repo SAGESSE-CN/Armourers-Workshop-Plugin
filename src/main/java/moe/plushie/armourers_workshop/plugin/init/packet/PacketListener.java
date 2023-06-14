@@ -1,23 +1,23 @@
 package moe.plushie.armourers_workshop.plugin.init.packet;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
-import org.bukkit.plugin.Plugin;
-
-public class PacketListener extends PacketAdapter {
-
-    public PacketListener(Plugin plugin, PacketType... types) {
-        super(plugin, types);
-    }
-
-    @Override
-    public void onPacketSending(PacketEvent ev) {
-
-    }
-
-    @Override
-    public void onPacketReceiving(PacketEvent event) {
+//import com.comphenix.protocol.PacketType;
+//import com.comphenix.protocol.events.PacketAdapter;
+//import com.comphenix.protocol.events.PacketEvent;
+//import org.bukkit.plugin.Plugin;
+//
+//public class PacketListener extends PacketAdapter {
+//
+//    public PacketListener(Plugin plugin, PacketType... types) {
+//        super(plugin, types);
+//    }
+//
+//    @Override
+//    public void onPacketSending(PacketEvent ev) {
+//
+//    }
+//
+//    @Override
+//    public void onPacketReceiving(PacketEvent event) {
 //        if (event.getPacketType().equals(PacketType.Play.Client.WINDOW_CLICK)) {
 //            Player player = event.getPlayer();
 //            if (player == null) {
@@ -44,5 +44,5 @@ public class PacketListener extends PacketAdapter {
 //            int menuId = packet.getIntegers().read(0);
 //            MenuManager.clearMenu(menuId);
 //        }
-    }
-}
+//    }
+//}

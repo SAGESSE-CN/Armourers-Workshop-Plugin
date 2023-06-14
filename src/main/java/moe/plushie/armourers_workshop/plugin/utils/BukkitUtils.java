@@ -12,22 +12,22 @@ import org.bukkit.inventory.Inventory;
 
 public class BukkitUtils {
 
-    public static final org.bukkit.inventory.ItemStack EMPTY_STACK = new org.bukkit.inventory.ItemStack(Material.AIR);
+    public static final org.bukkit.inventory.ItemStack EMPTY_STACK = new org.bukkit.inventory.ItemStack(Material.AIR, 0);
 
     public static ItemStack wrap(org.bukkit.inventory.ItemStack itemStack) {
-        if (itemStack == null || itemStack.getAmount() <= 0) {
+        if (itemStack == null || itemStack == EMPTY_STACK || itemStack.getType() == Material.AIR || itemStack.getAmount() <= 0) {
             return ItemStack.EMPTY;
         }
         return new WrappedItemStack(itemStack);
     }
 
     public static org.bukkit.inventory.ItemStack unwrap(ItemStack itemStack) {
+        if (itemStack == null || itemStack == ItemStack.EMPTY || itemStack.isEmpty()) {
+            return EMPTY_STACK;
+        }
         // yep, we not need convert it.
         if (itemStack instanceof WrappedItemStack) {
             return ((WrappedItemStack) itemStack).itemStack;
-        }
-        if (itemStack.isEmpty()) {
-            return null;
         }
         return FastCache.ITEM_TO_BUKKIT_ITEM.computeIfAbsent(itemStack, it -> {
             try {

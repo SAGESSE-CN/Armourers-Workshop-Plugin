@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.plugin.core.menu;
 import moe.plushie.armourers_workshop.customapi.CustomSlot;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
-import moe.plushie.armourers_workshop.plugin.init.ModLog;
 import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -16,24 +15,27 @@ public class SkinSlot extends CustomSlot {
     private final SkinWardrobe wardrobe;
     private final SkinSlotType slotType;
     private final Collection<SkinSlotType> slotTypes;
-    private final int slot;
+
+    private ItemStack lastItem;
 
     public SkinSlot(Inventory inventory, SkinWardrobe wardrobe, SkinSlotType slotType, int slot) {
         super(inventory, slot, 0, 0);
         this.wardrobe = wardrobe;
         this.slotType = slotType;
-        this.slot = slot;
         this.slotTypes = Collections.singleton(slotType);
     }
 
     @Override
     public ItemStack getItem() {
-        return BukkitUtils.unwrap(wardrobe.getItem(slotType, slot));
+        if (lastItem == null) {
+            lastItem = BukkitUtils.unwrap(wardrobe.getItem(slotType, slot));
+        }
+        return lastItem;
     }
 
     @Override
     public boolean hasItem() {
-        return !wardrobe.getItem(slotType, slot).isEmpty();
+        return getItem() != BukkitUtils.EMPTY_STACK;
     }
 
     @Override
@@ -49,8 +51,8 @@ public class SkinSlot extends CustomSlot {
 
     @Override
     public void setChanged() {
-        ModLog.debug("setChanged: {}", this);
         wardrobe.save();
+        lastItem = null;
     }
 
     @Override

@@ -28,10 +28,7 @@ public class OpenWardrobePacket extends CustomPacket {
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null && wardrobe.isEditable(player)) {
             SkinWardrobeMenu menu = new SkinWardrobeMenu(wardrobe, player);
-            MenuManager.openMenu(menu, player, buf -> {
-                buf.writeInt(player.getEntityId());
-                buf.writeUtf(wardrobe.getProfile().getRegistryName().toString());
-            });
+            MenuManager.openMenu(menu, player);
         }
     }
 }

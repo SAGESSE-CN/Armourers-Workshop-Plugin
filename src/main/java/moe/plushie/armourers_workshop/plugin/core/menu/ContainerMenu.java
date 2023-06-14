@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.core.menu;
 
 import moe.plushie.armourers_workshop.customapi.CustomMenu;
-import moe.plushie.armourers_workshop.plugin.init.ModLog;
+import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import org.bukkit.entity.Player;
 
 public abstract class ContainerMenu extends CustomMenu {
@@ -22,6 +22,10 @@ public abstract class ContainerMenu extends CustomMenu {
     public void handleOpenWindowPacket(int windowId) {
         // we need send custom event.
         this.menuId = windowId;
+    }
+
+    public void serialize(FriendlyByteBuf buffer) {
+        // nop
     }
 
     public int getMenuId() {

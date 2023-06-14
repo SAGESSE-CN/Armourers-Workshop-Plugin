@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
 import moe.plushie.armourers_workshop.plugin.api.ITagRepresentable;
-import moe.plushie.armourers_workshop.plugin.api.Item;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.NonNullList;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.plugin.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.plugin.core.network.NetworkManager;
 import moe.plushie.armourers_workshop.plugin.core.network.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.plugin.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
 import moe.plushie.armourers_workshop.plugin.utils.FastCache;
 import net.querz.nbt.tag.CompoundTag;
