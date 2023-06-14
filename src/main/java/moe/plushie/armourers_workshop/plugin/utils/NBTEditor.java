@@ -1,13 +1,5 @@
 package moe.plushie.armourers_workshop.plugin.utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -21,6 +13,14 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 /**
  * Sets/Gets NBT tags from ItemStacks
  * Supports 1.8-1.19
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * Github: https://github.com/BananaPuncher714/NBTEditor
  * Spigot: https://www.spigotmc.org/threads/269621/
  *
- * @version 7.18.3
+ * @version 7.18.5
  * @author BananaPuncher714
  */
 public final class NBTEditor {
@@ -51,7 +51,7 @@ public final class NBTEditor {
         VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         LOCAL_VERSION = MinecraftVersion.get( VERSION );
 
-        classCache = new HashMap<>();
+        classCache = new HashMap< String, Class<?> >();
         try {
             if ( LOCAL_VERSION.lessThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
                 classCache.put( "NBTBase", Class.forName( "net.minecraft.server." + VERSION + "." + "NBTBase" ) );
@@ -75,11 +75,11 @@ public final class NBTEditor {
             } else {
                 classCache.put( "BlockPosition", Class.forName( "net.minecraft.core.BlockPosition" ) );
 
-                classCache.put( "NBTBase", Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTBase" ) );
-                classCache.put( "NBTTagCompound", Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagCompound" ) );
-                classCache.put( "NBTTagList", Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagList" ) );
-                classCache.put( "NBTTagEnd", Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagEnd" ) );
-                classCache.put( "MojangsonParser", Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.MojangsonParser" ) );
+                classCache.put( "NBTBase", Class.forName( "net.minecraft.nbt.NBTBase" ) );
+                classCache.put( "NBTTagCompound", Class.forName( "net.minecraft.nbt.NBTTagCompound" ) );
+                classCache.put( "NBTTagList", Class.forName( "net.minecraft.nbt.NBTTagList" ) );
+                classCache.put( "NBTTagEnd", Class.forName( "net.minecraft.nbt.NBTTagEnd" ) );
+                classCache.put( "MojangsonParser", Class.forName( "net.minecraft.nbt.MojangsonParser" ) );
 
                 classCache.put( "ItemStack", Class.forName( "net.minecraft.world.item.ItemStack" ) );
 
@@ -107,7 +107,7 @@ public final class NBTEditor {
             e.printStackTrace();
         }
 
-        NBTClasses = new HashMap<>();
+        NBTClasses = new HashMap< Class< ? >, Class< ? > >();
         try {
             if ( LOCAL_VERSION.lessThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
                 NBTClasses.put( Byte.class, Class.forName( "net.minecraft.server." + VERSION + "." + "NBTTagByte" ) );
@@ -121,16 +121,16 @@ public final class NBTEditor {
                 NBTClasses.put( Class.forName( "[B" ), Class.forName( "net.minecraft.server." + VERSION + "." + "NBTTagByteArray" ) );
                 NBTClasses.put( Class.forName( "[I" ), Class.forName( "net.minecraft.server." + VERSION + "." + "NBTTagIntArray" ) );
             } else {
-                NBTClasses.put( Byte.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagByte" ) );
-                NBTClasses.put( Boolean.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagByte" ) );
-                NBTClasses.put( String.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagString" ) );
-                NBTClasses.put( Double.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagDouble" ) );
-                NBTClasses.put( Integer.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagInt" ) );
-                NBTClasses.put( Long.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagLong" ) );
-                NBTClasses.put( Short.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagShort" ) );
-                NBTClasses.put( Float.class, Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagFloat" ) );
-                NBTClasses.put( Class.forName( "[B" ), Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagByteArray" ) );
-                NBTClasses.put( Class.forName( "[I" ), Class.forName( "moe.plushie.armourers_workshop.plugin.utils.nbt.NBTTagIntArray" ) );
+                NBTClasses.put( Byte.class, Class.forName( "net.minecraft.nbt.NBTTagByte" ) );
+                NBTClasses.put( Boolean.class, Class.forName( "net.minecraft.nbt.NBTTagByte" ) );
+                NBTClasses.put( String.class, Class.forName( "net.minecraft.nbt.NBTTagString" ) );
+                NBTClasses.put( Double.class, Class.forName( "net.minecraft.nbt.NBTTagDouble" ) );
+                NBTClasses.put( Integer.class, Class.forName( "net.minecraft.nbt.NBTTagInt" ) );
+                NBTClasses.put( Long.class, Class.forName( "net.minecraft.nbt.NBTTagLong" ) );
+                NBTClasses.put( Short.class, Class.forName( "net.minecraft.nbt.NBTTagShort" ) );
+                NBTClasses.put( Float.class, Class.forName( "net.minecraft.nbt.NBTTagFloat" ) );
+                NBTClasses.put( Class.forName( "[B" ), Class.forName( "net.minecraft.nbt.NBTTagByteArray" ) );
+                NBTClasses.put( Class.forName( "[I" ), Class.forName( "net.minecraft.nbt.NBTTagIntArray" ) );
             }
         } catch ( ClassNotFoundException e ) {
             e.printStackTrace();
@@ -179,11 +179,17 @@ public final class NBTEditor {
                 methodCache.put( "getKeys", getNMSClass( "NBTTagCompound" ).getMethod( "c" ) );
             } else if ( LOCAL_VERSION.lessThanOrEqualTo( MinecraftVersion.v1_17 ) ) {
                 methodCache.put( "getKeys", getNMSClass( "NBTTagCompound" ).getMethod( "getKeys" ) );
-            } else {
+            } else if ( LOCAL_VERSION.lessThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ){
                 methodCache.put( "getKeys", getNMSClass( "NBTTagCompound" ).getMethod( "d" ) );
+            } else {
+                methodCache.put( "getKeys", getNMSClass( "NBTTagCompound" ).getMethod( "e" ) );
             }
 
-            if ( LOCAL_VERSION.greaterThanOrEqualTo( MinecraftVersion.v1_19 ) ) {
+            if ( LOCAL_VERSION.greaterThanOrEqualTo( MinecraftVersion.v1_20 ) ) {
+                methodCache.put( "hasTag", getNMSClass( "ItemStack" ).getMethod( "u" ) );
+                methodCache.put( "getTag", getNMSClass( "ItemStack" ).getMethod( "v" ) );
+                methodCache.put( "setTag", getNMSClass( "ItemStack" ).getMethod( "c", getNMSClass( "NBTTagCompound" ) ) );
+            } else if ( LOCAL_VERSION.greaterThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ) {
                 methodCache.put( "hasTag", getNMSClass( "ItemStack" ).getMethod( "t" ) );
                 methodCache.put( "getTag", getNMSClass( "ItemStack" ).getMethod( "u" ) );
                 methodCache.put( "setTag", getNMSClass( "ItemStack" ).getMethod( "c", getNMSClass( "NBTTagCompound" ) ) );
@@ -1555,7 +1561,9 @@ public final class NBTEditor {
         v1_17,
         v1_18_R1,
         v1_18_R2,
-        v1_19,
+        v1_19_R1,
+        v1_19_R2,
+        v1_19_R3,
         v1_20,
         v1_21,
         v1_22;

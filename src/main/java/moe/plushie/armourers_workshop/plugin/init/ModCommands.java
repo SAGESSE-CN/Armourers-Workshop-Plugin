@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.init;
 
 import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIConfig;
+import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.ArgumentSuggestions;
@@ -9,6 +9,8 @@ import dev.jorel.commandapi.arguments.EntitySelectorArgument;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.LiteralArgument;
+import dev.jorel.commandapi.executors.CommandArguments;
+import moe.plushie.armourers_workshop.plugin.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.core.data.DataDomain;
 import moe.plushie.armourers_workshop.plugin.core.skin.Skin;
@@ -27,7 +29,7 @@ import java.util.Collection;
 public class ModCommands {
 
     public static void init() {
-        CommandAPI.onLoad(new CommandAPIConfig().silentLogs(true));
+        CommandAPI.onLoad(new CommandAPIBukkitConfig(ArmourersWorkshop.INSTANCE).silentLogs(true));
 
         new CommandTree("armourers")
                 .then(literal("setSkin").then(entities().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
@@ -57,9 +59,10 @@ public class ModCommands {
 
     public static class Executor {
 
-        public static void setSkin(CommandSender sender, Object[] args) {
+        public static void setSkin(CommandSender sender, CommandArguments commandArguments) {
             int slotIn;
             String identifier;
+            Object[] args = commandArguments.args();
             if (args[1] instanceof Integer) {
                 slotIn = (int) args[1];
                 identifier = (String) args[2];
@@ -87,7 +90,8 @@ public class ModCommands {
             }
         }
 
-        public static void giveSkin(CommandSender sender, Object[] args) {
+        public static void giveSkin(CommandSender sender, CommandArguments commandArguments) {
+            Object[] args = commandArguments.args();
             SkinDescriptor descriptor = loadSkinDescriptor((String) args[1]);
             if (descriptor.isEmpty()) {
                 return;
