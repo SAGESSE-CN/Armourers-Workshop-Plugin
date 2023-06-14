@@ -3,8 +3,8 @@
     <option name="JAR_PATH" value="$PROJECT_DIR$/run/minecraft_server.jar" />
     <option name="PROGRAM_PARAMETERS" value="nogui" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
-    <option name="ALTERNATIVE_JRE_PATH" />
-    <module name="Armourers-Workshop-Plugin.main" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="/Library/Java/JavaVirtualMachines/jdk-16.0.1.jdk/Contents/Home" />
     <method v="2">
       <option name="Gradle.BeforeRunTask" enabled="false" tasks="prepareRun" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
     </method>

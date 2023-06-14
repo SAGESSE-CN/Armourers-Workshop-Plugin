@@ -11,6 +11,7 @@ if (version == "unspecified") {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
     maven { url "https://oss.sonatype.org/content/groups/public/" }
@@ -32,6 +33,8 @@ dependencies {
     implementation "commons-lang:commons-lang:2.6"
     implementation "com.github.Querz:NBT:6.1+"
     implementation "dev.jorel:commandapi-shade:8.8.0"
+
+    implementation "moe.plushie.armourers_workshop:customapi:1.0.0-SNAPSHOT"
 }
 
 def targetJavaVersion = 8
@@ -45,9 +48,9 @@ java {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+//    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release = targetJavaVersion
-    }
+//    }
 }
 
 tasks.register("prepareRun") {
@@ -79,6 +82,7 @@ shadowJar {
     relocate("org.apache", pkg)
     relocate("dev.jorel", pkg)
     relocate("net.querz", pkg)
+    relocate("moe.plushie.armourers_workshop.customapi", pkg + ".customapi")
 }
 
 

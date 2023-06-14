@@ -4,12 +4,15 @@ import moe.plushie.armourers_workshop.plugin.api.Item;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import net.querz.nbt.io.SNBTUtil;
 import net.querz.nbt.tag.CompoundTag;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 public class BukkitUtils {
+
+    public static final org.bukkit.inventory.ItemStack EMPTY_STACK = new org.bukkit.inventory.ItemStack(Material.AIR);
 
     public static ItemStack wrap(org.bukkit.inventory.ItemStack itemStack) {
         if (itemStack == null || itemStack.getAmount() <= 0) {

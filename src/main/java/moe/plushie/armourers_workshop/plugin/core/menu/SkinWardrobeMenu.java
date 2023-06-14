@@ -1,20 +1,28 @@
 package moe.plushie.armourers_workshop.plugin.core.menu;
 
-import moe.plushie.armourers_workshop.plugin.api.InventorySlot;
-import moe.plushie.armourers_workshop.plugin.api.ItemStack;
-import moe.plushie.armourers_workshop.plugin.api.Slot;
+import moe.plushie.armourers_workshop.customapi.CustomSlot;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
+import moe.plushie.armourers_workshop.plugin.init.ModLog;
+import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class SkinWardrobeMenu extends ContainerMenu {
 
+    private final Inventory inventory;
     private final SkinWardrobe wardrobe;
+    private final ArrayList<ItemStack> lastSyncSlot = new ArrayList<>();
 
     public SkinWardrobeMenu(SkinWardrobe wardrobe, Player player) {
-        super("armourers_workshop:wardrobe");
+        super("armourers_workshop:wardrobe", player, SkinSlotType.getTotalSize());
         this.wardrobe = wardrobe;
+        this.inventory = getInventory();
+
 
         addPlayerSlots(player.getInventory());
 
@@ -34,7 +42,7 @@ public class SkinWardrobeMenu extends ContainerMenu {
 
     private void addPlayerSlots(Inventory inventory) {
         for (int i = 0; i < 36; ++i) {
-            addSlot(new InventorySlot(inventory, i));
+            addSlot(new CustomSlot(inventory, i, 0, 0));
         }
     }
 
@@ -66,16 +74,16 @@ public class SkinWardrobeMenu extends ContainerMenu {
     private void addSkinSlots(SkinSlotType slotType) {
         int size = wardrobe.getUnlockedSize(slotType);
         for (int i = 0; i < size; ++i) {
-            addSlot(new SkinSlot(wardrobe, slotType, i));
+            addSlot(new SkinSlot(inventory, wardrobe, slotType, i));
         }
     }
 
     private int getFreeSlot(SkinSlotType slotType) {
-        for (Slot slot : slots) {
+        for (CustomSlot slot : slots) {
             if (slot instanceof SkinSlot && !slot.hasItem()) {
                 SkinSlot slot1 = (SkinSlot) slot;
                 if (slot1.getSlotTypes().contains(slotType) || slot1.getSlotTypes().isEmpty()) {
-                    return slot1.getIndex();
+                    return slot1.index;
                 }
             }
         }
@@ -84,27 +92,55 @@ public class SkinWardrobeMenu extends ContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        Slot slot = safeGetSlot(index);
+        CustomSlot slot = slots.get(index);
         if (slot == null || !slot.hasItem()) {
-            return ItemStack.EMPTY;
+            return BukkitUtils.EMPTY_STACK;
         }
         ItemStack itemStack = slot.getItem();
         if (slot instanceof SkinSlot) {
             if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
-                return ItemStack.EMPTY;
+                return BukkitUtils.EMPTY_STACK;
             }
-            slot.set(ItemStack.EMPTY);
-            return itemStack.copy();
+            slot.set(BukkitUtils.EMPTY_STACK);
+            return new ItemStack(itemStack);
         }
-        SkinSlotType slotType = SkinSlotType.of(itemStack);
+        SkinSlotType slotType = SkinSlotType.of(BukkitUtils.wrap(itemStack));
         if (slotType != null) {
             int startIndex = getFreeSlot(slotType);
             if (!moveItemStackTo(itemStack, startIndex, startIndex + 1, false)) {
-                return ItemStack.EMPTY;
+                return BukkitUtils.EMPTY_STACK;
             }
-            slot.set(ItemStack.EMPTY);
-            return itemStack.copy();
+            slot.set(BukkitUtils.EMPTY_STACK);
+            return new ItemStack(itemStack);
         }
-        return ItemStack.EMPTY;
+        return BukkitUtils.EMPTY_STACK;
+    }
+
+    @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
+        // in normal, the size is inconsistent this will only happen when the container is first loaded.
+        if (lastSyncSlot.size() != slots.size()) {
+            lastSyncSlot.ensureCapacity(slots.size());
+            slots.forEach(s -> lastSyncSlot.add(s.getItem()));
+            return;
+        }
+        // if slots is ready, we check all slots and fast synchronize changes to all players if changes.
+        int changes = 0;
+        for (int index = 0; index < slots.size(); ++index) {
+            // the first 36 slots we defined as player slots, no synchronize is required.
+            if (index < 36) {
+                continue;
+            }
+            ItemStack newItemStack = slots.get(index).getItem();
+            if (!Objects.equals(lastSyncSlot.get(index), newItemStack)) {
+                lastSyncSlot.set(index, newItemStack);
+                changes += 1;
+            }
+        }
+        if (changes != 0) {
+            ModLog.debug("observer slots has {} changes, sync to players", changes);
+            wardrobe.broadcast();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
 import moe.plushie.armourers_workshop.plugin.api.ITagRepresentable;
+import moe.plushie.armourers_workshop.plugin.api.Item;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.NonNullList;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
@@ -119,6 +120,14 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
             return;
         }
         inventory.set(slotType.getIndex() + slot, itemStack);
+    }
+
+    public ItemStack removeItem(SkinSlotType slotType, int slot, int size) {
+        ItemStack itemStack = getItem(slotType, slot);
+        if (itemStack != ItemStack.EMPTY) {
+            return itemStack.split(size);
+        }
+        return ItemStack.EMPTY;
     }
 
     public int getUnlockedSize(SkinSlotType slotType) {

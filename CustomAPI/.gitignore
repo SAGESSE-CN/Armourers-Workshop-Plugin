@@ -1,0 +1,19 @@
+# Idea
+.idea
+*.iml
+
+# Maven
+target
+src/test
+
+# Libs
+src/libs
+
+# Javadocs
+/javadocs
+
+*/javadocs
+*/javadoc-bundle-options
+*/google-java-format.xml
+
+dependency-reduced-pom.xml
