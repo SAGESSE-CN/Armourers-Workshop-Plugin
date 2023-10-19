@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.plugin.core.skin;
 
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.plugin.init.ModItems;
 import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
 import moe.plushie.armourers_workshop.plugin.utils.FastCache;
 import net.querz.nbt.tag.CompoundTag;
@@ -56,7 +57,7 @@ public class SkinDescriptor {
     }
 
     public ItemStack asItemStack() {
-        ItemStack itemStack = new ItemStack("armourers_workshop:skin");
+        ItemStack itemStack = new ItemStack(ModItems.SKIN);
         CompoundTag tag = itemStack.getTag();
         tag.put("ArmourersWorkshop", serializeNBT());
         return itemStack;

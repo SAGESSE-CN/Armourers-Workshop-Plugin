@@ -4,23 +4,23 @@ import net.querz.nbt.tag.CompoundTag;
 
 public class ItemStack {
 
-    public static final ItemStack EMPTY = new ItemStack("minecraft:air", 0);
+    public static final ItemStack EMPTY = new ItemStack(Items.AIR, 0);
 
-    protected final String id;
+    protected final Item item;
     protected final CompoundTag tag;
 
     protected int count;
 
-    public ItemStack(String id) {
-        this(id, 1);
+    public ItemStack(Item item) {
+        this(item, 1);
     }
 
-    public ItemStack(String id, int count) {
-        this(id, count, new CompoundTag());
+    public ItemStack(Item item, int count) {
+        this(item, count, new CompoundTag());
     }
 
-    public ItemStack(String id, int count, CompoundTag tag) {
-        this.id = id;
+    public ItemStack(Item item, int count, CompoundTag tag) {
+        this.item = item;
         this.count = count;
         this.tag = tag;
     }
@@ -32,7 +32,7 @@ public class ItemStack {
         }
         String targetId = tag.getString("id");
         if (itemTag != null) {
-            String newId = Item.getRealId(itemTag.getString("__redirected_id__"));
+            String newId = Items.getRealId(itemTag.getString("__redirected_id__"));
             if (newId != null) {
                 targetId = newId;
             }
@@ -40,7 +40,7 @@ public class ItemStack {
         if (itemTag == null) {
             itemTag = new CompoundTag();
         }
-        this.id = targetId;
+        this.item = Items.byId(targetId);
         this.count = tag.getByte("Count");
         this.tag = itemTag;
     }
@@ -51,12 +51,13 @@ public class ItemStack {
 
     public CompoundTag save(CompoundTag tag) {
         CompoundTag itemTag = getTag().clone();
+        String id = item.getKey().toString();
         if (id.startsWith("minecraft:")) {
             tag.putString("id", id);
         } else {
-            String sourceId = Item.getWrapperId(itemTag.getString("__redirected_id__"));
+            String sourceId = Items.getWrapperId(itemTag.getString("__redirected_id__"));
             if (sourceId == null) {
-                sourceId = Item.matchIdBySize(getMaxStackSize());
+                sourceId = Items.getWrapperIdBySize(getMaxStackSize());
             }
             itemTag.putString("__redirected_id__", id + "/" + sourceId);
             tag.putString("id", sourceId);
@@ -66,8 +67,8 @@ public class ItemStack {
         return tag;
     }
 
-    public String getItem() {
-        return id;
+    public Item getItem() {
+        return item;
     }
 
     public CompoundTag getTag() {
@@ -83,7 +84,7 @@ public class ItemStack {
 
 
     public ItemStack copy() {
-        return new ItemStack(id, count, tag.clone());
+        return new ItemStack(item, count, tag.clone());
     }
 
     public ItemStack split(int i) {
@@ -112,7 +113,7 @@ public class ItemStack {
     }
 
     public int getMaxStackSize() {
-        return Item.getMaxStackSizeById(id);
+        return item.getMaxStackSize();
     }
 
     public boolean isStackable() {
@@ -174,7 +175,7 @@ public class ItemStack {
 //    }
 
     public boolean sameItem(ItemStack itemStack) {
-        return !itemStack.isEmpty() && id.equals(itemStack.id);
+        return !itemStack.isEmpty() && item.equals(itemStack.item);
     }
 
     //    public boolean sameItemStackIgnoreDurability(ItemStack itemStack) {
@@ -186,7 +187,7 @@ public class ItemStack {
 //    }
 //
     public static boolean isSameItemSameTags(ItemStack itemStack, ItemStack itemStack2) {
-        return itemStack.id.equals(itemStack2.id) && tagMatches(itemStack, itemStack2);
+        return itemStack.item.equals(itemStack2.item) && tagMatches(itemStack, itemStack2);
     }
 
 //    public boolean overrideStackedOnOther(Slot slot, ClickAction clickAction, Player player) {
@@ -200,6 +201,6 @@ public class ItemStack {
 
     @Override
     public String toString() {
-        return "" + count + " " + id;
+        return "" + count + " " + item.getKey();
     }
 }

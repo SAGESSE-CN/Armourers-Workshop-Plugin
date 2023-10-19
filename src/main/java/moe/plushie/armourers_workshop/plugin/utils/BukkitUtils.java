@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.plugin.utils;
 
 import moe.plushie.armourers_workshop.plugin.api.Item;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
+import moe.plushie.armourers_workshop.plugin.api.Items;
 import net.querz.nbt.io.SNBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import org.bukkit.Material;
@@ -71,7 +72,7 @@ public class BukkitUtils {
         private final org.bukkit.inventory.ItemStack itemStack;
 
         public WrappedItemStack(org.bukkit.inventory.ItemStack itemStack) {
-            super(realId(itemStack), itemStack.getAmount());
+            super(Items.byId(realId(itemStack)), itemStack.getAmount());
             this.itemStack = itemStack;
         }
 
@@ -104,7 +105,7 @@ public class BukkitUtils {
             String id = itemStack.getType().getKey().toString();
             String redirectedId = NBTEditor.getString(itemStack, "__redirected_id__");
             if (redirectedId != null && !redirectedId.isEmpty()) {
-                String newId = Item.getRealId(redirectedId);
+                String newId = Items.getRealId(redirectedId);
                 if (newId != null) {
                     return newId;
                 }

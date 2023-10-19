@@ -1,19 +1,15 @@
-package moe.plushie.armourers_workshop.plugin.core.listener;
+package moe.plushie.armourers_workshop.plugin.init.handler;
 
 import moe.plushie.armourers_workshop.plugin.utils.NBTEditor;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.LoomInventory;
 
-public class ModItemsListener implements Listener {
+public class ItemEventHandler implements Listener {
 
     @EventHandler
     public void onCraft(CraftItemEvent event) {

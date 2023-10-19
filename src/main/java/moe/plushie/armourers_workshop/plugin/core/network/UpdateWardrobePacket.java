@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.NonNullList;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
+import moe.plushie.armourers_workshop.plugin.init.ModItems;
 import moe.plushie.armourers_workshop.plugin.init.ModLog;
 import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import moe.plushie.armourers_workshop.plugin.utils.DataAccessor;
@@ -125,6 +126,7 @@ public class UpdateWardrobePacket extends CustomPacket {
             case SYNC_OPTION: {
                 if (field != null) {
                     field.set(wardrobe, fieldValue);
+                    wardrobe.save();
                     return wardrobe;
                 }
                 break;
@@ -148,7 +150,10 @@ public class UpdateWardrobePacket extends CustomPacket {
                 }
                 // for security reasons we only allows the player upload the bottle item.
                 ItemStack itemStack = ItemStack.of(compoundNBT.getCompoundTag("Item"));
-                return itemStack.getItem().equals("armourers_workshop:bottle");
+                if (itemStack.isEmpty()) {
+                    return true;
+                }
+                return itemStack.getItem().equals(ModItems.BOTTLE);
             }
             case SYNC_OPTION: {
                 return true;

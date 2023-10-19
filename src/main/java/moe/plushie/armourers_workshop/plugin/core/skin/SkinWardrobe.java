@@ -32,19 +32,21 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
 
 
     private final int id;
-    private final EntityProfile profile = ModEntityProfiles.PLAYER;
+    private final EntityProfile profile;
     private final WeakReference<Entity> entity;
 
-    public SkinWardrobe(Entity entity) {
+    public SkinWardrobe(Entity entity, EntityProfile profile) {
         this.id = entity.getEntityId();
         this.entity = new WeakReference<>(entity);
+        this.profile = profile;
     }
 
     @Nullable
     public static SkinWardrobe of(@Nullable Entity entity) {
         if (entity != null) {
             return FastCache.ENTITY_TO_SKIN_WARDROBE.computeIfAbsent(entity, it -> {
-                SkinWardrobe wardrobe = new SkinWardrobe(entity);
+                EntityProfile profile = ModEntityProfiles.getProfile(entity);
+                SkinWardrobe wardrobe = new SkinWardrobe(entity, profile);
                 NamespacedKey key = SkinWardrobeStorage.getKey();
                 CompoundTag tag = entity.getPersistentDataContainer().get(key, DataSerializers.COMPOUND_TAG);
                 if (tag != null && tag.size() != 0) {
@@ -127,6 +129,12 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
             return itemStack.split(size);
         }
         return ItemStack.EMPTY;
+    }
+
+    public void setUnlockedSize(SkinSlotType slotType, int size) {
+        if (slotType != SkinSlotType.DYE) {
+            skinSlots.put(slotType, size);
+        }
     }
 
     public int getUnlockedSize(SkinSlotType slotType) {

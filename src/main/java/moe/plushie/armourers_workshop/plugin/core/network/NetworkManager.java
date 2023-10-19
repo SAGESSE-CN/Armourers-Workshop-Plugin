@@ -6,11 +6,13 @@ import moe.plushie.armourers_workshop.plugin.api.FMLPacket;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.plugin.api.Packet;
+import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.utils.PacketSplitter;
 import moe.plushie.armourers_workshop.plugin.utils.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,18 +30,25 @@ public class NetworkManager {
 
 
     public static void init() {
+        Messenger messenger = Bukkit.getServer().getMessenger();
 
-        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(ArmourersWorkshop.INSTANCE, AW_CHANNEL, dispatcher);
-        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(ArmourersWorkshop.INSTANCE, AW_CHANNEL);
+        messenger.registerIncomingPluginChannel(ArmourersWorkshop.INSTANCE, AW_CHANNEL, dispatcher);
+        messenger.registerOutgoingPluginChannel(ArmourersWorkshop.INSTANCE, AW_CHANNEL);
 
-        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(ArmourersWorkshop.INSTANCE, FML_CHANNEL, dispatcher);
-        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(ArmourersWorkshop.INSTANCE, FML_CHANNEL);
+        messenger.registerIncomingPluginChannel(ArmourersWorkshop.INSTANCE, FML_CHANNEL, dispatcher);
+        messenger.registerOutgoingPluginChannel(ArmourersWorkshop.INSTANCE, FML_CHANNEL);
     }
-
 
     public static void sendToAll(final CustomPacket message) {
         Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
         send(message, players);
+    }
+
+    public static void sendWardrobeTo(Entity entity, Player player) {
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        if (wardrobe != null) {
+            wardrobe.broadcast(player);
+        }
     }
 
     public static void sendTo(final CustomPacket message, final Player player) {

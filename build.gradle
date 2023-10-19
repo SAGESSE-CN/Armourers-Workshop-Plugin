@@ -27,7 +27,7 @@ dependencies {
 
     compileOnly "io.netty:netty-buffer:4.1.80+"
     compileOnly "io.netty:netty-handler:4.1.80+"
-//    compileOnly "com.comphenix.protocol:ProtocolLib:4.8.0+"
+    compileOnly "com.comphenix.protocol:ProtocolLib:5.0.0"
 
     implementation "commons-io:commons-io:2.11.0"
     implementation "commons-lang:commons-lang:2.6"
@@ -82,6 +82,7 @@ shadowJar {
     relocate("org.apache", pkg)
     relocate("dev.jorel", pkg)
     relocate("net.querz", pkg)
+    relocate("com.frengor", pkg)
     relocate("moe.plushie.armourers_workshop.customapi", pkg + ".customapi")
 }
 
