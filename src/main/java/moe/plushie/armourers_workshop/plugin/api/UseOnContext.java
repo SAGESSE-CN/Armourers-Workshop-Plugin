@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.api;
 
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -29,15 +30,23 @@ public class UseOnContext {
         return this.player;
     }
 
+    public World getWorld() {
+        return player.getWorld();
+    }
+
+    public ItemStack getItem() {
+        return item;
+    }
+
     public EquipmentSlot getHand() {
         return this.hand;
     }
 
-    public Block getBlockClicked() {
+    public Block getClickedBlock() {
         return blockClicked;
     }
 
-    public BlockFace getBlockFace() {
+    public BlockFace getClickedBlockFace() {
         return blockFace;
     }
 }

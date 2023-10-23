@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.plugin.init.ModCommands;
 import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.plugin.init.ModItems;
+import moe.plushie.armourers_workshop.plugin.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.plugin.init.ModPackets;
 import moe.plushie.armourers_workshop.plugin.init.handler.EntityEventHandler;
 import moe.plushie.armourers_workshop.plugin.init.handler.ItemEventHandler;
@@ -23,10 +24,12 @@ public final class ArmourersWorkshop extends JavaPlugin  {
     public void onEnable() {
         INSTANCE = this;
 
-        ModItems.init();
         ModConfig.init();
         ModPackets.init();
+
+        ModItems.init();
         ModEntityProfiles.init();
+        ModMenuTypes.init();
         ModCommands.init();
 
         NetworkManager.init();

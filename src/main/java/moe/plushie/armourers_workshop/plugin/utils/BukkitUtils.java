@@ -1,15 +1,27 @@
 package moe.plushie.armourers_workshop.plugin.utils;
 
-import moe.plushie.armourers_workshop.plugin.api.Item;
+import moe.plushie.armourers_workshop.customapi.CustomBlock;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.Items;
+import moe.plushie.armourers_workshop.plugin.api.UseOnContext;
+import moe.plushie.armourers_workshop.plugin.init.ModLog;
 import net.querz.nbt.io.SNBTUtil;
 import net.querz.nbt.tag.CompoundTag;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
+import java.util.Base64;
+import java.util.UUID;
 
 public class BukkitUtils {
 
@@ -34,7 +46,7 @@ public class BukkitUtils {
             try {
                 CompoundTag tag = new CompoundTag();
                 itemStack.save(tag);
-                return NBTEditor.getItemFromTag(NBTEditor.NBTCompound.fromJson(SNBTUtil.toSNBT(tag)));
+                return NBTEditor.getItemFromTag(NBTEditor.getNBTCompound(SNBTUtil.toSNBT(tag)));
             } catch (Exception e) {
                 return null;
             }
@@ -128,6 +140,47 @@ public class BukkitUtils {
         }
     }
 
+    public static void setBlock(UseOnContext context, String id, @Nullable CompoundTag state, @Nullable CompoundTag tag) {
+        try {
+            String skinURL = getSkinURL(id, state, tag);
+
+            // ..
+            Location pos = context.getClickedBlock().getLocation();
+            Location location = context.getClickedBlock().getLocation();
+            BlockFace dir = context.getClickedBlockFace();
+            CustomBlock.BlockPlaceContext context1;
+            context1 = new CustomBlock.BlockPlaceContext(context.getPlayer(), context.getHand(), 2, pos, location, dir);
+            CustomBlock.placeItem(NBTEditor.getHead(skinURL), context1, context.getHand());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setBlockAndUpdate(UseOnContext context, String id, @Nullable CompoundTag state, @Nullable CompoundTag tag) {
+        setBlock(context, id, state, tag);
+        Block target = context.getClickedBlock().getRelative(context.getClickedBlockFace());
+        if (!target.getType().isAir()) {
+            target.getState().update(true, false);
+        }
+    }
+
+    public static void updateBlock(org.bukkit.block.Block block, String id, @Nullable CompoundTag state, @Nullable CompoundTag tag) {
+        try {
+            String skinURL = getSkinURL(id, state, tag);
+            if (block.getType() != Material.PLAYER_HEAD) {
+                block.setType(Material.PLAYER_HEAD, true);
+            }
+            NBTEditor.setSkullTexture(block, skinURL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateBlockAndUpdate(org.bukkit.block.Block block, String id, @Nullable CompoundTag state, @Nullable CompoundTag tag) {
+        updateBlock(block, id, state, tag);
+        block.getState().update(true, false);
+    }
+
     public static Entity findEntity(World world, int entityId) {
         for (Entity entity : world.getEntities()) {
             if (entity.getEntityId() == entityId) {
@@ -135,5 +188,18 @@ public class BukkitUtils {
             }
         }
         return null;
+    }
+
+    private static String getSkinURL(String id, @Nullable CompoundTag state, @Nullable CompoundTag tag) throws IOException {
+        CompoundTag blockTag = new CompoundTag();
+        blockTag.putString("id", id);
+        if (state != null) {
+            blockTag.put("state", state);
+        }
+        if (tag != null) {
+            blockTag.put("tag", tag);
+        }
+        String value = SNBTUtil.toSNBT(blockTag);
+        return "\",__redirected_block__:" + value + ",__block_redirected__:\"";
     }
 }

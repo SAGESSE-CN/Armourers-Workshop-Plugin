@@ -28,9 +28,9 @@ public class Items {
         });
     }
 
-    public static void register(NamespacedKey key, Item item) {
-        item.setKey(key);
-        ITEMS.put(key.toString(), item);
+    public static void register(String id, Item item) {
+        item.setKey(NamespacedKey.fromString(id));
+        ITEMS.put(id, item);
     }
 
     @Nullable

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.core.item;
 
+import moe.plushie.armourers_workshop.plugin.api.Component;
 import moe.plushie.armourers_workshop.plugin.api.InteractionResultHolder;
 import moe.plushie.armourers_workshop.plugin.api.Item;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
@@ -25,16 +26,16 @@ public class SkinUnlockItem extends Item {
         if (wardrobe == null || skinType == null) {
             return InteractionResultHolder.fail(itemStack);
         }
-//        Component skinName = TranslateUtils.Name.of(skinType);
+        Component skinName = Component.translatable("skinType.armourers_workshop." + skinType.getRegistryName().getPath());
         if (wardrobe.getUnlockedSize(slotType) >= slotType.getMaxSize()) {
-//            player.sendSystemMessage(Component.translatable("chat.armourers_workshop.slotUnlockedFailed", skinName));
+            player.spigot().sendMessage(Component.translatable("chat.armourers_workshop.slotUnlockedFailed", skinName).getContents());
             return InteractionResultHolder.fail(itemStack);
         }
         itemStack.shrink(1);
         int count = wardrobe.getUnlockedSize(slotType) + 1;
         wardrobe.setUnlockedSize(slotType, count);
         wardrobe.broadcast();
-//        player.sendSystemMessage(Component.translatable("chat.armourers_workshop.slotUnlocked", skinName, Integer.toString(count)));
+        player.spigot().sendMessage(Component.translatable("chat.armourers_workshop.slotUnlocked", skinName, Integer.toString(count)).getContents());
         return InteractionResultHolder.success(itemStack);
     }
 }

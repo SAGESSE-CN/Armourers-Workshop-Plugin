@@ -14,8 +14,6 @@ import moe.plushie.armourers_workshop.plugin.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.core.data.DataDomain;
 import moe.plushie.armourers_workshop.plugin.core.menu.MenuManager;
-import moe.plushie.armourers_workshop.plugin.core.menu.SkinWardrobeMenu;
-import moe.plushie.armourers_workshop.plugin.core.menu.SkinWardrobeOpMenu;
 import moe.plushie.armourers_workshop.plugin.core.skin.Skin;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
@@ -129,8 +127,7 @@ public class ModCommands {
             for (Entity entity : entities) {
                 SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe != null) {
-                    SkinWardrobeMenu menu = new SkinWardrobeOpMenu(wardrobe, player);
-                    MenuManager.openMenu(menu, player);
+                    MenuManager.openMenu(ModMenuTypes.WARDROBE_OP, player, wardrobe);
                     break;
                 }
             }

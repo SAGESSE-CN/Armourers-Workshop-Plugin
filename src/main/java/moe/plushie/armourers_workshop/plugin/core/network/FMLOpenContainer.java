@@ -2,16 +2,17 @@ package moe.plushie.armourers_workshop.plugin.core.network;
 
 import moe.plushie.armourers_workshop.plugin.api.FMLPacket;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
-import moe.plushie.armourers_workshop.plugin.api.TextComponent;
+import moe.plushie.armourers_workshop.plugin.api.Component;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 public class FMLOpenContainer extends CustomPacket implements FMLPacket {
 
     private final String id;
     private final int windowId;
-    private final TextComponent title;
+    private final Component title;
     private final FriendlyByteBuf additionalData;
 
-    public FMLOpenContainer(String id, int windowId, TextComponent title, FriendlyByteBuf additionalData) {
+    public FMLOpenContainer(String id, int windowId, Component title, FriendlyByteBuf additionalData) {
         this.id = id;
         this.windowId = windowId;
         this.title = title;

@@ -15,6 +15,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -48,7 +49,7 @@ public class EntityEventHandler implements Listener {
     @EventHandler
     public void onInteractBlock(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (!event.hasItem()) {
+        if (!event.hasItem() || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR) {
             return;
         }
         EquipmentSlot hand = event.getHand();

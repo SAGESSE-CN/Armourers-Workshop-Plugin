@@ -18,6 +18,8 @@ public interface CustomAPI {
 
     CustomMenuImpl createCustomMenu(CustomMenuProvider impl, Player player, InventoryHolder holder, int size, String title);
 
+    CustomBlockImpl createCustomBlock();
+
     
     class Proxy<T> extends ItemStack {
 

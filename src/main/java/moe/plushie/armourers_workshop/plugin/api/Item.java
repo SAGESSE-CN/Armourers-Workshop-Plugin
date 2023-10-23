@@ -28,7 +28,7 @@ public class Item {
         return InteractionResultHolder.fail(itemStack);
     }
 
-    public InteractionResult useOn(UseOnContext useOnContext) {
+    public InteractionResult useOn(UseOnContext context) {
         // Pass to vanilla handler.
         if (properties.material != null) {
             return InteractionResult.PASS;

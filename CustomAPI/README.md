@@ -17,7 +17,7 @@ customapi requires the usage of Maven or a Maven compatible build system.
 <dependency>
     <groupId>moe.plushie.armourers_workshop</groupId>
     <artifactId>customapi</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
 </dependency>
 
 <repository>

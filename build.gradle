@@ -34,7 +34,7 @@ dependencies {
     implementation "com.github.Querz:NBT:6.1+"
     implementation "dev.jorel:commandapi-bukkit-shade:9.0.3"
 
-    implementation "moe.plushie.armourers_workshop:customapi:1.0.0-SNAPSHOT"
+    implementation "moe.plushie.armourers_workshop:customapi:1.0.1-SNAPSHOT"
 }
 
 def targetJavaVersion = 8

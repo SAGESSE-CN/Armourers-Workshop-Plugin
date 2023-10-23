@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.customapi.version;
 
 import moe.plushie.armourers_workshop.customapi.*;
 import net.minecraft.server.v1_16_R1.*;
+import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R1.event.CraftEventFactory;
 import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftInventory;
@@ -9,8 +11,11 @@ import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftInventoryCustom;
 import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftInventoryView;
 import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+
+import javax.annotation.Nullable;
 
 public class Wrapper1_16_R1 implements CustomAPI {
 
@@ -24,6 +29,11 @@ public class Wrapper1_16_R1 implements CustomAPI {
     public CustomMenuImpl createCustomMenu(CustomMenuProvider impl, Player player, InventoryHolder holder, int size, String title) {
         CraftInventoryCustom inventory = new CraftInventoryCustom(holder, size, title);
         return new AbstractCustomMenu(impl, toNMS(player), inventory);
+    }
+
+    @Override
+    public CustomBlockImpl createCustomBlock() {
+        return new AbstractCustomBlock();
     }
 
     public static class AbstractCustomSlot extends Slot implements CustomSlotImpl {
@@ -189,6 +199,34 @@ public class Wrapper1_16_R1 implements CustomAPI {
         }
     }
 
+    public static class AbstractCustomBlock implements CustomBlockImpl {
+
+        @Override
+        public int placeItem(org.bukkit.inventory.ItemStack itemStack, IBlockPlaceContext context, EquipmentSlot hand) {
+            ItemStack itemStack1 = toNMS(itemStack);
+            EnumHand hand1 = toNMS2(hand);
+            Vec3D vec1 = toNMS_V3d(context.getClickedPos());
+            BlockPosition pos1 = toNMS_BP(context.getClickedLocation());
+            EnumDirection dir1 = toNMS2(context.getClickedFace());
+            MovingObjectPositionBlock hitResult;
+            if (context.getClickedType() != 0) {
+                hitResult = new MovingObjectPositionBlock(vec1, dir1, pos1, context.getClickedType() == 1);
+            } else {
+                hitResult = MovingObjectPositionBlock.a(vec1, dir1, pos1);
+            }
+            EntityPlayer player = toNMS(context.getPlayer());
+            ItemActionContext context1 = new AbstractItemActionContext(player.getWorld(), player, toNMS2(context.getHand()), itemStack1, hitResult);
+            return itemStack1.placeItem(context1, hand1).ordinal();
+        }
+
+        public static class AbstractItemActionContext extends ItemActionContext {
+
+            protected AbstractItemActionContext(World var0, @Nullable EntityHuman var1, EnumHand var2, ItemStack var3, MovingObjectPositionBlock var4) {
+                super(var0, var1, var2, var3, var4);
+            }
+        }
+    }
+
     private static EntityPlayer toNMS(Player player) {
         return ((CraftPlayer) player).getHandle();
     }
@@ -203,5 +241,39 @@ public class Wrapper1_16_R1 implements CustomAPI {
 
     private static org.bukkit.inventory.ItemStack fromNMS(ItemStack itemStack) {
         return Proxy.of(itemStack, CraftItemStack::asCraftMirror);
+    }
+
+    private static Vec3D toNMS_V3d(Location location) {
+        return new Vec3D(location.getX(), location.getY(), location.getZ());
+    }
+
+    private static BlockPosition toNMS_BP(Location location) {
+        return new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+    }
+
+    private static EnumHand toNMS2(EquipmentSlot slot) {
+        if (slot == EquipmentSlot.OFF_HAND) {
+            return EnumHand.OFF_HAND;
+        }
+        return EnumHand.MAIN_HAND;
+    }
+
+    private static EnumDirection toNMS2(BlockFace face) {
+        switch (face) {
+            case NORTH:
+                return EnumDirection.NORTH;
+            case SOUTH:
+                return EnumDirection.SOUTH;
+            case EAST:
+                return EnumDirection.EAST;
+            case WEST:
+                return EnumDirection.WEST;
+            case UP:
+                return EnumDirection.UP;
+            case DOWN:
+                return EnumDirection.DOWN;
+            default:
+                return EnumDirection.NORTH;
+        }
     }
 }

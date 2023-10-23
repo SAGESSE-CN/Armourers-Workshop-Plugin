@@ -1,34 +1,39 @@
 package moe.plushie.armourers_workshop.plugin.core.menu;
 
 import moe.plushie.armourers_workshop.customapi.CustomMenu;
+import moe.plushie.armourers_workshop.plugin.api.Component;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.plugin.api.MenuType;
+import moe.plushie.armourers_workshop.plugin.core.network.FMLOpenContainer;
+import moe.plushie.armourers_workshop.plugin.core.network.NetworkManager;
 import org.bukkit.entity.Player;
 
 public abstract class ContainerMenu extends CustomMenu {
 
-    private int menuId;
-    private final String registryName;
+    protected final Player player;
+    protected final MenuType<?> menuType;
 
-    public ContainerMenu(String registryName, Player player, int size) {
-        super(player, size, registryName);
-        this.registryName = registryName;
-    }
-
-    public String getRegistryName() {
-        return registryName;
+    public ContainerMenu(MenuType<?> menuType, Player player, int slotSize) {
+        super(player, slotSize, menuType.getRegistryName());
+        this.player = player;
+        this.menuType = menuType;
     }
 
     @Override
     public void handleOpenWindowPacket(int windowId) {
         // we need send custom event.
-        this.menuId = windowId;
+        String id = getType().getRegistryName();
+        FriendlyByteBuf buf = new FriendlyByteBuf();
+        serialize(buf);
+        Component title = Component.translatable("inventory." + id.replace(':', '.'));
+        NetworkManager.sendTo(new FMLOpenContainer(id, windowId, title, buf), player);
     }
 
     public void serialize(FriendlyByteBuf buffer) {
         // nop
     }
 
-    public int getMenuId() {
-        return menuId;
+    public MenuType<?> getType() {
+        return menuType;
     }
 }

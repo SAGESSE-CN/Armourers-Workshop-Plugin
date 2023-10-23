@@ -2,13 +2,16 @@ package moe.plushie.armourers_workshop.plugin.core.menu;
 
 import moe.plushie.armourers_workshop.customapi.CustomSlot;
 import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
+import moe.plushie.armourers_workshop.plugin.api.MenuType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.init.ModLog;
 import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -19,15 +22,10 @@ public class SkinWardrobeMenu extends ContainerMenu {
     private final SkinWardrobe wardrobe;
     private final ArrayList<ItemStack> lastSyncSlot = new ArrayList<>();
 
-    public SkinWardrobeMenu(SkinWardrobe wardrobe, Player player) {
-        this("armourers_workshop:wardrobe", wardrobe, player);
-    }
-
-    public SkinWardrobeMenu(String registryName, SkinWardrobe wardrobe, Player player) {
-        super(registryName, player, SkinSlotType.getTotalSize());
+    public SkinWardrobeMenu(MenuType<?> menuType, Player player, SkinWardrobe wardrobe) {
+        super(menuType, player, SkinSlotType.getTotalSize());
         this.wardrobe = wardrobe;
         this.inventory = getInventory();
-
 
         addPlayerSlots(player.getInventory());
 
@@ -95,14 +93,14 @@ public class SkinWardrobeMenu extends ContainerMenu {
         return 0;
     }
 
-//    @Override
-//    public boolean stillValid(Player player) {
-//        Entity entity = getEntity();
-//        if (entity == null || !entity.isAlive() || !wardrobe.isEditable(player)) {
-//            return false;
-//        }
-//        return entity.distanceToSqr(player.getX(), player.getY(), player.getZ()) <= 64.0;
-//    }
+    @Override
+    public boolean stillValid(Player player) {
+        Entity entity = getEntity();
+        if (entity == null || !entity.isValid() || !wardrobe.isEditable(player)) {
+            return false;
+        }
+        return entity.getLocation().distance(player.getLocation()) <= 64.0;
+    }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
@@ -162,5 +160,15 @@ public class SkinWardrobeMenu extends ContainerMenu {
     public void serialize(FriendlyByteBuf buffer) {
         buffer.writeInt(wardrobe.getId());
         buffer.writeUtf(wardrobe.getProfile().getRegistryName().toString());
+    }
+
+
+    public SkinWardrobe getWardrobe() {
+        return wardrobe;
+    }
+
+    @Nullable
+    public Entity getEntity() {
+        return wardrobe.getEntity();
     }
 }
