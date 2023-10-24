@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.api;
 
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class Item {
 
-    private NamespacedKey key;
+    private ResourceLocation key;
 
     private final Properties properties;
 
@@ -21,46 +21,62 @@ public class Item {
     }
 
     public InteractionResultHolder<ItemStack> use(ItemStack itemStack, Player player, EquipmentSlot hand) {
-        // Pass to vanilla handler.
-        if (properties.material != null) {
-            return InteractionResultHolder.pass(itemStack);
-        }
-        return InteractionResultHolder.fail(itemStack);
+        return InteractionResultHolder.pass(itemStack);
+    }
+
+    /**
+     * This is called when the item is used, before the block is activated.
+     *
+     * @return Return PASS to allow vanilla handling, any other to skip normal code.
+     */
+    public InteractionResult useOnFirst(ItemStack stack, UseOnContext context) {
+        return InteractionResult.PASS;
     }
 
     public InteractionResult useOn(UseOnContext context) {
-        // Pass to vanilla handler.
-        if (properties.material != null) {
-            return InteractionResult.PASS;
-        }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.PASS;
     }
 
-    public InteractionResult attackLivingEntity(ItemStack itemStack, Player player, Entity entity) {
-        // Pass to vanilla handler.
-        if (properties.material != null) {
-            return InteractionResult.PASS;
-        }
-        return InteractionResult.SUCCESS;
+    /**
+     * Called when the player Left Clicks (attacks) an entity. Processed before
+     * damage is done, if return value is true further processing is canceled and
+     * the entity is not attacked.
+     *
+     * @param stack  The Item being used
+     * @param player The player that is attacking
+     * @param entity The entity being attacked
+     * @return True to cancel the rest of the interaction.
+     */
+    public InteractionResult attackLivingEntity(ItemStack stack, Player player, Entity entity) {
+        return InteractionResult.PASS;
     }
 
     public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity entity, EquipmentSlot hand) {
-        // Pass to vanilla handler.
-        if (properties.material != null) {
-            return InteractionResult.PASS;
-        }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.PASS;
+    }
+
+    /**
+     * Should this item, when held, allow sneak-clicks to pass through to the
+     * underlying block?
+     *
+     * @param stack  The Item being used
+     * @param player The Player that is wielding the item
+     * @param world  The world
+     * @param pos    Block position in level
+     */
+    public boolean doesSneakBypassUse(ItemStack stack, Player player, World world, BlockPos pos) {
+        return false;
     }
 
     public int getMaxStackSize() {
         return properties.maxStackSize;
     }
 
-    public void setKey(NamespacedKey key) {
+    public void setKey(ResourceLocation key) {
         this.key = key;
     }
 
-    public NamespacedKey getKey() {
+    public ResourceLocation getKey() {
         return key;
     }
 

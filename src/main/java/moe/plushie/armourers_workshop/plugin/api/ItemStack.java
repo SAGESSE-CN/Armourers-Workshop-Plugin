@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.plugin.api;
 
 import net.querz.nbt.tag.CompoundTag;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 public class ItemStack {
 
@@ -124,7 +126,20 @@ public class ItemStack {
         return false;
     }
 
-    public static boolean tagMatches(ItemStack itemStack, ItemStack itemStack2) {
+    /**
+     * Should this item, when held, allow sneak-clicks to pass through to the
+     * underlying block?
+     *
+     * @param player The Player that is wielding the item
+     * @param world  The world
+     * @param pos    Block position in level
+     */
+    public boolean doesSneakBypassUse(Player player, World world, BlockPos pos) {
+        return isEmpty() || getItem().doesSneakBypassUse(this, player, world, pos);
+    }
+
+
+        public static boolean tagMatches(ItemStack itemStack, ItemStack itemStack2) {
         if (itemStack.isEmpty() && itemStack2.isEmpty()) {
             return true;
         } else if (!itemStack.isEmpty() && !itemStack2.isEmpty()) {

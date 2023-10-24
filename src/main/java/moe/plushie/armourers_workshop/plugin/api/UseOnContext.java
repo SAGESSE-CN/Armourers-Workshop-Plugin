@@ -12,6 +12,7 @@ public class UseOnContext {
     protected final Player player;
     protected final Block blockClicked;
     protected final BlockFace blockFace;
+    protected final BlockPos clickedPos;
     protected final EquipmentSlot hand;
 
     public UseOnContext(Player player, ItemStack item, Block clickedBlock, BlockFace clickedFace) {
@@ -23,6 +24,7 @@ public class UseOnContext {
         this.item = item;
         this.blockClicked = clickedBlock;
         this.blockFace = clickedFace;
+        this.clickedPos = BlockPos.of(clickedBlock.getLocation());
         this.hand = hand;
     }
 
@@ -46,8 +48,19 @@ public class UseOnContext {
         return blockClicked;
     }
 
-    public BlockFace getClickedBlockFace() {
+    public BlockPos getClickedPos() {
+        return clickedPos;
+    }
+
+    public BlockFace getClickedFace() {
         return blockFace;
+    }
+
+    public BlockFace getHorizontalDirection() {
+        if (player != null) {
+            return player.getFacing();
+        }
+        return BlockFace.NORTH;
     }
 }
 

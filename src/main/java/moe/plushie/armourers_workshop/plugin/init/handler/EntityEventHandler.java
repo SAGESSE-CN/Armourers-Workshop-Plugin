@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.init.handler;
 
+import moe.plushie.armourers_workshop.plugin.api.BlockEntity;
+import moe.plushie.armourers_workshop.plugin.api.BlockPos;
 import moe.plushie.armourers_workshop.plugin.api.InteractionResult;
 import moe.plushie.armourers_workshop.plugin.api.InteractionResultHolder;
 import moe.plushie.armourers_workshop.plugin.api.Item;
@@ -9,10 +11,12 @@ import moe.plushie.armourers_workshop.plugin.core.network.NetworkManager;
 import moe.plushie.armourers_workshop.plugin.core.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -49,18 +53,52 @@ public class EntityEventHandler implements Listener {
     @EventHandler
     public void onInteractBlock(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (!event.hasItem() || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR) {
-            return;
-        }
         EquipmentSlot hand = event.getHand();
         ItemStack itemStack = BukkitUtils.wrap(event.getItem());
         Item item = itemStack.getItem();
-        if (event.hasBlock() && !player.isSneaking()) {
+        if (event.hasBlock() && event.getClickedBlock() != null) {
+            World world = player.getWorld();
+            BlockPos blockPos = BlockPos.of(event.getClickedBlock().getLocation());
+            // for attack(left-click) will pass to vanilla.
+            if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                // for we custom block, check it and cancel event.
+                BlockEntity blockEntity = BukkitUtils.getBlockEntity(event.getClickedBlock());
+                if (blockEntity != null && blockEntity.getBlockState().attack(world, blockPos, player) != InteractionResult.PASS) {
+                    event.setCancelled(true);
+                    return;
+                }
+                return;
+            }
+            // order: useOnFirst -> block.use -> useOn
             UseOnContext context = new UseOnContext(player, itemStack, event.getClickedBlock(), event.getBlockFace(), hand);
-            if (item.useOn(context) != InteractionResult.PASS) {
+            if (event.useItemInHand() != Event.Result.DENY && item.useOnFirst(itemStack, context) != InteractionResult.PASS) {
                 event.setCancelled(true);
+                return;
+            }
+            // block.use
+            ItemStack mainHandItem = BukkitUtils.wrap(player.getInventory().getItemInMainHand());
+            ItemStack offHandItem = BukkitUtils.wrap(player.getInventory().getItemInOffHand());
+            boolean flag = !mainHandItem.isEmpty() || !offHandItem.isEmpty();
+            boolean flag1 = player.isSneaking() && flag && (!mainHandItem.doesSneakBypassUse(player, world, blockPos) || !offHandItem.doesSneakBypassUse(player, world, blockPos));
+            if (event.useItemInHand() == Event.Result.ALLOW || (event.useItemInHand() != Event.Result.DENY && !flag1)) {
+                // for we custom block, check it and cancel event.
+                BlockEntity blockEntity = BukkitUtils.getBlockEntity(event.getClickedBlock());
+                if (blockEntity != null && blockEntity.getBlockState().use(world, blockPos, player, hand) != InteractionResult.PASS) {
+                    event.setCancelled(true);
+                    return;
+                }
+                // for vanilla interactive block, we pass it directly.
+                if (context.getClickedBlock().getType().isInteractable()) {
+                    return;
+                }
+            }
+            // use item on context.
+            if (event.useItemInHand() != Event.Result.DENY && item.useOn(context) != InteractionResult.PASS) {
+                event.setCancelled(true);
+                return;
             }
         } else {
+            // order: use
             InteractionResultHolder<ItemStack> result = item.use(itemStack, player, hand);
             if (result.getObject() != itemStack) {
                 player.getInventory().setItem(hand, BukkitUtils.unwrap(result.getObject()));
@@ -68,6 +106,10 @@ public class EntityEventHandler implements Listener {
             if (result.getResult() != InteractionResult.PASS) {
                 event.setCancelled(true);
             }
+        }
+        // safe: we need to cancel all unknown events.
+        if (item.asMaterial() == null) {
+            event.setCancelled(true);
         }
     }
 

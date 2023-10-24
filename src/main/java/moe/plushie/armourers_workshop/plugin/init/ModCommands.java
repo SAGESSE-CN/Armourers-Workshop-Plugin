@@ -13,7 +13,7 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import moe.plushie.armourers_workshop.plugin.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.core.data.DataDomain;
-import moe.plushie.armourers_workshop.plugin.core.menu.MenuManager;
+import moe.plushie.armourers_workshop.plugin.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.plugin.core.skin.Skin;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;

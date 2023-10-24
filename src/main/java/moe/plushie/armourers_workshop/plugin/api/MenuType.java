@@ -26,5 +26,4 @@ public class MenuType<T> {
 
         T createMenu(MenuType<?> menuType, Player player, V hostObject);
     }
-
 }

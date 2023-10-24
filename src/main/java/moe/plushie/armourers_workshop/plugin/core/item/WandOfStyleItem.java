@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.plugin.core.item;
 import moe.plushie.armourers_workshop.plugin.api.InteractionResult;
 import moe.plushie.armourers_workshop.plugin.api.Item;
 import moe.plushie.armourers_workshop.plugin.api.ItemStack;
-import moe.plushie.armourers_workshop.plugin.core.menu.MenuManager;
+import moe.plushie.armourers_workshop.plugin.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.init.ModMenuTypes;
 import org.bukkit.entity.Entity;

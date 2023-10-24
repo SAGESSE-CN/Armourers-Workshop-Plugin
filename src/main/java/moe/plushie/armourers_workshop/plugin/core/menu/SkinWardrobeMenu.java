@@ -23,11 +23,11 @@ public class SkinWardrobeMenu extends ContainerMenu {
     private final ArrayList<ItemStack> lastSyncSlot = new ArrayList<>();
 
     public SkinWardrobeMenu(MenuType<?> menuType, Player player, SkinWardrobe wardrobe) {
-        super(menuType, player, SkinSlotType.getTotalSize());
+        super(menuType, player);
         this.wardrobe = wardrobe;
         this.inventory = getInventory();
 
-        addPlayerSlots(player.getInventory());
+        addPlayerSlots(player.getInventory(), 0, 0);
 
         addSkinSlots(SkinSlotType.HEAD);
         addSkinSlots(SkinSlotType.CHEST);
@@ -41,12 +41,6 @@ public class SkinWardrobeMenu extends ContainerMenu {
         addSkinSlots(SkinSlotType.DYE);
 
 //        addMannequinSlots(Group.SKINS, 0, 5);
-    }
-
-    private void addPlayerSlots(Inventory inventory) {
-        for (int i = 0; i < 36; ++i) {
-            addSlot(new CustomSlot(inventory, i, 0, 0));
-        }
     }
 
     protected void addEquipmentSlots() {
@@ -77,14 +71,14 @@ public class SkinWardrobeMenu extends ContainerMenu {
     private void addSkinSlots(SkinSlotType slotType) {
         int size = wardrobe.getUnlockedSize(slotType);
         for (int i = 0; i < size; ++i) {
-            addSlot(new SkinSlot(inventory, wardrobe, slotType, i));
+            addSlot(new SkinDataSlot(inventory, wardrobe, slotType, i));
         }
     }
 
     private int getFreeSlot(SkinSlotType slotType) {
         for (CustomSlot slot : slots) {
-            if (slot instanceof SkinSlot && !slot.hasItem()) {
-                SkinSlot slot1 = (SkinSlot) slot;
+            if (slot instanceof SkinDataSlot && !slot.hasItem()) {
+                SkinDataSlot slot1 = (SkinDataSlot) slot;
                 if (slot1.getSlotTypes().contains(slotType) || slot1.getSlotTypes().isEmpty()) {
                     return slot1.index;
                 }
@@ -109,7 +103,7 @@ public class SkinWardrobeMenu extends ContainerMenu {
             return BukkitUtils.EMPTY_STACK;
         }
         ItemStack itemStack = slot.getItem();
-        if (slot instanceof SkinSlot) {
+        if (slot instanceof SkinDataSlot) {
             if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
                 return BukkitUtils.EMPTY_STACK;
             }
@@ -162,9 +156,13 @@ public class SkinWardrobeMenu extends ContainerMenu {
         buffer.writeUtf(wardrobe.getProfile().getRegistryName().toString());
     }
 
-
     public SkinWardrobe getWardrobe() {
         return wardrobe;
+    }
+
+    @Override
+    public int getSlotSize() {
+        return SkinSlotType.getTotalSize();
     }
 
     @Nullable

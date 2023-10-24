@@ -98,6 +98,15 @@ public class FriendlyByteBuf extends ByteBuf {
         return new UUID(readLong(), readLong());
     }
 
+    public BlockPos readBlockPos() {
+        return BlockPos.of(readLong());
+    }
+
+    public FriendlyByteBuf writeBlockPos(BlockPos blockPos) {
+        this.writeLong(blockPos.asLong());
+        return this;
+    }
+
     public FriendlyByteBuf writeVarInt(int i) {
         while ((i & -128) != 0) {
             writeByte(i & 127 | 128);

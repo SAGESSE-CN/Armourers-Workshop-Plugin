@@ -7,13 +7,13 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-public class CustomMenu implements CustomMenuProvider {
+public abstract class CustomMenu implements CustomMenuProvider {
 
     protected final ArrayList<CustomSlot> slots = new ArrayList<>();
     protected final CustomMenuImpl impl;
 
-    public CustomMenu(Player player, int size, String title) {
-        this.impl = Versions.API.createCustomMenu(this, player, null, size, title);
+    public CustomMenu(Player player, String title) {
+        this.impl = Versions.API.createCustomMenu(this, player, null, getSlotSize(), title);
     }
 
     public void open() {
@@ -22,11 +22,6 @@ public class CustomMenu implements CustomMenuProvider {
 
     public void close() {
         impl.closeContainer();
-    }
-
-    @Override
-    public boolean stillValid(Player player) {
-        return true;
     }
 
     @Override
@@ -63,4 +58,8 @@ public class CustomMenu implements CustomMenuProvider {
     public Inventory getInventory() {
         return impl.getInventory();
     }
+
+    public abstract boolean stillValid(Player player);
+
+    public abstract int getSlotSize();
 }

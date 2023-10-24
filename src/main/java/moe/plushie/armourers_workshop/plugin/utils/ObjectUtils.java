@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.plugin.utils;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -68,6 +70,13 @@ public class ObjectUtils {
         }
     }
 
+    @SafeVarargs
+    public static <T> ArrayList<T> map(T... objects) {
+        ArrayList<T> results = new ArrayList<>(objects.length);
+        Collections.addAll(results, objects);
+        return results;
+    }
+
 
 //    public static void set(IMatrix3f matrixIn, IMatrix3f matrixOut) {
 //        FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
@@ -80,5 +89,5 @@ public class ObjectUtils {
 //        matrixIn.store(buffer);
 //        matrixOut.load(buffer);
 //    }
-
 }
+

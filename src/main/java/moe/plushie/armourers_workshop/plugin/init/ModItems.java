@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.init;
 
+import moe.plushie.armourers_workshop.plugin.api.Block;
 import moe.plushie.armourers_workshop.plugin.api.BlockItem;
 import moe.plushie.armourers_workshop.plugin.api.Item;
 import moe.plushie.armourers_workshop.plugin.api.Items;
@@ -14,14 +15,14 @@ public class ModItems {
 
     public static final Item SKIN = normal(Item::new).build("skin");
 
-    public static final Item SKIN_LIBRARY = block("armourers_workshop:skin-library").build("skin-library");
-    public static final Item SKIN_LIBRARY_CREATIVE = block("armourers_workshop:skin-library-creative").build("skin-library-creative");
-    public static final Item SKIN_LIBRARY_GLOBAL = block("armourers_workshop:skin-library-global").build("skin-library-global");
+    public static final Item SKIN_LIBRARY = block(ModBlocks.SKIN_LIBRARY).build("skin-library");
+    public static final Item SKIN_LIBRARY_CREATIVE = block(ModBlocks.SKIN_LIBRARY_CREATIVE).build("skin-library-creative");
+    public static final Item SKIN_LIBRARY_GLOBAL = block(ModBlocks.SKIN_LIBRARY_GLOBAL).build("skin-library-global");
 
-    public static final Item SKINNING_TABLE = block("armourers_workshop:skinning-table").build("skinning-table");
-    public static final Item DYE_TABLE = block("armourers_workshop:dye-table").build("dye-table");
-    //public static final Item OUTFIT_MAKER = block("armourers_workshop:outfit-maker").build("outfit-maker");
-    public static final Item HOLOGRAM_PROJECTOR = block("armourers_workshop:hologram-projector").build("hologram-projector");
+    public static final Item SKINNING_TABLE = block(ModBlocks.SKINNING_TABLE).build("skinning-table");
+    public static final Item DYE_TABLE = block(ModBlocks.DYE_TABLE).build("dye-table");
+    //public static final Item OUTFIT_MAKER = block(ModBlocks.OUTFIT_MAKER).build("outfit-maker");
+    public static final Item HOLOGRAM_PROJECTOR = block(ModBlocks.HOLOGRAM_PROJECTOR).build("hologram-projector");
 
     public static final Item BOTTLE = normal(Item::new).build("dye-bottle");
     //public static final Item MANNEQUIN_TOOL = normal(MannequinToolItem::new).build("mannequin-tool");
@@ -67,8 +68,8 @@ public class ModItems {
         return new Builder(factory);
     }
 
-    private static Builder block(String blockId) {
-        return normal(properties -> new BlockItem(blockId, properties));
+    private static Builder block(Block block) {
+        return normal(properties -> new BlockItem(block, properties));
     }
 
     private static Builder unlock(SkinSlotType slotType) {

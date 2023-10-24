@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.api;
 
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -9,28 +8,34 @@ import java.util.function.Function;
 
 public class Items {
 
-    private static final HashMap<String, Material> ID_TO_MATERIALS = _v2k(Material.values(), it -> it.getKey().toString());
-
-    private static final HashMap<String, Item> ITEMS = new HashMap<>();
+    private static final HashMap<ResourceLocation, Material> ID_TO_MATERIALS = _v2k(Material.values(), it -> new ResourceLocation(it.getKey()));
+    private static final HashMap<ResourceLocation, Item> ITEMS = new HashMap<>();
+    private static final HashMap<String, Item> ITEMS_BK = new HashMap<>();
 
     public static Item AIR = byId("minecraft:air");
 
     public static Item byId(String id) {
-        return ITEMS.computeIfAbsent(id, key -> {
+        return ITEMS_BK.computeIfAbsent(id, id1 -> byKey(new ResourceLocation(id1)));
+    }
+
+    public static Item byKey(ResourceLocation key) {
+        return ITEMS.computeIfAbsent(key, key1 -> {
             Item.Properties properties = new Item.Properties();
-            Material material = ID_TO_MATERIALS.get(id);
+            Material material = ID_TO_MATERIALS.get(key1);
             if (material != null) {
                 properties.material(material);
             }
             Item item = new Item(properties);
-            item.setKey(NamespacedKey.fromString(id));
+            item.setKey(key1);
             return item;
         });
     }
 
+
     public static void register(String id, Item item) {
-        item.setKey(NamespacedKey.fromString(id));
-        ITEMS.put(id, item);
+        ResourceLocation key = new ResourceLocation(id);
+        item.setKey(key);
+        ITEMS.put(key, item);
     }
 
     @Nullable
