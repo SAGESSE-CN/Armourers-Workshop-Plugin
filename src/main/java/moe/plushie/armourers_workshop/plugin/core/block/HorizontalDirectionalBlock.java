@@ -1,19 +1,19 @@
 package moe.plushie.armourers_workshop.plugin.core.block;
 
-import moe.plushie.armourers_workshop.plugin.api.Block;
-import moe.plushie.armourers_workshop.plugin.api.BlockPlaceContext;
-import moe.plushie.armourers_workshop.plugin.api.BlockPos;
-import moe.plushie.armourers_workshop.plugin.api.BlockState;
-import moe.plushie.armourers_workshop.plugin.api.BlockStateProperties;
-import moe.plushie.armourers_workshop.plugin.api.state.StateDefinition;
-import moe.plushie.armourers_workshop.plugin.api.state.properties.EnumProperty;
+import net.cocoonmc.core.BlockPos;
+import net.cocoonmc.core.Direction;
+import net.cocoonmc.core.block.Block;
+import net.cocoonmc.core.block.BlockState;
+import net.cocoonmc.core.block.BlockStateProperties;
+import net.cocoonmc.core.block.state.StateDefinition;
+import net.cocoonmc.core.block.state.properties.EnumProperty;
+import net.cocoonmc.core.item.context.BlockPlaceContext;
 import org.bukkit.World;
-import org.bukkit.block.BlockFace;
 import org.jetbrains.annotations.Nullable;
 
 public class HorizontalDirectionalBlock extends Block {
 
-    public static final EnumProperty<BlockFace> FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public HorizontalDirectionalBlock(Properties properties) {
         super(properties);
@@ -31,11 +31,11 @@ public class HorizontalDirectionalBlock extends Block {
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-        for (BlockFace direction : context.getNearestLookingDirections()) {
-            if (direction == BlockFace.UP || direction == BlockFace.DOWN) {
-                return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOppositeFace());
+        for (Direction direction : context.getNearestLookingDirections()) {
+            if (direction == Direction.UP || direction == Direction.DOWN) {
+                return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
             } else {
-                return this.defaultBlockState().setValue(FACING, direction.getOppositeFace());
+                return this.defaultBlockState().setValue(FACING, direction.getOpposite());
             }
         }
         return null;

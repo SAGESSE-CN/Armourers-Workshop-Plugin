@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.plugin.utils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.Packet;
 import moe.plushie.armourers_workshop.plugin.core.network.CustomPacket;
+import net.cocoonmc.core.network.FriendlyByteBuf;
 
 import java.util.ArrayList;
 import java.util.HashMap;

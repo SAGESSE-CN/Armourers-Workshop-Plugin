@@ -1,12 +1,13 @@
 package moe.plushie.armourers_workshop.plugin.init;
 
-import moe.plushie.armourers_workshop.plugin.api.Block;
-import moe.plushie.armourers_workshop.plugin.api.BlockItem;
-import moe.plushie.armourers_workshop.plugin.api.Item;
-import moe.plushie.armourers_workshop.plugin.api.Items;
 import moe.plushie.armourers_workshop.plugin.core.item.SkinUnlockItem;
 import moe.plushie.armourers_workshop.plugin.core.item.WandOfStyleItem;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
+import net.cocoonmc.core.block.Block;
+import net.cocoonmc.core.item.BlockItem;
+import net.cocoonmc.core.item.Item;
+import net.cocoonmc.core.item.Items;
+import net.cocoonmc.core.resources.ResourceLocation;
 
 import java.util.function.Function;
 
@@ -65,11 +66,11 @@ public class ModItems {
     }
 
     private static Builder normal(Function<Item.Properties, Item> factory) {
-        return new Builder(factory);
+        return new Builder(factory).stacksTo(1);
     }
 
     private static Builder block(Block block) {
-        return normal(properties -> new BlockItem(block, properties));
+        return normal(properties -> new BlockItem(block, properties)).stacksTo(64);
     }
 
     private static Builder unlock(SkinSlotType slotType) {
@@ -92,10 +93,10 @@ public class ModItems {
         }
 
         public Item build(String name) {
-            String id = "armourers_workshop:" + name;
+            ResourceLocation key = new ResourceLocation("armourers_workshop", name);
             Item item = factory.apply(properties);
-            ModLog.debug("Registering Item '{}'", id);
-            Items.register(id, item);
+            ModLog.debug("Registering Item '{}'", key);
+            Items.register(key, item);
             return item;
         }
     }

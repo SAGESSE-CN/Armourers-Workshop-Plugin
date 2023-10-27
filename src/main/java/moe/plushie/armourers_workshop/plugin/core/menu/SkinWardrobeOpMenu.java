@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.core.menu;
 
-import moe.plushie.armourers_workshop.plugin.api.MenuType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
+import net.cocoonmc.core.inventory.MenuType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 

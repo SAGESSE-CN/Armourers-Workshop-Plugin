@@ -1,20 +1,21 @@
 package moe.plushie.armourers_workshop.plugin.init;
 
-import moe.plushie.armourers_workshop.plugin.api.Block;
-import moe.plushie.armourers_workshop.plugin.api.Blocks;
-import moe.plushie.armourers_workshop.plugin.api.ResourceLocation;
 import moe.plushie.armourers_workshop.plugin.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.plugin.core.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.plugin.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.plugin.core.block.SkinLibraryBlock;
+import moe.plushie.armourers_workshop.plugin.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.plugin.core.block.SkinningTableBlock;
+import net.cocoonmc.core.block.Block;
+import net.cocoonmc.core.block.Blocks;
+import net.cocoonmc.core.resources.ResourceLocation;
 
 import java.util.function.Function;
 
 public class ModBlocks {
 
     public static final Block HOLOGRAM_PROJECTOR = normal(HologramProjectorBlock::new).lightLevel(13).noOcclusion().strength(5f, 1200f).build("hologram-projector");
-    //public static final Block SKINNABLE = normal(AttachedHorizontalDirectionalBlock::new).lightLevel(15).noOcclusion().build("skinnable");
+    public static final Block SKINNABLE = normal(SkinnableBlock::new).lightLevel(15).noOcclusion().build("skinnable");
 
     public static final Block DYE_TABLE = normal(DyeTableBlock::new).build("dye-table");
     public static final Block SKINNING_TABLE = normal(SkinningTableBlock::new).build("skinning-table");

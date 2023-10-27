@@ -1,15 +1,18 @@
 package moe.plushie.armourers_workshop.plugin.core.block;
 
-import moe.plushie.armourers_workshop.plugin.api.Block;
-import moe.plushie.armourers_workshop.plugin.api.BlockPos;
-import moe.plushie.armourers_workshop.plugin.api.BlockState;
-import moe.plushie.armourers_workshop.plugin.api.BlockStateProperties;
-import moe.plushie.armourers_workshop.plugin.api.InteractionResult;
-import moe.plushie.armourers_workshop.plugin.api.state.StateDefinition;
-import moe.plushie.armourers_workshop.plugin.api.state.properties.BooleanProperty;
+import moe.plushie.armourers_workshop.plugin.api.WorldAccessor;
+import moe.plushie.armourers_workshop.plugin.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.plugin.init.platform.MenuManager;
+import net.cocoonmc.core.BlockPos;
+import net.cocoonmc.core.block.Block;
+import net.cocoonmc.core.block.BlockState;
+import net.cocoonmc.core.block.BlockStateProperties;
+import net.cocoonmc.core.block.state.StateDefinition;
+import net.cocoonmc.core.block.state.properties.BooleanProperty;
+import net.cocoonmc.core.world.InteractionHand;
+import net.cocoonmc.core.world.InteractionResult;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 
 public class HologramProjectorBlock extends AttachedDirectionalBlock {
 
@@ -20,8 +23,8 @@ public class HologramProjectorBlock extends AttachedDirectionalBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, World world, BlockPos blockPos, Player player, EquipmentSlot hand) {
-        return super.use(blockState, world, blockPos, player, hand);
+    public InteractionResult use(BlockState blockState, World world, BlockPos blockPos, Player player, InteractionHand hand) {
+        return MenuManager.openMenu(ModMenuTypes.HOLOGRAM_PROJECTOR, player, WorldAccessor.of(world, blockPos));
     }
 
     @Override

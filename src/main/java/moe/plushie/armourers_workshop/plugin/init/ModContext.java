@@ -1,12 +1,16 @@
 package moe.plushie.armourers_workshop.plugin.init;
 
 import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
-import net.querz.nbt.io.NBTUtil;
-import net.querz.nbt.tag.CompoundTag;
+import net.cocoonmc.core.nbt.CompoundTag;
+import net.cocoonmc.core.nbt.NbtIO;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,11 +31,11 @@ public class ModContext {
 
     public ModContext(CompoundTag tag) {
         int count = 0;
-        if (tag.containsKey("t0")) {
+        if (tag.contains("t0")) {
             t0 = DataSerializers.loadUUID(tag.get("t0"));
             count += 1;
         }
-        if (tag.containsKey("t1")) {
+        if (tag.contains("t1")) {
             t1 = DataSerializers.loadUUID(tag.get("t1"));
             count += 1;
         }
@@ -46,8 +50,8 @@ public class ModContext {
         // load from data.
         if (file.exists()) {
             try {
-                CompoundTag contextTag = (CompoundTag) NBTUtil.read(file, true).getTag();
-                contextTag = contextTag.getCompoundTag("data");
+                CompoundTag contextTag = NbtIO.readCompressed(Files.newInputStream(file.toPath()));
+                contextTag = contextTag.getCompound("data");
                 current = new ModContext(contextTag);
                 return;
             } catch (Exception e) {
@@ -56,8 +60,8 @@ public class ModContext {
         }
         // save new context into world.
         current = new ModContext();
-        CompoundTag tag1 = new CompoundTag();
-        CompoundTag tag = new CompoundTag();
+        CompoundTag tag1 = CompoundTag.newInstance();
+        CompoundTag tag = CompoundTag.newInstance();
         current.save(tag);
         tag1.put("data", tag);
         tag1.putInt("DataVersion", 3120);
@@ -65,7 +69,7 @@ public class ModContext {
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
-            NBTUtil.write(tag1, file, true);
+            NbtIO.writeCompressed(tag1, Files.newOutputStream(file.toPath()));
         } catch (Exception e) {
             e.printStackTrace();
         }

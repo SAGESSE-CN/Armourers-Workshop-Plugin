@@ -1,15 +1,15 @@
 package moe.plushie.armourers_workshop.plugin.core.item;
 
-import moe.plushie.armourers_workshop.plugin.api.InteractionResult;
-import moe.plushie.armourers_workshop.plugin.api.Item;
-import moe.plushie.armourers_workshop.plugin.api.ItemStack;
-import moe.plushie.armourers_workshop.plugin.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.plugin.init.platform.MenuManager;
+import net.cocoonmc.core.item.Item;
+import net.cocoonmc.core.item.ItemStack;
+import net.cocoonmc.core.world.InteractionHand;
+import net.cocoonmc.core.world.InteractionResult;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 
 public class WandOfStyleItem extends Item {
 
@@ -24,7 +24,7 @@ public class WandOfStyleItem extends Item {
     }
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity entity, EquipmentSlot hand) {
+    public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity entity, InteractionHand hand) {
         openGUI(player, entity);
         return InteractionResult.SUCCESS;
     }

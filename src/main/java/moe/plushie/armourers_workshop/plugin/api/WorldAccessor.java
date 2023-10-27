@@ -1,6 +1,9 @@
 package moe.plushie.armourers_workshop.plugin.api;
 
-import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
+import net.cocoonmc.Cocoon;
+import net.cocoonmc.core.BlockPos;
+import net.cocoonmc.core.block.Block;
+import net.cocoonmc.core.block.BlockEntity;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -16,17 +19,19 @@ public interface WorldAccessor {
 
 
     static WorldAccessor of(World world, BlockPos blockPos) {
-        Location location = new Location(world, blockPos.getX(), blockPos.getY(), blockPos.getZ());
         return new WorldAccessor() {
 
             @Override
             public Block getBlock() {
-                return BukkitUtils.wrap(location.getBlock());
+                Location location = new Location(world, blockPos.getX(), blockPos.getY(), blockPos.getZ());
+//                return location.getBlock();
+//                return BukkitUtils.wrap(location.getBlock());
+                return null;
             }
 
             @Override
             public BlockEntity getBlockEntity() {
-                return BukkitUtils.getBlockEntity(location.getBlock());
+                return Cocoon.API.BLOCK.getBlockEntity(world, blockPos);
             }
 
             @Override

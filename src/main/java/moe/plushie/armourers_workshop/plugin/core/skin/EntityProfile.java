@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
-import moe.plushie.armourers_workshop.plugin.api.ResourceLocation;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
+import net.cocoonmc.core.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.function.Function;

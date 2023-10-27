@@ -1,19 +1,19 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
 import moe.plushie.armourers_workshop.plugin.api.IResultHandler;
-import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinLibraryLoader;
 import moe.plushie.armourers_workshop.plugin.core.data.DataDomain;
 import moe.plushie.armourers_workshop.plugin.core.data.DataManager;
 import moe.plushie.armourers_workshop.plugin.core.data.LocalDataService;
-import moe.plushie.armourers_workshop.plugin.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.init.ModContext;
 import moe.plushie.armourers_workshop.plugin.init.ModLog;
+import moe.plushie.armourers_workshop.plugin.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.plugin.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.plugin.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.plugin.utils.StreamUtils;
 import moe.plushie.armourers_workshop.plugin.utils.ThreadUtils;
+import net.cocoonmc.core.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import javax.crypto.Cipher;

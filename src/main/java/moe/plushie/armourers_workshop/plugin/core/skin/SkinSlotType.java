@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
-import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
+import net.cocoonmc.core.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;

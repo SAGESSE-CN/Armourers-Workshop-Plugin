@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.init;
 
-import moe.plushie.armourers_workshop.plugin.api.ResourceLocation;
+import net.cocoonmc.core.resources.ResourceLocation;
 
 public class ModConstants {
 

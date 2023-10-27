@@ -1,16 +1,15 @@
 package moe.plushie.armourers_workshop.plugin.core.menu;
 
-import moe.plushie.armourers_workshop.customapi.CustomSlot;
-import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
-import moe.plushie.armourers_workshop.plugin.api.MenuType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.init.ModLog;
-import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
+import net.cocoonmc.core.inventory.MenuType;
+import net.cocoonmc.core.inventory.Slot;
+import net.cocoonmc.core.item.ItemStack;
+import net.cocoonmc.core.network.FriendlyByteBuf;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -76,7 +75,7 @@ public class SkinWardrobeMenu extends ContainerMenu {
     }
 
     private int getFreeSlot(SkinSlotType slotType) {
-        for (CustomSlot slot : slots) {
+        for (Slot slot : slots) {
             if (slot instanceof SkinDataSlot && !slot.hasItem()) {
                 SkinDataSlot slot1 = (SkinDataSlot) slot;
                 if (slot1.getSlotTypes().contains(slotType) || slot1.getSlotTypes().isEmpty()) {
@@ -98,28 +97,28 @@ public class SkinWardrobeMenu extends ContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        CustomSlot slot = slots.get(index);
+        Slot slot = slots.get(index);
         if (slot == null || !slot.hasItem()) {
-            return BukkitUtils.EMPTY_STACK;
+            return ItemStack.EMPTY;
         }
         ItemStack itemStack = slot.getItem();
         if (slot instanceof SkinDataSlot) {
             if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
-                return BukkitUtils.EMPTY_STACK;
+                return ItemStack.EMPTY;
             }
-            slot.set(BukkitUtils.EMPTY_STACK);
-            return new ItemStack(itemStack);
+            slot.setItem(ItemStack.EMPTY);
+            return itemStack.copy();
         }
-        SkinSlotType slotType = SkinSlotType.of(BukkitUtils.wrap(itemStack));
+        SkinSlotType slotType = SkinSlotType.of(itemStack);
         if (slotType != null) {
             int startIndex = getFreeSlot(slotType);
             if (!moveItemStackTo(itemStack, startIndex, startIndex + 1, false)) {
-                return BukkitUtils.EMPTY_STACK;
+                return ItemStack.EMPTY;
             }
-            slot.set(BukkitUtils.EMPTY_STACK);
-            return new ItemStack(itemStack);
+            slot.setItem(ItemStack.EMPTY);
+            return itemStack.copy();
         }
-        return BukkitUtils.EMPTY_STACK;
+        return ItemStack.EMPTY;
     }
 
     @Override

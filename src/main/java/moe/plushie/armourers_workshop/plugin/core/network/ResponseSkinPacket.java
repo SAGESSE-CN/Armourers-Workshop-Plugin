@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.plugin.core.network;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.core.skin.Skin;
 import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.plugin.utils.StreamUtils;
+import net.cocoonmc.core.network.FriendlyByteBuf;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;

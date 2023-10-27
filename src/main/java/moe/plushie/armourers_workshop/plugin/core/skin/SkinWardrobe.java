@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
 import moe.plushie.armourers_workshop.plugin.api.ITagRepresentable;
-import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.NonNullList;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.plugin.core.network.NetworkManager;
@@ -9,7 +8,8 @@ import moe.plushie.armourers_workshop.plugin.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.plugin.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
 import moe.plushie.armourers_workshop.plugin.utils.FastCache;
-import net.querz.nbt.tag.CompoundTag;
+import net.cocoonmc.core.item.ItemStack;
+import net.cocoonmc.core.nbt.CompoundTag;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -186,7 +186,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
 
     @Override
     public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
+        CompoundTag nbt = CompoundTag.newInstance();
         SkinWardrobeStorage.saveSkinSlots(skinSlots, nbt);
         SkinWardrobeStorage.saveFlags(flags, nbt);
         SkinWardrobeStorage.saveInventoryItems(inventory, nbt);

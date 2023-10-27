@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.plugin.api;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.cocoonmc.core.network.FriendlyByteBuf;
 
 public class Packet<T> {
 

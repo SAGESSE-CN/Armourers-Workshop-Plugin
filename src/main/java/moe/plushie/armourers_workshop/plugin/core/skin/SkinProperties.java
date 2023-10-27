@@ -3,13 +3,13 @@ package moe.plushie.armourers_workshop.plugin.core.skin;
 import moe.plushie.armourers_workshop.plugin.api.IDataInputStream;
 import moe.plushie.armourers_workshop.plugin.api.IDataOutputStream;
 import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
-import net.querz.nbt.tag.ByteTag;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.DoubleTag;
-import net.querz.nbt.tag.FloatTag;
-import net.querz.nbt.tag.IntTag;
-import net.querz.nbt.tag.StringTag;
-import net.querz.nbt.tag.Tag;
+import net.cocoonmc.core.nbt.ByteTag;
+import net.cocoonmc.core.nbt.CompoundTag;
+import net.cocoonmc.core.nbt.DoubleTag;
+import net.cocoonmc.core.nbt.FloatTag;
+import net.cocoonmc.core.nbt.IntTag;
+import net.cocoonmc.core.nbt.StringTag;
+import net.cocoonmc.core.nbt.Tag;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -173,18 +173,18 @@ public class SkinProperties {
     }
 
     public void readFromNBT(CompoundTag nbt) {
-        for (String key : nbt.keySet()) {
-            Tag<?> value = nbt.get(key);
+        for (String key : nbt.getAllKeys()) {
+            Tag value = nbt.get(key);
             if (value instanceof StringTag) {
-                properties.put(key, ((StringTag) value).getValue());
+                properties.put(key, ((StringTag) value).getAsString());
             } else if (value instanceof IntTag) {
-                properties.put(key, ((IntTag) value).asInt());
+                properties.put(key, ((IntTag) value).getAsInt());
             } else if (value instanceof FloatTag) {
-                properties.put(key, ((FloatTag) value).asFloat());
+                properties.put(key, ((FloatTag) value).getAsFloat());
             } else if (value instanceof DoubleTag) {
-                properties.put(key, ((DoubleTag) value).asDouble());
+                properties.put(key, ((DoubleTag) value).getAsDouble());
             } else if (value instanceof ByteTag) {
-                properties.put(key, ((ByteTag) value).asByte() != 0);
+                properties.put(key, ((ByteTag) value).getAsByte() != 0);
             }
         }
     }

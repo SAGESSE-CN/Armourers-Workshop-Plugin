@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.plugin.core.network;
 
-import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.plugin.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
+import net.cocoonmc.core.network.FriendlyByteBuf;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 

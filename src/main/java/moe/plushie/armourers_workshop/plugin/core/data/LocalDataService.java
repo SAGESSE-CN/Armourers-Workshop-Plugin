@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.plugin.init.ModLog;
 import moe.plushie.armourers_workshop.plugin.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.plugin.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.plugin.utils.SkinUUID;
-import net.querz.nbt.tag.CompoundTag;
+import net.cocoonmc.core.nbt.CompoundTag;
 import org.bukkit.Server;
 
 import java.io.ByteArrayInputStream;
@@ -228,12 +228,12 @@ public class LocalDataService {
             this.fileHash = nbt.getInt("FileHash");
             // properties
             this.properties = SkinProperties.create();
-            this.properties.readFromNBT(nbt.getCompoundTag("Properties"));
+            this.properties.readFromNBT(nbt.getCompound("Properties"));
             this.propertiesHash = nbt.getInt("PropertiesHash");
         }
 
         public CompoundTag serializeNBT() {
-            CompoundTag nbt = new CompoundTag();
+            CompoundTag nbt = CompoundTag.newInstance();
             nbt.putString("UUID", id);
             nbt.putString("Type", type.getRegistryName().toString());
             nbt.putInt("Version", version);
@@ -241,7 +241,7 @@ public class LocalDataService {
             nbt.putInt("FileSize", fileSize);
             nbt.putInt("FileHash", fileHash);
             // properties
-            CompoundTag props = new CompoundTag();
+            CompoundTag props = CompoundTag.newInstance();
             properties.writeToNBT(props);
             nbt.put("Properties", props);
             nbt.putInt("PropertiesHash", propertiesHash);

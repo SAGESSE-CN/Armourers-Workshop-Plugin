@@ -11,6 +11,8 @@ if (version == "unspecified") {
 }
 
 repositories {
+    flatDir { dir "../cocoon/build/libs/" }
+
     mavenLocal()
     mavenCentral()
     maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
@@ -31,10 +33,9 @@ dependencies {
 
     implementation "commons-io:commons-io:2.11.0"
     implementation "commons-lang:commons-lang:2.6"
-    implementation "com.github.Querz:NBT:6.1+"
     implementation "dev.jorel:commandapi-bukkit-shade:9.0.3"
 
-    implementation "moe.plushie.armourers_workshop:customapi:1.0.1-SNAPSHOT"
+    implementation "net.cocoonmc:cocoon:2.0.0"
 }
 
 def targetJavaVersion = 8
@@ -81,9 +82,8 @@ shadowJar {
     def pkg = "moe.plushie.armourers_workshop.plugin.lib"
     relocate("org.apache", pkg)
     relocate("dev.jorel", pkg)
-    relocate("net.querz", pkg)
     relocate("com.frengor", pkg)
-    relocate("moe.plushie.armourers_workshop.customapi", pkg + ".customapi")
+//    relocate("net.cocoonmc", pkg)
 }
 
 

@@ -1,15 +1,14 @@
 package moe.plushie.armourers_workshop.plugin.core.menu;
 
-import moe.plushie.armourers_workshop.customapi.CustomSlot;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
-import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
+import net.cocoonmc.core.inventory.Slot;
+import net.cocoonmc.core.item.ItemStack;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 
-public class SkinSlot extends CustomSlot {
+public class SkinSlot extends Slot {
 
     protected final Collection<SkinSlotType> slotTypes;
 
@@ -21,7 +20,7 @@ public class SkinSlot extends CustomSlot {
     @Override
     public boolean mayPlace(ItemStack itemStack) {
         // when slot type is not provide, we consider it is an unrestricted slot.
-        if (!slotTypes.isEmpty() && !slotTypes.contains(SkinSlotType.of(BukkitUtils.wrap(itemStack)))) {
+        if (!slotTypes.isEmpty() && !slotTypes.contains(SkinSlotType.of(itemStack))) {
             return false;
         }
 //        return container.canPlaceItem(index, itemStack);

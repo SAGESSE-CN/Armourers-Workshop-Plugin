@@ -1,9 +1,14 @@
 package moe.plushie.armourers_workshop.plugin.api.skin;
 
-import moe.plushie.armourers_workshop.plugin.api.ResourceLocation;
+import net.cocoonmc.core.resources.ResourceLocation;
+
+import java.util.List;
 
 public interface ISkinType {
 
+    int getId();
+
     ResourceLocation getRegistryName();
 
+    List<? extends ISkinPartType> getParts();
 }

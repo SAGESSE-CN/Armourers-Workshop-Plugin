@@ -1,15 +1,15 @@
 package moe.plushie.armourers_workshop.plugin.core.block;
 
-import moe.plushie.armourers_workshop.plugin.api.AttachFace;
-import moe.plushie.armourers_workshop.plugin.api.Block;
-import moe.plushie.armourers_workshop.plugin.api.BlockPlaceContext;
-import moe.plushie.armourers_workshop.plugin.api.BlockPos;
-import moe.plushie.armourers_workshop.plugin.api.BlockState;
-import moe.plushie.armourers_workshop.plugin.api.BlockStateProperties;
-import moe.plushie.armourers_workshop.plugin.api.state.StateDefinition;
-import moe.plushie.armourers_workshop.plugin.api.state.properties.EnumProperty;
+import net.cocoonmc.core.BlockPos;
+import net.cocoonmc.core.Direction;
+import net.cocoonmc.core.block.Block;
+import net.cocoonmc.core.block.BlockState;
+import net.cocoonmc.core.block.BlockStateProperties;
+import net.cocoonmc.core.block.state.StateDefinition;
+import net.cocoonmc.core.block.state.properties.AttachFace;
+import net.cocoonmc.core.block.state.properties.EnumProperty;
+import net.cocoonmc.core.item.context.BlockPlaceContext;
 import org.bukkit.World;
-import org.bukkit.block.BlockFace;
 import org.jetbrains.annotations.Nullable;
 
 public class AttachedDirectionalBlock extends HorizontalDirectionalBlock {
@@ -32,12 +32,12 @@ public class AttachedDirectionalBlock extends HorizontalDirectionalBlock {
 
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        for (BlockFace direction : context.getNearestLookingDirections()) {
+        for (Direction direction : context.getNearestLookingDirections()) {
             BlockState blockstate;
-            if (direction == BlockFace.UP || direction == BlockFace.DOWN) {
-                blockstate = this.defaultBlockState().setValue(FACE, direction == BlockFace.UP ? AttachFace.CEILING : AttachFace.FLOOR).setValue(FACING, context.getHorizontalDirection().getOppositeFace());
+            if (direction == Direction.UP || direction == Direction.DOWN) {
+                blockstate = this.defaultBlockState().setValue(FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR).setValue(FACING, context.getHorizontalDirection().getOpposite());
             } else {
-                blockstate = this.defaultBlockState().setValue(FACE, AttachFace.WALL).setValue(FACING, direction.getOppositeFace());
+                blockstate = this.defaultBlockState().setValue(FACE, AttachFace.WALL).setValue(FACING, direction.getOpposite());
             }
             if (blockstate.canSurvive(context.getWorld(), context.getClickedPos())) {
                 return blockstate;

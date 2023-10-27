@@ -2,13 +2,12 @@ package moe.plushie.armourers_workshop.plugin.core.network;
 
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.plugin.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.plugin.api.FMLPacket;
-import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.plugin.api.Packet;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.utils.PacketSplitter;
 import moe.plushie.armourers_workshop.plugin.utils.Scheduler;
+import net.cocoonmc.core.network.FriendlyByteBuf;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -67,13 +66,12 @@ public class NetworkManager {
     }
 
     private static void split(final CustomPacket message, Consumer<Packet<?>> consumer) {
-        if (message instanceof FMLPacket) {
-            FriendlyByteBuf buf = new FriendlyByteBuf();
-            message.encode(buf);
-            consumer.accept(new Packet<>(FML_CHANNEL, buf));
-        } else {
-            splitter.split(message, buf -> new Packet<>(AW_CHANNEL, buf), 32000, consumer);
-        }
+//        if (message instanceof FMLPacket) {
+//            FriendlyByteBuf buf = new FriendlyByteBuf();
+//            message.encode(buf);
+//            consumer.accept(new Packet<>(FML_CHANNEL, buf));
+//        }
+        splitter.split(message, buf -> new Packet<>(AW_CHANNEL, buf), 32000, consumer);
     }
 
 

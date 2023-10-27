@@ -1,14 +1,14 @@
 package moe.plushie.armourers_workshop.plugin.core.item;
 
-import moe.plushie.armourers_workshop.plugin.api.Component;
-import moe.plushie.armourers_workshop.plugin.api.InteractionResultHolder;
-import moe.plushie.armourers_workshop.plugin.api.Item;
-import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
+import net.cocoonmc.core.item.Item;
+import net.cocoonmc.core.item.ItemStack;
+import net.cocoonmc.core.network.Component;
+import net.cocoonmc.core.world.InteractionHand;
+import net.cocoonmc.core.world.InteractionResultHolder;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 
 public class SkinUnlockItem extends Item {
 
@@ -20,7 +20,7 @@ public class SkinUnlockItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(ItemStack itemStack, Player player, EquipmentSlot hand) {
+    public InteractionResultHolder<ItemStack> use(ItemStack itemStack, Player player, InteractionHand hand) {
         ISkinType skinType = slotType.getSkinType();
         SkinWardrobe wardrobe = SkinWardrobe.of(player);
         if (wardrobe == null || skinType == null) {

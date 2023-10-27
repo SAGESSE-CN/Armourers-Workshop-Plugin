@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.plugin.core.network;
 
 import io.netty.buffer.ByteBufOutputStream;
-import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.init.ModConfig;
 import moe.plushie.armourers_workshop.plugin.init.ModConstants;
 import moe.plushie.armourers_workshop.plugin.init.ModContext;
+import net.cocoonmc.core.network.FriendlyByteBuf;
 import org.bukkit.entity.Player;
 
 import java.io.ObjectOutputStream;

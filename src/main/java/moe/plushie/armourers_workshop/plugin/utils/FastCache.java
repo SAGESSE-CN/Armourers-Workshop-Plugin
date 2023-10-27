@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.plugin.utils;
 
-import moe.plushie.armourers_workshop.plugin.api.BlockEntity;
-import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
+import net.cocoonmc.core.item.ItemStack;
 import org.bukkit.entity.Entity;
 
 import java.util.WeakHashMap;
@@ -13,10 +12,6 @@ public class FastCache<K, V> {
 
     public static final FastCache<Entity, SkinWardrobe> ENTITY_TO_SKIN_WARDROBE = new FastCache<>();
     public static final FastCache<ItemStack, SkinDescriptor> ITEM_TO_SKIN_DESCRIPTOR = new FastCache<>();
-
-    public static final FastCache<ItemStack, org.bukkit.inventory.ItemStack> ITEM_TO_BUKKIT_ITEM = new FastCache<>();
-    public static final FastCache<org.bukkit.inventory.ItemStack, ItemStack> BUKKIT_ITEM_TO_ITEM = new FastCache<>();
-    public static final FastCache<Object, BlockEntity> STATE_TO_BLOCK_ENTITY = new FastCache<>();
 
     private final WeakHashMap<K, V> values = new WeakHashMap<>();
 

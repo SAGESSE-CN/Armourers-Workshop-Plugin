@@ -1,15 +1,14 @@
 package moe.plushie.armourers_workshop.plugin.utils;
 
 import io.netty.buffer.Unpooled;
-import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IEntitySerializer;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
-import net.querz.nbt.io.SNBTParser;
-import net.querz.nbt.io.SNBTUtil;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.IntArrayTag;
-import net.querz.nbt.tag.StringTag;
-import net.querz.nbt.tag.Tag;
+import net.cocoonmc.core.nbt.CompoundTag;
+import net.cocoonmc.core.nbt.IntArrayTag;
+import net.cocoonmc.core.nbt.NbtIO;
+import net.cocoonmc.core.nbt.StringTag;
+import net.cocoonmc.core.nbt.Tag;
+import net.cocoonmc.core.network.FriendlyByteBuf;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +47,7 @@ public class DataSerializers {
             if (tag != null) {
                 return tag;
             }
-            return new CompoundTag();
+            return CompoundTag.newInstance();
         }
     };
 
@@ -268,13 +267,13 @@ public class DataSerializers {
 //        };
 //    }
     public static CompoundTag parseCompoundTag(CompoundTag nbt, String key) {
-        Tag<?> value = nbt.get(key);
+        Tag value = nbt.get(key);
         if (value instanceof CompoundTag) {
             return (CompoundTag) value;
         }
         if (value instanceof StringTag) {
             try {
-                return (CompoundTag) SNBTUtil.fromSNBT(((StringTag) value).getValue());
+                return NbtIO.fromString(((StringTag) value).getAsString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -700,7 +699,7 @@ public class DataSerializers {
     }
 
     public static IntArrayTag createUUID(UUID uUID) {
-        return new IntArrayTag(uuidToIntArray(uUID));
+        return IntArrayTag.valueOf(uuidToIntArray(uUID));
     }
 
     public static UUID uuidFromIntArray(int[] is) {
@@ -708,10 +707,10 @@ public class DataSerializers {
     }
 
     public static UUID loadUUID(Tag tag) {
-        if (tag.getID() != IntArrayTag.ID) {
-            throw new IllegalArgumentException("Expected UUID-Tag to be of type " + IntArrayTag.ID + ", but found " + tag.getID() + ".");
+        if (tag.getType() != 11) {
+            throw new IllegalArgumentException("Expected UUID-Tag to be of type " + 11 + ", but found " + tag.getType() + ".");
         } else {
-            int[] is = ((IntArrayTag) tag).getValue();
+            int[] is = ((IntArrayTag) tag).getAsIntArray();
             if (is.length != 4) {
                 throw new IllegalArgumentException("Expected UUID-Array to be of length 4, but found " + is.length + ".");
             } else {

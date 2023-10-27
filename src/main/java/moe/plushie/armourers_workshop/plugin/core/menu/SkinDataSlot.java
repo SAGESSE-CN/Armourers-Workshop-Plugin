@@ -1,16 +1,15 @@
 package moe.plushie.armourers_workshop.plugin.core.menu;
 
-import moe.plushie.armourers_workshop.customapi.CustomSlot;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
-import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
+import net.cocoonmc.core.inventory.Slot;
+import net.cocoonmc.core.item.ItemStack;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class SkinDataSlot extends CustomSlot {
+public class SkinDataSlot extends Slot {
 
     private final SkinWardrobe wardrobe;
     private final SkinSlotType slotType;
@@ -28,25 +27,25 @@ public class SkinDataSlot extends CustomSlot {
     @Override
     public ItemStack getItem() {
         if (lastItem == null) {
-            lastItem = BukkitUtils.unwrap(wardrobe.getItem(slotType, slot));
+            lastItem = wardrobe.getItem(slotType, slot);
         }
         return lastItem;
     }
 
     @Override
     public boolean hasItem() {
-        return getItem() != BukkitUtils.EMPTY_STACK;
+        return getItem().isEmpty();
     }
 
     @Override
-    public void set(ItemStack itemStack) {
-        wardrobe.setItem(slotType, slot, BukkitUtils.wrap(itemStack));
+    public void setItem(ItemStack itemStack) {
+        wardrobe.setItem(slotType, slot, itemStack);
         setChanged();
     }
 
     @Override
-    public ItemStack remove(int size) {
-        return BukkitUtils.unwrap(wardrobe.removeItem(slotType, slot, size));
+    public ItemStack removeItem(int size) {
+        return wardrobe.removeItem(slotType, slot, size);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class SkinDataSlot extends CustomSlot {
     @Override
     public boolean mayPlace(ItemStack itemStack) {
         // when slot type is not provide, we consider it is an unrestricted slot.
-        if (!slotTypes.isEmpty() && !slotTypes.contains(SkinSlotType.of(BukkitUtils.wrap(itemStack)))) {
+        if (!slotTypes.isEmpty() && !slotTypes.contains(SkinSlotType.of(itemStack))) {
             return false;
         }
         // TODO

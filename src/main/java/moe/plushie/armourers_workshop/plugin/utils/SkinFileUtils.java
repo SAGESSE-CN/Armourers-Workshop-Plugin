@@ -1,15 +1,17 @@
 package moe.plushie.armourers_workshop.plugin.utils;
 
-import net.querz.nbt.io.NBTUtil;
-import net.querz.nbt.io.SNBTUtil;
-import net.querz.nbt.tag.CompoundTag;
+import net.cocoonmc.core.nbt.CompoundTag;
+import net.cocoonmc.core.nbt.NbtIO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 /**
  * because `commons.io` versions on some servers are too low,
@@ -156,21 +158,21 @@ public class SkinFileUtils {
 //    }
 
     public static void writeNBT(CompoundTag compoundTag, File file) throws IOException {
-        NBTUtil.write(compoundTag, file);
+        NbtIO.write(compoundTag, Files.newOutputStream(file.toPath()));
     }
 
     public static CompoundTag readNBT(File file) throws IOException {
         if (file.exists()) {
-            return (CompoundTag) NBTUtil.read(file).getTag();
+            return NbtIO.read(Files.newInputStream(file.toPath()));
         }
         return null;
     }
 
     public static CompoundTag readNBT(String contents) {
         try {
-            return (CompoundTag) SNBTUtil.fromSNBT(contents);
+            return NbtIO.fromString(contents);
         } catch (Exception e) {
-            return new CompoundTag();
+            return CompoundTag.newInstance();
         }
     }
 }

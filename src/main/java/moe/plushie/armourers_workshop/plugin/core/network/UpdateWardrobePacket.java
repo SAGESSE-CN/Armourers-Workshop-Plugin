@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.core.network;
 
-import moe.plushie.armourers_workshop.plugin.api.FriendlyByteBuf;
 import moe.plushie.armourers_workshop.plugin.api.IEntitySerializer;
 import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
-import moe.plushie.armourers_workshop.plugin.api.ItemStack;
 import moe.plushie.armourers_workshop.plugin.api.NonNullList;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
@@ -13,7 +11,9 @@ import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import moe.plushie.armourers_workshop.plugin.utils.DataAccessor;
 import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
 import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
-import net.querz.nbt.tag.CompoundTag;
+import net.cocoonmc.core.item.ItemStack;
+import net.cocoonmc.core.nbt.CompoundTag;
+import net.cocoonmc.core.network.FriendlyByteBuf;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -59,9 +59,9 @@ public class UpdateWardrobePacket extends CustomPacket {
     }
 
     public static UpdateWardrobePacket pick(SkinWardrobe wardrobe, int slot, ItemStack itemStack) {
-        CompoundTag compoundNBT = new CompoundTag();
+        CompoundTag compoundNBT = CompoundTag.newInstance();
         compoundNBT.putInt("Slot", slot);
-        compoundNBT.put("Item", itemStack.save(new CompoundTag()));
+        compoundNBT.put("Item", itemStack.save(CompoundTag.newInstance()));
         return new UpdateWardrobePacket(wardrobe, Mode.SYNC_ITEM, compoundNBT, null, null);
     }
 
@@ -117,7 +117,7 @@ public class UpdateWardrobePacket extends CustomPacket {
                 NonNullList<ItemStack> inventory = wardrobe.getInventory();
                 int slot = compoundNBT.getInt("Slot");
                 if (slot < inventory.size()) {
-                    inventory.set(slot, ItemStack.of(compoundNBT.getCompoundTag("Item")));
+                    inventory.set(slot, ItemStack.of(compoundNBT.getCompound("Item")));
                     wardrobe.save();
                     return wardrobe;
                 }
@@ -149,7 +149,7 @@ public class UpdateWardrobePacket extends CustomPacket {
                     return false;
                 }
                 // for security reasons we only allows the player upload the bottle item.
-                ItemStack itemStack = ItemStack.of(compoundNBT.getCompoundTag("Item"));
+                ItemStack itemStack = ItemStack.of(compoundNBT.getCompound("Item"));
                 if (itemStack.isEmpty()) {
                     return true;
                 }
