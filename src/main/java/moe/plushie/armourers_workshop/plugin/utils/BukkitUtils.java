@@ -1,10 +1,5 @@
 package moe.plushie.armourers_workshop.plugin.utils;
 
-import com.comphenix.protocol.reflect.accessors.Accessors;
-import com.comphenix.protocol.reflect.accessors.FieldAccessor;
-import com.comphenix.protocol.wrappers.WrappedGameProfile;
-import com.comphenix.protocol.wrappers.WrappedSignedProperty;
-import moe.plushie.armourers_workshop.plugin.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.plugin.core.skin.color.PaintColor;
 import net.cocoonmc.core.block.BlockState;
 import net.cocoonmc.core.item.ItemStack;
@@ -12,7 +7,6 @@ import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.nbt.NbtIO;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Skull;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -22,8 +16,8 @@ import java.io.IOException;
 
 public class BukkitUtils {
 
-    private static FieldAccessor GET_PROFILE;
-    public static final org.bukkit.inventory.ItemStack EMPTY_STACK = new org.bukkit.inventory.ItemStack(Material.AIR, 0);
+//    private static FieldAccessor GET_PROFILE;
+//    public static final org.bukkit.inventory.ItemStack EMPTY_STACK = new org.bukkit.inventory.ItemStack(Material.AIR, 0);
 
 //    public static ItemStack wrap(org.bukkit.inventory.ItemStack itemStack) {
 //        if (isEmpty(itemStack)) {
@@ -188,22 +182,22 @@ public class BukkitUtils {
 //        }
 //    }
 
-    public static void updateBlock(org.bukkit.block.Block block, String id, @Nullable BlockState state, @Nullable CompoundTag tag) {
-        try {
-            String skinURL = getSkinURL(id, state, tag);
-            if (block.getType() != Material.PLAYER_HEAD) {
-                block.setType(Material.PLAYER_HEAD, true);
-            }
-            setSkullTexture(block, skinURL);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void updateBlockAndUpdate(org.bukkit.block.Block block, String id, @Nullable BlockState state, @Nullable CompoundTag tag) {
-        updateBlock(block, id, state, tag);
-        block.getState().update(true, false);
-    }
+//    public static void updateBlock(org.bukkit.block.Block block, String id, @Nullable BlockState state, @Nullable CompoundTag tag) {
+//        try {
+//            String skinURL = getSkinURL(id, state, tag);
+//            if (block.getType() != Material.PLAYER_HEAD) {
+//                block.setType(Material.PLAYER_HEAD, true);
+//            }
+//            setSkullTexture(block, skinURL);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public static void updateBlockAndUpdate(org.bukkit.block.Block block, String id, @Nullable BlockState state, @Nullable CompoundTag tag) {
+//        updateBlock(block, id, state, tag);
+//        block.getState().update(true, false);
+//    }
 
     public static Entity findEntity(World world, int entityId) {
         for (Entity entity : world.getEntities()) {
@@ -214,45 +208,45 @@ public class BukkitUtils {
         return null;
     }
 
-    private static String getSkinURL(String id, @Nullable BlockState state, @Nullable CompoundTag tag) throws IOException {
-        CompoundTag blockTag = CompoundTag.newInstance();
-        blockTag.putString("id", id);
-        if (state != null) {
-            CompoundTag stateTag = state.serialize();
-            if (stateTag.size() != 0) {
-                blockTag.put("state", stateTag);
-            }
-        }
-        if (tag != null) {
-            blockTag.put("tag", tag);
-        }
-        String value = NbtIO.toString(blockTag);
-        return "\",__redirected_block__:" + value + ",__block_redirected__:\"";
-    }
+//    private static String getSkinURL(String id, @Nullable BlockState state, @Nullable CompoundTag tag) throws IOException {
+//        CompoundTag blockTag = CompoundTag.newInstance();
+//        blockTag.putString("id", id);
+//        if (state != null) {
+//            CompoundTag stateTag = state.serialize();
+//            if (stateTag.size() != 0) {
+//                blockTag.put("state", stateTag);
+//            }
+//        }
+//        if (tag != null) {
+//            blockTag.put("tag", tag);
+//        }
+//        String value = NbtIO.toString(blockTag);
+//        return "\",__redirected_block__:" + value + ",__block_redirected__:\"";
+//    }
 
 
-    private static String getSkullTexture(org.bukkit.block.Block block) {
-        Skull skull = (Skull) block.getState();
-        if (GET_PROFILE == null) {
-            GET_PROFILE = Accessors.getFieldAccessorOrNull(skull.getClass(), "profile", Object.class);
-            if (GET_PROFILE == null) {
-                return null;
-            }
-        }
-        Object handle = GET_PROFILE.get(skull);
-        if (handle == null) {
-            return null;
-        }
-        WrappedGameProfile profile = WrappedGameProfile.fromHandle(handle);
-        WrappedSignedProperty property = profile.getProperties().get("textures").stream().findFirst().orElse(null);
-        if (property == null) {
-            return null;
-        }
-        return property.getValue();
-    }
-
-    private static void setSkullTexture(org.bukkit.block.Block block, String texture) {
-        NBTEditor.setSkullTexture(block, texture);
-    }
-
+//    private static String getSkullTexture(org.bukkit.block.Block block) {
+//        Skull skull = (Skull) block.getState();
+//        if (GET_PROFILE == null) {
+//            GET_PROFILE = Accessors.getFieldAccessorOrNull(skull.getClass(), "profile", Object.class);
+//            if (GET_PROFILE == null) {
+//                return null;
+//            }
+//        }
+//        Object handle = GET_PROFILE.get(skull);
+//        if (handle == null) {
+//            return null;
+//        }
+//        WrappedGameProfile profile = WrappedGameProfile.fromHandle(handle);
+//        WrappedSignedProperty property = profile.getProperties().get("textures").stream().findFirst().orElse(null);
+//        if (property == null) {
+//            return null;
+//        }
+//        return property.getValue();
+//    }
+//
+//    private static void setSkullTexture(org.bukkit.block.Block block, String texture) {
+//        NBTEditor.setSkullTexture(block, texture);
+//    }
+//
 }

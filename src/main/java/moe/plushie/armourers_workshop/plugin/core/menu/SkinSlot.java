@@ -24,7 +24,7 @@ public class SkinSlot extends Slot {
             return false;
         }
 //        return container.canPlaceItem(index, itemStack);
-        return false;
+        return true;
     }
 
     public Collection<SkinSlotType> getSlotTypes() {

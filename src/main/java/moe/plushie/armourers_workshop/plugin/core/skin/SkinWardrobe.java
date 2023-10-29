@@ -1,13 +1,15 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
 import moe.plushie.armourers_workshop.plugin.api.ITagRepresentable;
-import moe.plushie.armourers_workshop.plugin.api.NonNullList;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.plugin.core.network.NetworkManager;
 import moe.plushie.armourers_workshop.plugin.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.plugin.init.ModEntityProfiles;
+import moe.plushie.armourers_workshop.plugin.utils.CacheKeys;
 import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
-import moe.plushie.armourers_workshop.plugin.utils.FastCache;
+import net.cocoonmc.Cocoon;
+import net.cocoonmc.core.inventory.Container;
+import net.cocoonmc.core.inventory.SimpleContainer;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.nbt.CompoundTag;
 import org.bukkit.NamespacedKey;
@@ -28,8 +30,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
 
     private final HashMap<SkinSlotType, Integer> skinSlots = new HashMap<>();
 
-    private final NonNullList<ItemStack> inventory = NonNullList.withSize(SkinSlotType.getTotalSize(), ItemStack.EMPTY);
-
+    private final SimpleContainer inventory = new SimpleContainer(SkinSlotType.getTotalSize());
 
     private final int id;
     private final EntityProfile profile;
@@ -43,19 +44,19 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
 
     @Nullable
     public static SkinWardrobe of(@Nullable Entity entity) {
-        if (entity != null) {
-            return FastCache.ENTITY_TO_SKIN_WARDROBE.computeIfAbsent(entity, it -> {
-                EntityProfile profile = ModEntityProfiles.getProfile(entity);
-                SkinWardrobe wardrobe = new SkinWardrobe(entity, profile);
-                NamespacedKey key = SkinWardrobeStorage.getKey();
-                CompoundTag tag = entity.getPersistentDataContainer().get(key, DataSerializers.COMPOUND_TAG);
-                if (tag != null && tag.size() != 0) {
-                    wardrobe.deserializeNBT(tag);
-                }
-                return wardrobe;
-            });
+        if (entity == null) {
+            return null;
         }
-        return null;
+        return Cocoon.API.CACHE.computeIfAbsent(entity, CacheKeys.SKIN_WARDROBE_KEY, it -> {
+            EntityProfile profile = ModEntityProfiles.getProfile(entity);
+            SkinWardrobe wardrobe = new SkinWardrobe(entity, profile);
+            NamespacedKey key = SkinWardrobeStorage.getKey();
+            CompoundTag tag = entity.getPersistentDataContainer().get(key, DataSerializers.COMPOUND_TAG);
+            if (tag != null && tag.size() != 0) {
+                wardrobe.deserializeNBT(tag);
+            }
+            return wardrobe;
+        });
     }
 
     public void save() {
@@ -102,7 +103,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
     public int getFreeSlot(SkinSlotType slotType) {
         int unlockedSize = getUnlockedSize(slotType);
         for (int i = 0; i < unlockedSize; ++i) {
-            if (inventory.get(slotType.getIndex() + i).isEmpty()) {
+            if (inventory.getItem(slotType.getIndex() + i).isEmpty()) {
                 return i;
             }
         }
@@ -113,14 +114,14 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
         if (slot >= getUnlockedSize(slotType)) {
             return ItemStack.EMPTY;
         }
-        return inventory.get(slotType.getIndex() + slot);
+        return inventory.getItem(slotType.getIndex() + slot);
     }
 
     public void setItem(SkinSlotType slotType, int slot, ItemStack itemStack) {
         if (slot >= getUnlockedSize(slotType)) {
             return;
         }
-        inventory.set(slotType.getIndex() + slot, itemStack);
+        inventory.setItem(slotType.getIndex() + slot, itemStack);
     }
 
     public ItemStack removeItem(SkinSlotType slotType, int slot, int size) {
@@ -152,7 +153,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
         return slotType.getMaxSize();
     }
 
-    public NonNullList<ItemStack> getInventory() {
+    public Container getInventory() {
         return inventory;
     }
 

@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.plugin.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.plugin.init.ModItems;
 import moe.plushie.armourers_workshop.plugin.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.plugin.init.ModPackets;
+import moe.plushie.armourers_workshop.plugin.init.handler.EntityEventHandler;
 import moe.plushie.armourers_workshop.plugin.init.handler.PacketEventHandler;
 import net.cocoonmc.Cocoon;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,7 +42,7 @@ public final class ArmourersWorkshop extends JavaPlugin {
         SkinLoader.getInstance().setup();
 
         // Plugin startup logic
-//        getServer().getPluginManager().registerEvents(new EntityEventHandler(), this);
+        getServer().getPluginManager().registerEvents(new EntityEventHandler(), this);
 //        getServer().getPluginManager().registerEvents(new ItemEventHandler(), this);
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketEventHandler(this));

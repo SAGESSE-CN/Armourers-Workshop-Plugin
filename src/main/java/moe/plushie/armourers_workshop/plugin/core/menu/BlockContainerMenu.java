@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.core.menu;
 
 import moe.plushie.armourers_workshop.plugin.api.WorldAccessor;
+import net.cocoonmc.Cocoon;
 import net.cocoonmc.core.inventory.MenuType;
 import net.cocoonmc.core.inventory.Slot;
 import net.cocoonmc.core.item.Item;
@@ -8,6 +9,7 @@ import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.network.FriendlyByteBuf;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public abstract class BlockContainerMenu extends ContainerMenu {
     public BlockContainerMenu(MenuType<?> menuType, Player player, WorldAccessor accessor) {
         super(menuType, player);
         this.accessor = accessor;
-        this.inventory = getInventory();
+        this.inventory = Cocoon.API.MENU.create((InventoryHolder) null, getSlotSize(), "");
 
         this.addPlayerSlots(player.getInventory(), 8, 108);
     }
@@ -40,6 +42,19 @@ public abstract class BlockContainerMenu extends ContainerMenu {
         buffer.writeBlockPos(accessor.getBlockPos());
     }
 
+    @Override
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
+    }
+
+//    protected void fillInventory(Inventory inventory) {
+//        BlockEntity blockEntity = accessor.getBlockEntity();
+//    }
 
     protected void addInputSlot(Inventory inventory, int slot, int x, int y) {
         addInputSlot(inventory, slot, x, y, null, null);
@@ -128,6 +143,7 @@ public abstract class BlockContainerMenu extends ContainerMenu {
     protected void onDataSlotChange(Slot slot) {
     }
 
+    protected abstract int getSlotSize();
 
     public static class PlaceFilter {
 

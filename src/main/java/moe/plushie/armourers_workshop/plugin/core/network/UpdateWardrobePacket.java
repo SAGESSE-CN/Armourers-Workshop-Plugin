@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.plugin.core.network;
 
 import moe.plushie.armourers_workshop.plugin.api.IEntitySerializer;
 import moe.plushie.armourers_workshop.plugin.api.IServerPacketHandler;
-import moe.plushie.armourers_workshop.plugin.api.NonNullList;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.plugin.init.ModItems;
@@ -11,6 +10,7 @@ import moe.plushie.armourers_workshop.plugin.utils.BukkitUtils;
 import moe.plushie.armourers_workshop.plugin.utils.DataAccessor;
 import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
 import moe.plushie.armourers_workshop.plugin.utils.ObjectUtils;
+import net.cocoonmc.core.inventory.Container;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.network.FriendlyByteBuf;
@@ -114,10 +114,10 @@ public class UpdateWardrobePacket extends CustomPacket {
                 return wardrobe;
             }
             case SYNC_ITEM: {
-                NonNullList<ItemStack> inventory = wardrobe.getInventory();
+                Container inventory = wardrobe.getInventory();
                 int slot = compoundNBT.getInt("Slot");
-                if (slot < inventory.size()) {
-                    inventory.set(slot, ItemStack.of(compoundNBT.getCompound("Item")));
+                if (slot < inventory.getContainerSize()) {
+                    inventory.setItem(slot, ItemStack.of(compoundNBT.getCompound("Item")));
                     wardrobe.save();
                     return wardrobe;
                 }

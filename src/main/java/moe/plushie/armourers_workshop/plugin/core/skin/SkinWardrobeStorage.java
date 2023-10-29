@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.plugin.core.skin;
 
 import moe.plushie.armourers_workshop.plugin.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.plugin.api.NonNullList;
+import net.cocoonmc.core.inventory.Container;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.nbt.ListTag;
@@ -81,10 +81,10 @@ public class SkinWardrobeStorage {
         }
     }
 
-    public static void saveInventoryItems(NonNullList<ItemStack> inventory, CompoundTag nbt) {
+    public static void saveInventoryItems(Container inventory, CompoundTag nbt) {
         ListTag listTag = ListTag.newInstance();
-        for (int i = 0; i < inventory.size(); ++i) {
-            ItemStack itemStack = inventory.get(i);
+        for (int i = 0; i < inventory.getContainerSize(); ++i) {
+            ItemStack itemStack = inventory.getItem(i);
             if (!itemStack.isEmpty()) {
                 CompoundTag compoundTag2 = CompoundTag.newInstance();
                 compoundTag2.putByte("Slot", (byte) i);
@@ -97,7 +97,7 @@ public class SkinWardrobeStorage {
         }
     }
 
-    public static void loadInventoryItems(NonNullList<ItemStack> inventory, CompoundTag nbt) {
+    public static void loadInventoryItems(Container inventory, CompoundTag nbt) {
         ListTag listTag = nbt.getList("Items", 10);
         if (listTag == null || listTag.size() == 0) {
             return;
@@ -105,8 +105,8 @@ public class SkinWardrobeStorage {
         for (int i = 0; i < listTag.size(); ++i) {
             CompoundTag compoundTag2 = (CompoundTag) listTag.get(i);
             int j = compoundTag2.getByte("Slot") & 255;
-            if (j < inventory.size()) {
-                inventory.set(j, new ItemStack(compoundTag2));
+            if (j < inventory.getContainerSize()) {
+                inventory.setItem(j, new ItemStack(compoundTag2));
             }
         }
     }

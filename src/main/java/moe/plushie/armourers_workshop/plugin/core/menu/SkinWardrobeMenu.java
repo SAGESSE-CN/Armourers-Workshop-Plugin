@@ -24,7 +24,7 @@ public class SkinWardrobeMenu extends ContainerMenu {
     public SkinWardrobeMenu(MenuType<?> menuType, Player player, SkinWardrobe wardrobe) {
         super(menuType, player);
         this.wardrobe = wardrobe;
-        this.inventory = getInventory();
+        this.inventory = wardrobe.getInventory().asBukkit();
 
         addPlayerSlots(player.getInventory(), 0, 0);
 
@@ -43,13 +43,11 @@ public class SkinWardrobeMenu extends ContainerMenu {
     }
 
     protected void addEquipmentSlots() {
-        SkinSlotType[] slotTypes = {SkinSlotType.SWORD, SkinSlotType.SHIELD, SkinSlotType.BOW, SkinSlotType.TRIDENT, null, SkinSlotType.PICKAXE, SkinSlotType.AXE, SkinSlotType.SHOVEL, SkinSlotType.HOE};
+        SkinSlotType[] slotTypes = {SkinSlotType.SWORD, SkinSlotType.SHIELD, SkinSlotType.BOW, SkinSlotType.TRIDENT, SkinSlotType.PICKAXE, SkinSlotType.AXE, SkinSlotType.SHOVEL, SkinSlotType.HOE};
         for (SkinSlotType slotType : slotTypes) {
-            if (slotType != null) {
-                int count = wardrobe.getUnlockedSize(slotType);
-                if (count > 0) {
-                    addSkinSlots(slotType);
-                }
+            int count = wardrobe.getUnlockedSize(slotType);
+            if (count > 0) {
+                addSkinSlots(slotType);
             }
         }
     }
@@ -68,16 +66,17 @@ public class SkinWardrobeMenu extends ContainerMenu {
     }
 
     private void addSkinSlots(SkinSlotType slotType) {
+        int index = slotType.getIndex();
         int size = wardrobe.getUnlockedSize(slotType);
         for (int i = 0; i < size; ++i) {
-            addSlot(new SkinDataSlot(inventory, wardrobe, slotType, i));
+            addSlot(new SkinSlot(inventory, index + i, 0, 0, slotType));
         }
     }
 
     private int getFreeSlot(SkinSlotType slotType) {
         for (Slot slot : slots) {
-            if (slot instanceof SkinDataSlot && !slot.hasItem()) {
-                SkinDataSlot slot1 = (SkinDataSlot) slot;
+            if (slot instanceof SkinSlot && !slot.hasItem()) {
+                SkinSlot slot1 = (SkinSlot) slot;
                 if (slot1.getSlotTypes().contains(slotType) || slot1.getSlotTypes().isEmpty()) {
                     return slot1.index;
                 }
@@ -102,7 +101,7 @@ public class SkinWardrobeMenu extends ContainerMenu {
             return ItemStack.EMPTY;
         }
         ItemStack itemStack = slot.getItem();
-        if (slot instanceof SkinDataSlot) {
+        if (slot instanceof SkinSlot) {
             if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
                 return ItemStack.EMPTY;
             }
@@ -160,8 +159,8 @@ public class SkinWardrobeMenu extends ContainerMenu {
     }
 
     @Override
-    public int getSlotSize() {
-        return SkinSlotType.getTotalSize();
+    public Inventory getInventory() {
+        return inventory;
     }
 
     @Nullable

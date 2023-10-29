@@ -3,8 +3,9 @@ package moe.plushie.armourers_workshop.plugin.core.skin;
 import moe.plushie.armourers_workshop.plugin.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.plugin.core.skin.color.ColorScheme;
 import moe.plushie.armourers_workshop.plugin.init.ModItems;
+import moe.plushie.armourers_workshop.plugin.utils.CacheKeys;
 import moe.plushie.armourers_workshop.plugin.utils.DataSerializers;
-import moe.plushie.armourers_workshop.plugin.utils.FastCache;
+import net.cocoonmc.Cocoon;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.nbt.CompoundTag;
 
@@ -37,7 +38,7 @@ public class SkinDescriptor {
         if (itemStack.isEmpty()) {
             return EMPTY;
         }
-        return FastCache.ITEM_TO_SKIN_DESCRIPTOR.computeIfAbsent(itemStack, it -> {
+        return Cocoon.API.CACHE.computeIfAbsent(itemStack, CacheKeys.SKIN_KEY, it -> {
             CompoundTag nbt = itemStack.getTag();
             if (nbt == null || !nbt.contains("ArmourersWorkshop")) {
                 return EMPTY;

@@ -24,6 +24,11 @@ public abstract class ContainerMenu extends Menu {
         return true;
     }
 
+    @Override
+    public Inventory getInventory() {
+        return null;
+    }
+
     public ItemStack quickMoveStack(Player player, int index, int slotSize) {
         Slot slot = slots.get(index);
         if (slot == null || !slot.hasItem()) {
