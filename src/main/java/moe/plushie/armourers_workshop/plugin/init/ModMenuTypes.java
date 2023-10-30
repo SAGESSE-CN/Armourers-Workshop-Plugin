@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.plugin.init;
 
+import moe.plushie.armourers_workshop.plugin.core.menu.ColorMixerMenu;
 import moe.plushie.armourers_workshop.plugin.core.menu.CreativeSkinLibraryMenu;
 import moe.plushie.armourers_workshop.plugin.core.menu.DyeTableMenu;
 import moe.plushie.armourers_workshop.plugin.core.menu.GlobalSkinLibraryMenu;
@@ -26,7 +27,7 @@ public class ModMenuTypes {
     public static final MenuType<GlobalSkinLibraryMenu> SKIN_LIBRARY_GLOBAL = normal(GlobalSkinLibraryMenu::new).build("skin-library-global");
 
     public static final MenuType<HologramProjectorMenu> HOLOGRAM_PROJECTOR = normal(HologramProjectorMenu::new).build("hologram-projector");
-    //public static final MenuType<ColorMixerMenu> COLOR_MIXER = block(ColorMixerMenu::new, ModBlocks.COLOR_MIXER).bind(() -> ColorMixerWindow::new).build("colour-mixer");
+    public static final MenuType<ColorMixerMenu> COLOR_MIXER = normal(ColorMixerMenu::new).build("colour-mixer");
     //public static final MenuType<ArmourerMenu> ARMOURER = block(ArmourerMenu::new, ModBlocks.ARMOURER).bind(() -> ArmourerWindow::new).build("armourer");
     //public static final MenuType<OutfitMakerMenu> OUTFIT_MAKER = block(OutfitMakerMenu::new, ModBlocks.OUTFIT_MAKER).bind(() -> OutfitMakerWindow::new).build("outfit-maker");
     //public static final MenuType<AdvancedSkinBuilderMenu> ADVANCED_SKIN_BUILDER = block(AdvancedSkinBuilderMenu::new, ModBlocks.ADVANCED_SKIN_BUILDER).bind(() -> AdvancedSkinBuilderWindow::new).build("advanced-skin-builder");
@@ -49,7 +50,7 @@ public class ModMenuTypes {
 
         public MenuType<M> build(String name) {
             ResourceLocation registryName = new ResourceLocation("armourers_workshop", name);
-            return new MenuType<>(registryName, factory);
+            return MenuType.register(registryName, new MenuType<>(factory));
         }
     }
 

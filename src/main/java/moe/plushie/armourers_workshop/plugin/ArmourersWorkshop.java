@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.plugin.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.plugin.core.network.NetworkManager;
 import moe.plushie.armourers_workshop.plugin.core.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.plugin.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.plugin.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.plugin.init.ModBlocks;
 import moe.plushie.armourers_workshop.plugin.init.ModCommands;
 import moe.plushie.armourers_workshop.plugin.init.ModConfig;
@@ -31,9 +32,10 @@ public final class ArmourersWorkshop extends JavaPlugin {
 
         ModBlocks.init();
         ModItems.init();
-        ModEntityProfiles.init();
+        ModBlockEntities.init();
         ModMenuTypes.init();
         ModCommands.init();
+        ModEntityProfiles.init();
 
         NetworkManager.init();
         SkinningRecipes.init();

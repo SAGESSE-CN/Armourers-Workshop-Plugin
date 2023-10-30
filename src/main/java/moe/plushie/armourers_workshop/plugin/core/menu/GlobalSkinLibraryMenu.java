@@ -11,7 +11,7 @@ public class GlobalSkinLibraryMenu extends BlockContainerMenu {
     }
 
     @Override
-    public int getSlotSize() {
+    public int getContainerSize() {
         return 2;
     }
 }

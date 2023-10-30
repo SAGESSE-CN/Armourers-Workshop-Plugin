@@ -1,15 +1,15 @@
 package moe.plushie.armourers_workshop.plugin.core.menu;
 
 import moe.plushie.armourers_workshop.plugin.api.WorldAccessor;
-import net.cocoonmc.Cocoon;
+import net.cocoonmc.core.inventory.Container;
 import net.cocoonmc.core.inventory.MenuType;
+import net.cocoonmc.core.inventory.SimpleContainer;
 import net.cocoonmc.core.inventory.Slot;
 import net.cocoonmc.core.item.Item;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.network.FriendlyByteBuf;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.function.Predicate;
 
 public abstract class BlockContainerMenu extends ContainerMenu {
 
-    protected final Inventory inventory;
+    private Inventory inventory;
     protected final WorldAccessor accessor;
 
     protected final ArrayList<Slot> inputSlots = new ArrayList<>();
@@ -27,7 +27,6 @@ public abstract class BlockContainerMenu extends ContainerMenu {
     public BlockContainerMenu(MenuType<?> menuType, Player player, WorldAccessor accessor) {
         super(menuType, player);
         this.accessor = accessor;
-        this.inventory = Cocoon.API.MENU.create((InventoryHolder) null, getSlotSize(), "");
 
         this.addPlayerSlots(player.getInventory(), 8, 108);
     }
@@ -42,8 +41,12 @@ public abstract class BlockContainerMenu extends ContainerMenu {
         buffer.writeBlockPos(accessor.getBlockPos());
     }
 
+
     @Override
     public Inventory getInventory() {
+        if (inventory == null) {
+            inventory = createInventoryContainer().asBukkit();
+        }
         return inventory;
     }
 
@@ -52,9 +55,9 @@ public abstract class BlockContainerMenu extends ContainerMenu {
         super.broadcastChanges();
     }
 
-//    protected void fillInventory(Inventory inventory) {
-//        BlockEntity blockEntity = accessor.getBlockEntity();
-//    }
+    protected Container createInventoryContainer() {
+        return new SimpleContainer(getContainerSize());
+    }
 
     protected void addInputSlot(Inventory inventory, int slot, int x, int y) {
         addInputSlot(inventory, slot, x, y, null, null);
@@ -143,7 +146,7 @@ public abstract class BlockContainerMenu extends ContainerMenu {
     protected void onDataSlotChange(Slot slot) {
     }
 
-    protected abstract int getSlotSize();
+    protected abstract int getContainerSize();
 
     public static class PlaceFilter {
 

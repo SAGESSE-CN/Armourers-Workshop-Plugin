@@ -2,11 +2,14 @@ package moe.plushie.armourers_workshop.plugin.init.handler;
 
 import moe.plushie.armourers_workshop.plugin.core.network.NetworkManager;
 import moe.plushie.armourers_workshop.plugin.core.network.UpdateContextPacket;
+import moe.plushie.armourers_workshop.plugin.init.ModLog;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.lang.reflect.Method;
@@ -31,6 +34,12 @@ public class EntityEventHandler implements Listener {
             e.printStackTrace();
         }
     }
+
+//    @EventHandler
+//    public void on(BlockDropItemEvent event) {
+//        ModLog.debug("{}: {} => {}", event.getPlayer(), event.getBlock(), event.getItems());
+////        Bukkit.broadcastMessage(event.getBlock().getType().name() + " => " + event.getEntityType().getName() + " : " + event.getTo().name());
+//    }
 
 //    @EventHandler
 //    public void onInteractBlock(PlayerInteractEvent event) {

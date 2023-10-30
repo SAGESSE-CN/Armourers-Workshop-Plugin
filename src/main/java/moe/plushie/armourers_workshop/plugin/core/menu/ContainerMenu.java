@@ -24,11 +24,6 @@ public abstract class ContainerMenu extends Menu {
         return true;
     }
 
-    @Override
-    public Inventory getInventory() {
-        return null;
-    }
-
     public ItemStack quickMoveStack(Player player, int index, int slotSize) {
         Slot slot = slots.get(index);
         if (slot == null || !slot.hasItem()) {
@@ -47,20 +42,6 @@ public abstract class ContainerMenu extends Menu {
         }
         slot.setChanged();
         return ItemStack.EMPTY;
-    }
-
-    protected void clearContainer(Player player, Inventory inventory) {
-//        if (!player.isAlive() || player instanceof ServerPlayer && ((ServerPlayer)player).hasDisconnected()) {
-//            for (int i = 0; i < container.getContainerSize(); ++i) {
-//                player.drop(container.removeItemNoUpdate(i), false);
-//            }
-//            return;
-//        }
-//        for (int i = 0; i < container.getContainerSize(); ++i) {
-//            Inventory inventory = player.getInventory();
-//            if (!(inventory.player instanceof ServerPlayer)) continue;
-//            inventory.placeItemBackInInventory(container.removeItemNoUpdate(i));
-//        }
     }
 
     protected void addPlayerSlots(Inventory inventory, int slotsX, int slotsY) {

@@ -9,19 +9,18 @@ import org.bukkit.entity.Player;
 
 public class SkinningTableMenu extends BlockContainerMenu {
 
-    private ItemStack output = ItemStack.EMPTY;
-
     public SkinningTableMenu(MenuType<?> menuType, Player player, WorldAccessor accessor) {
         super(menuType, player, accessor);
-        this.addInputSlot(inventory, 0, 37, 22);
-        this.addInputSlot(inventory, 1, 37, 58);
-        this.addOutputSlot(inventory, 2, 119, 40);
+        this.addInputSlot(getInventory(), 0, 37, 22);
+        this.addInputSlot(getInventory(), 1, 37, 58);
+        this.addOutputSlot(getInventory(), 2, 119, 40);
     }
 
     @Override
     public void removed(Player player) {
         super.removed(player);
-        this.clearContainer(player, inventory);
+        this.outputSlots.forEach(it -> it.setItemNoUpdate(ItemStack.EMPTY));
+        this.clearContainer(player, getInventory());
     }
 
     @Override
@@ -43,7 +42,7 @@ public class SkinningTableMenu extends BlockContainerMenu {
     }
 
     @Override
-    public int getSlotSize() {
+    public int getContainerSize() {
         return 3;
     }
 }

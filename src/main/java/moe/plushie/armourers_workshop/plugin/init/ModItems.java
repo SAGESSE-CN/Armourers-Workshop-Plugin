@@ -96,8 +96,7 @@ public class ModItems {
             ResourceLocation key = new ResourceLocation("armourers_workshop", name);
             Item item = factory.apply(properties);
             ModLog.debug("Registering Item '{}'", key);
-            Items.register(key, item);
-            return item;
+            return Item.register(key, item);
         }
     }
 }

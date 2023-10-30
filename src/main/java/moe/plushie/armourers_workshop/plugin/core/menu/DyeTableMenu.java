@@ -21,9 +21,9 @@ public class DyeTableMenu extends BlockContainerMenu {
 
     public DyeTableMenu(MenuType<?> menuType, Player player, WorldAccessor accessor) {
         super(menuType, player, accessor);
-        this.addDataSlots(inventory, 68, 36, 22, 22);
-        this.addInputSlot(inventory, 8, 26, 23, it -> SkinDescriptor.of(it).isEmpty(), it -> false);
-        this.addOutputSlot(inventory, 9, 26, 69);
+        this.addDataSlots(getInventory(), 68, 36, 22, 22);
+        this.addInputSlot(getInventory(), 8, 26, 23, it -> SkinDescriptor.of(it).isEmpty(), it -> false);
+        this.addOutputSlot(getInventory(), 9, 26, 69);
     }
 
     public ItemStack getOutputStack() {
@@ -63,7 +63,7 @@ public class DyeTableMenu extends BlockContainerMenu {
 
     protected void loadSkin(ItemStack itemStack) {
         if (itemStack.isEmpty()) {
-            inventory.clear();
+            dataSlots.forEach(it -> it.setItemNoUpdate(ItemStack.EMPTY));
             return;
         }
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
@@ -76,7 +76,7 @@ public class DyeTableMenu extends BlockContainerMenu {
                 tag.putInt("Color", paintColor.getRawValue());
                 colorStack = new ItemStack(ModItems.BOTTLE, 1, tag);
             }
-            inventory.setItem(i, colorStack.asBukkit());
+            dataSlots.get(i).setItemNoUpdate(colorStack);
         }
         setOutputStack(itemStack.copy());
     }
@@ -105,7 +105,7 @@ public class DyeTableMenu extends BlockContainerMenu {
     }
 
     @Override
-    public int getSlotSize() {
+    public int getContainerSize() {
         return 10;
     }
 }

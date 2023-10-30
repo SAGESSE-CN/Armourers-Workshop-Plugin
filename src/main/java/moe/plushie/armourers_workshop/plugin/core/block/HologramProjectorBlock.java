@@ -4,10 +4,12 @@ import moe.plushie.armourers_workshop.plugin.api.WorldAccessor;
 import moe.plushie.armourers_workshop.plugin.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.plugin.init.platform.MenuManager;
 import net.cocoonmc.core.BlockPos;
+import net.cocoonmc.core.Direction;
 import net.cocoonmc.core.block.Block;
 import net.cocoonmc.core.block.BlockState;
 import net.cocoonmc.core.block.BlockStateProperties;
 import net.cocoonmc.core.block.state.StateDefinition;
+import net.cocoonmc.core.block.state.properties.AttachFace;
 import net.cocoonmc.core.block.state.properties.BooleanProperty;
 import net.cocoonmc.core.world.InteractionHand;
 import net.cocoonmc.core.world.InteractionResult;
@@ -20,6 +22,7 @@ public class HologramProjectorBlock extends AttachedDirectionalBlock {
 
     public HologramProjectorBlock(Properties properties) {
         super(properties);
+        this.registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FACE, AttachFace.WALL).setValue(LIT, false));
     }
 
     @Override
