@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.utils;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.IEntitySerializer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
 import net.cocoonmc.core.math.Vector3f;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.nbt.IntArrayTag;
@@ -131,18 +132,18 @@ public class DataSerializers {
         }
     };
 
-//    public static final IEntitySerializer<IPaintColor> PAINT_COLOR = new IEntitySerializer<IPaintColor>() {
-//        @Override
-//        public void write(FriendlyByteBuf buffer, IPaintColor color) {
-//            buffer.writeInt(color.getRawValue());
-//        }
-//
-//        @Override
-//        public IPaintColor read(FriendlyByteBuf buffer) {
-//            return PaintColor.of(buffer.readInt());
-//        }
-//    };
-//
+    public static final IEntitySerializer<PaintColor> PAINT_COLOR = new IEntitySerializer<PaintColor>() {
+        @Override
+        public void write(FriendlyByteBuf buffer, PaintColor color) {
+            buffer.writeInt(color.getRawValue());
+        }
+
+        @Override
+        public PaintColor read(FriendlyByteBuf buffer) {
+            return PaintColor.of(buffer.readInt());
+        }
+    };
+
 //    public static final IEntitySerializer<PlayerTextureDescriptor> PLAYER_TEXTURE = new IEntitySerializer<PlayerTextureDescriptor>() {
 //
 //        @Override

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.utils;
 
+import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
 import net.cocoonmc.core.math.Vector3f;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.nbt.FloatTag;
@@ -85,8 +86,20 @@ public class OptionalCompoundTag {
         }
     }
 
+    public PaintColor getOptionalPaintColor(String key, PaintColor defaultValue) {
+        if (tag != null && tag.contains(key, 3)) {
+            return PaintColor.of(tag.getInt(key));
+        }
+        return defaultValue;
+    }
 
-    private static  <T> boolean _shouldPutValue(CompoundTag tag, String key, T value, T defaultValue) {
+    public void putOptionalPaintColor(String key, PaintColor value, PaintColor defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
+            tag.putInt(key, value.getRawValue());
+        }
+    }
+
+    private static <T> boolean _shouldPutValue(CompoundTag tag, String key, T value, T defaultValue) {
         if (tag == null || key == null) {
             return false;
         }
@@ -97,7 +110,7 @@ public class OptionalCompoundTag {
         return true;
     }
 
-    private static  <T> boolean _shouldPutValueArray(CompoundTag tag, String key, Collection<T> value) {
+    private static <T> boolean _shouldPutValueArray(CompoundTag tag, String key, Collection<T> value) {
         if (tag == null || key == null) {
             return false;
         }

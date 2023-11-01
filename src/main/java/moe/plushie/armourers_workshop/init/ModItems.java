@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.item.SkinUnlockItem;
 import moe.plushie.armourers_workshop.core.item.WandOfStyleItem;
 import moe.plushie.armourers_workshop.core.skin.SkinSlotType;
@@ -24,7 +25,7 @@ public class ModItems {
     //public static final Item OUTFIT_MAKER = block(ModBlocks.OUTFIT_MAKER).build("outfit-maker");
     public static final Item HOLOGRAM_PROJECTOR = block(ModBlocks.HOLOGRAM_PROJECTOR).build("hologram-projector");
 
-    public static final Item BOTTLE = normal(Item::new).build("dye-bottle");
+    public static final Item BOTTLE = normal(BottleItem::new).build("dye-bottle");
     //public static final Item MANNEQUIN_TOOL = normal(MannequinToolItem::new).build("mannequin-tool");
     //public static final Item ARMOURERS_HAMMER = normal(ArmourersHammerItem::new).build("armourers-hammer");
     public static final Item WAND_OF_STYLE = normal(WandOfStyleItem::new).build("wand-of-style");
@@ -42,7 +43,7 @@ public class ModItems {
     public static final Item GIFT_SACK = normal(Item::new).stacksTo(64).build("gift-sack");
 
     //public static final Item ARMOURER = block(ModBlocks.ARMOURER).rarity(Rarity.EPIC).build("armourer");
-    //public static final Item COLOR_MIXER = block(ModBlocks.COLOR_MIXER).build("colour-mixer");
+    public static final Item COLOR_MIXER = block(ModBlocks.COLOR_MIXER).build("colour-mixer");
     //public static final Item ADVANCED_SKIN_BUILDER = block(ModBlocks.ADVANCED_SKIN_BUILDER).build("advanced-skin-builder");
 
     //public static final Item SKIN_CUBE = cube(ModBlocks.SKIN_CUBE).build("skin-cube");

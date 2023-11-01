@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.core.blockentity.ColorMixerBlockEntity;
+import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.GlobalSkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;

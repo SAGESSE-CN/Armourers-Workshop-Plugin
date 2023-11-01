@@ -5,15 +5,26 @@ import net.cocoonmc.core.block.BlockEntity;
 import net.cocoonmc.core.block.BlockState;
 import net.cocoonmc.core.inventory.Container;
 import net.cocoonmc.core.item.ItemStack;
+import net.cocoonmc.core.math.Vector3f;
 import net.cocoonmc.core.utils.ContainerHelper;
 import net.cocoonmc.core.utils.NonNullList;
 import net.cocoonmc.core.world.Level;
 import net.cocoonmc.core.world.entity.Player;
 
+import java.util.List;
+
 public abstract class UpdatableContainerBlockEntity extends BlockEntity implements Container {
 
     public UpdatableContainerBlockEntity(Level level, BlockPos pos, BlockState blockState) {
         super(level, pos, blockState);
+    }
+
+    public static void dropContainerIfNeeded(Level level, BlockPos blockPos) {
+        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        if (blockEntity instanceof UpdatableContainerBlockEntity) {
+            List<ItemStack> items = ((UpdatableContainerBlockEntity) blockEntity).getItems();
+            ContainerHelper.dropItems(items, level, Vector3f.of(blockPos));
+        }
     }
 
     @Override

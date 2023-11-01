@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.core.block.ColorMixerBlock;
+import moe.plushie.armourers_workshop.builder.block.ColorMixerBlock;
 import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.core.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
@@ -25,7 +25,7 @@ public class ModBlocks {
     public static final Block SKIN_LIBRARY = normal(SkinLibraryBlock::new).entity(ModBlockEntities.SKIN_LIBRARY).build("skin-library");
     public static final Block SKIN_LIBRARY_GLOBAL = normal(GlobalSkinLibraryBlock::new).entity(ModBlockEntities.SKIN_LIBRARY_GLOBAL).build("skin-library-global");
 
-    //public static final Block OUTFIT_MAKER = normal(HorizontalDirectionalBlock::new).build("outfit-maker");
+    public static final Block OUTFIT_MAKER = normal(ColorMixerBlock::new).entity(ModBlockEntities.COLOR_MIXER).build("outfit-maker");
     public static final Block COLOR_MIXER = normal(ColorMixerBlock::new).entity(ModBlockEntities.COLOR_MIXER).build("colour-mixer");
     //public static final Block ARMOURER = normal(HorizontalDirectionalBlock::new).build("armourer");
     //public static final Block ADVANCED_SKIN_BUILDER = normal(HorizontalDirectionalBlock::new).build("advanced-skin-builder");

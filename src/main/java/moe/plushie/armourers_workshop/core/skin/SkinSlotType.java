@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.item.BottleItem;
 import net.cocoonmc.core.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,9 +64,9 @@ public enum SkinSlotType {
         if (itemStack.isEmpty()) {
             return null;
         }
-//        if (itemStack.getItem() instanceof BottleItem) {
-//            return DYE;
-//        }
+        if (itemStack.getItem() instanceof BottleItem) {
+            return DYE;
+        }
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (!descriptor.isEmpty()) {
             return of(descriptor.getType());

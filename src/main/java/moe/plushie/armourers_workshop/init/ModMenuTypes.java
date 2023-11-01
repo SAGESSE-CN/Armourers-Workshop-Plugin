@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.core.menu.ColorMixerMenu;
+import moe.plushie.armourers_workshop.builder.menu.ColorMixerMenu;
 import moe.plushie.armourers_workshop.library.menu.CreativeSkinLibraryMenu;
 import moe.plushie.armourers_workshop.core.menu.DyeTableMenu;
 import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;

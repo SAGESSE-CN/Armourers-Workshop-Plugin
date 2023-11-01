@@ -2,15 +2,22 @@ package moe.plushie.armourers_workshop.library.block;
 
 import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.core.block.HorizontalDirectionalBlock;
+import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.cocoonmc.core.BlockPos;
+import net.cocoonmc.core.block.BlockEntity;
 import net.cocoonmc.core.block.BlockState;
+import net.cocoonmc.core.item.ItemStack;
+import net.cocoonmc.core.math.Vector3f;
+import net.cocoonmc.core.utils.ContainerHelper;
 import net.cocoonmc.core.world.InteractionHand;
 import net.cocoonmc.core.world.InteractionResult;
 import net.cocoonmc.core.world.Level;
 import net.cocoonmc.core.world.entity.Player;
+
+import java.util.List;
 
 public class SkinLibraryBlock extends HorizontalDirectionalBlock {
 
@@ -29,15 +36,10 @@ public class SkinLibraryBlock extends HorizontalDirectionalBlock {
         return InteractionResult.CONSUME;
     }
 
-    //    @Override
-//    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean p_196243_5_) {
-//        if (state.is(newState.getBlock())) {
-//            return;
-//        }
-//        SkinLibraryBlockEntity blockEntity = ObjectUtils.safeCast(level.getBlockEntity(pos), SkinLibraryBlockEntity.class);
-//        if (blockEntity != null) {
-//            DataSerializers.dropContents(level, pos, blockEntity.getInventory());
-//        }
-//        super.onRemove(state, level, pos, newState, p_196243_5_);
-//    }
+    @Override
+    public void onRemove(Level level, BlockPos blockPos, BlockState oldBlockState, BlockState newBlockState, boolean bl) {
+        if (!oldBlockState.is(newBlockState.getBlock())) {
+            UpdatableContainerBlockEntity.dropContainerIfNeeded(level, blockPos);
+        }
+    }
 }
