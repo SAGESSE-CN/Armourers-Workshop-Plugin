@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkManager;
@@ -28,7 +27,7 @@ public final class ArmourersWorkshopImpl extends JavaPlugin {
     public void onEnable() {
         INSTANCE = this;
 
-        Cocoon.init(this);
+        Cocoon.enable();
 
         ModConfig.init();
         ModPackets.init();
@@ -49,13 +48,13 @@ public final class ArmourersWorkshopImpl extends JavaPlugin {
 
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(new EntityEventHandler(), this);
-
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketEventHandler(this));
+        PacketEventHandler.init();
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        Cocoon.disable();
         SkinLibraryManager.getServer().stop();
         LocalDataService.stop();
         DataManager.stop();

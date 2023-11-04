@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
+import moe.plushie.armourers_workshop.core.skin.SkinOptions;
+import moe.plushie.armourers_workshop.core.skin.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
 import net.cocoonmc.core.math.Vector3f;
 import net.cocoonmc.core.nbt.CompoundTag;
@@ -98,6 +100,36 @@ public class OptionalCompoundTag {
             tag.putInt(key, value.getRawValue());
         }
     }
+
+    public ColorScheme getOptionalColorScheme(String key, ColorScheme defaultValue) {
+        if (tag.contains(key, 10)) {
+            return new ColorScheme(tag.getCompound(key));
+        }
+        return defaultValue;
+    }
+
+    public void putOptionalColorScheme(String key, ColorScheme value, ColorScheme defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
+            tag.put(key, value.serializeNBT());
+        }
+    }
+
+    public SkinOptions getOptionalSkinOptions(String key, SkinOptions defaultValue) {
+        if (tag.contains(key, 10)) {
+            CompoundTag nbt1 = tag.getCompound(key);
+            if (!nbt1.isEmpty()) {
+                return new SkinOptions(nbt1);
+            }
+        }
+        return defaultValue;
+    }
+
+    public void putOptionalSkinOptions(String key, SkinOptions value, SkinOptions defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
+            tag.put(key, value.serializeNBT());
+        }
+    }
+
 
     private static <T> boolean _shouldPutValue(CompoundTag tag, String key, T value, T defaultValue) {
         if (tag == null || key == null) {

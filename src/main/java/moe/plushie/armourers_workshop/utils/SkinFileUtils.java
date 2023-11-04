@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
 import net.cocoonmc.core.nbt.CompoundTag;
-import net.cocoonmc.core.nbt.NbtIO;
+import net.cocoonmc.core.nbt.NbtIo;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -156,19 +156,19 @@ public class SkinFileUtils {
 //    }
 
     public static void writeNBT(CompoundTag compoundTag, File file) throws IOException {
-        NbtIO.write(compoundTag, Files.newOutputStream(file.toPath()));
+        NbtIo.write(compoundTag, Files.newOutputStream(file.toPath()));
     }
 
     public static CompoundTag readNBT(File file) throws IOException {
         if (file.exists()) {
-            return NbtIO.read(Files.newInputStream(file.toPath()));
+            return NbtIo.read(Files.newInputStream(file.toPath()));
         }
         return null;
     }
 
     public static CompoundTag readNBT(String contents) {
         try {
-            return NbtIO.fromString(contents);
+            return CompoundTag.parseTag(contents);
         } catch (Exception e) {
             return CompoundTag.newInstance();
         }

@@ -2,14 +2,16 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
-import moe.plushie.armourers_workshop.core.blockentity.GlobalSkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
-import moe.plushie.armourers_workshop.library.blockentity.SkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
+import moe.plushie.armourers_workshop.library.blockentity.GlobalSkinLibraryBlockEntity;
+import moe.plushie.armourers_workshop.library.blockentity.SkinLibraryBlockEntity;
 import net.cocoonmc.core.block.Block;
 import net.cocoonmc.core.block.BlockEntity;
 import net.cocoonmc.core.block.BlockEntityType;
 import net.cocoonmc.core.resources.ResourceLocation;
+
+import java.util.HashSet;
 
 @SuppressWarnings("unused")
 public class ModBlockEntities {
@@ -38,6 +40,7 @@ public class ModBlockEntities {
 
     public static class Builder<T extends BlockEntity> {
 
+        private final HashSet<Block> validBlocks = new HashSet<>();
         private final BlockEntityType.Factory<T> factory;
 
         public Builder(BlockEntityType.Factory<T> factory) {
@@ -45,12 +48,13 @@ public class ModBlockEntities {
         }
 
         public Builder<T> of(Block block) {
+            this.validBlocks.add(block);
             return this;
         }
 
         public BlockEntityType<T> build(String name) {
             ResourceLocation registryName = new ResourceLocation("armourers_workshop", name);
-            return BlockEntityType.register(registryName, new BlockEntityType<>(factory));
+            return BlockEntityType.register(registryName, new BlockEntityType<>(validBlocks, factory));
         }
     }
 }

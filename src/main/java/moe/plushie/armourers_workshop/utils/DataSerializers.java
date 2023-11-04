@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
 import net.cocoonmc.core.math.Vector3f;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.nbt.IntArrayTag;
-import net.cocoonmc.core.nbt.NbtIO;
 import net.cocoonmc.core.nbt.StringTag;
 import net.cocoonmc.core.nbt.Tag;
 import net.cocoonmc.core.network.FriendlyByteBuf;
@@ -144,7 +143,7 @@ public class DataSerializers {
         }
     };
 
-//    public static final IEntitySerializer<PlayerTextureDescriptor> PLAYER_TEXTURE = new IEntitySerializer<PlayerTextureDescriptor>() {
+    //    public static final IEntitySerializer<PlayerTextureDescriptor> PLAYER_TEXTURE = new IEntitySerializer<PlayerTextureDescriptor>() {
 //
 //        @Override
 //        public void write(FriendlyByteBuf buffer, PlayerTextureDescriptor descriptor) {
@@ -309,7 +308,7 @@ public class DataSerializers {
         }
         if (value instanceof StringTag) {
             try {
-                return NbtIO.fromString(((StringTag) value).getAsString());
+                return CompoundTag.parseTag(((StringTag) value).getAsString());
             } catch (Exception e) {
                 e.printStackTrace();
             }

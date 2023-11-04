@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.blockentity;
 
 import net.cocoonmc.core.BlockPos;
 import net.cocoonmc.core.block.BlockEntity;
+import net.cocoonmc.core.block.BlockEntityType;
 import net.cocoonmc.core.block.BlockState;
 import net.cocoonmc.core.inventory.Container;
 import net.cocoonmc.core.item.ItemStack;
@@ -15,14 +16,14 @@ import java.util.List;
 
 public abstract class UpdatableContainerBlockEntity extends BlockEntity implements Container {
 
-    public UpdatableContainerBlockEntity(Level level, BlockPos pos, BlockState blockState) {
-        super(level, pos, blockState);
+    public UpdatableContainerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     public static void dropContainerIfNeeded(Level level, BlockPos blockPos) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof UpdatableContainerBlockEntity) {
-            List<ItemStack> items = ((UpdatableContainerBlockEntity) blockEntity).getItems();
+            List<ItemStack> items = ((UpdatableContainerBlockEntity) blockEntity).getDropItems();
             ContainerHelper.dropItems(items, level, Vector3f.of(blockPos));
         }
     }
@@ -89,6 +90,11 @@ public abstract class UpdatableContainerBlockEntity extends BlockEntity implemen
     }
 
     public abstract NonNullList<ItemStack> getItems();
+
+
+    public List<ItemStack> getDropItems() {
+        return getItems();
+    }
 
     public Container getInventory() {
         return this;

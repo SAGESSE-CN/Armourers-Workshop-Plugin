@@ -3,11 +3,13 @@ package moe.plushie.armourers_workshop.library.block;
 import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.core.block.HorizontalDirectionalBlock;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
+import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.cocoonmc.core.BlockPos;
 import net.cocoonmc.core.block.BlockEntity;
+import net.cocoonmc.core.block.BlockEntitySupplier;
 import net.cocoonmc.core.block.BlockState;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.math.Vector3f;
@@ -19,10 +21,15 @@ import net.cocoonmc.core.world.entity.Player;
 
 import java.util.List;
 
-public class SkinLibraryBlock extends HorizontalDirectionalBlock {
+public class SkinLibraryBlock extends HorizontalDirectionalBlock implements BlockEntitySupplier {
 
     public SkinLibraryBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return ModBlockEntities.SKIN_LIBRARY.create(pos, state);
     }
 
     @Override

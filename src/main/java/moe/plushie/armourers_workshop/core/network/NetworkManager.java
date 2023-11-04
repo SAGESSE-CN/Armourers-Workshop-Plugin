@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class NetworkManager {
 
     private static String AW_CHANNEL = "armourers_workshop:play";
-    private static String FML_CHANNEL = "fml:play";
 
     private static final Dispatcher dispatcher = new Dispatcher();
     private static final PacketSplitter splitter = new PacketSplitter();
@@ -34,9 +33,6 @@ public class NetworkManager {
 
         messenger.registerIncomingPluginChannel(Cocoon.getPlugin(), AW_CHANNEL, dispatcher);
         messenger.registerOutgoingPluginChannel(Cocoon.getPlugin(), AW_CHANNEL);
-
-        messenger.registerIncomingPluginChannel(Cocoon.getPlugin(), FML_CHANNEL, dispatcher);
-        messenger.registerOutgoingPluginChannel(Cocoon.getPlugin(), FML_CHANNEL);
     }
 
     public static void sendToAll(final CustomPacket message) {
@@ -89,9 +85,6 @@ public class NetworkManager {
                 FriendlyByteBuf payload = new FriendlyByteBuf(Unpooled.wrappedBuffer(message));
                 splitter.merge(player.getUniqueId(), payload, packet -> Scheduler.run(() -> packet.accept(packetHandler, player1)));
 //                context.setPacketHandled(true);
-            }
-            if (channel.equals(FML_CHANNEL)) {
-                // huh?
             }
         }
     }

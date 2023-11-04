@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.cocoonmc.core.nbt.CompoundTag;
-import net.cocoonmc.core.nbt.NbtIO;
+import net.cocoonmc.core.nbt.NbtIo;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -47,7 +47,7 @@ public class ModContext {
         // load from data.
         if (file.exists()) {
             try {
-                CompoundTag contextTag = NbtIO.readCompressed(Files.newInputStream(file.toPath()));
+                CompoundTag contextTag = NbtIo.readCompressed(Files.newInputStream(file.toPath()));
                 contextTag = contextTag.getCompound("data");
                 current = new ModContext(contextTag);
                 return;
@@ -66,7 +66,7 @@ public class ModContext {
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
-            NbtIO.writeCompressed(tag1, Files.newOutputStream(file.toPath()));
+            NbtIo.writeCompressed(tag1, Files.newOutputStream(file.toPath()));
         } catch (Exception e) {
             e.printStackTrace();
         }

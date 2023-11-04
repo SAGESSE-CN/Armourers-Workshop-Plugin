@@ -1,18 +1,10 @@
 package moe.plushie.armourers_workshop.init.handler;
 
-import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.core.network.NetworkManager;
 import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
-import moe.plushie.armourers_workshop.init.ModLog;
-import net.cocoonmc.core.BlockPos;
-import net.cocoonmc.core.block.BlockEntity;
-import net.cocoonmc.core.block.BlockState;
-import net.cocoonmc.core.world.Level;
 import net.cocoonmc.core.world.entity.Player;
-import net.cocoonmc.runtime.impl.BlockEntityAccessor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class EntityEventHandler implements Listener {

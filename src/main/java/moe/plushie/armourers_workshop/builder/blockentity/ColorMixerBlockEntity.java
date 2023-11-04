@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.OptionalCompoundTag;
 import net.cocoonmc.core.BlockPos;
 import net.cocoonmc.core.block.BlockEntity;
+import net.cocoonmc.core.block.BlockEntityType;
 import net.cocoonmc.core.block.BlockState;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.world.Level;
@@ -12,8 +13,8 @@ public class ColorMixerBlockEntity extends BlockEntity {
 
     private PaintColor color = PaintColor.WHITE;
 
-    public ColorMixerBlockEntity(Level level, BlockPos pos, BlockState blockState) {
-        super(level, pos, blockState);
+    public ColorMixerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     @Override
@@ -39,10 +40,14 @@ public class ColorMixerBlockEntity extends BlockEntity {
     }
 
     public void sendBlockUpdates() {
-        Level level = getLevel();
         if (level != null) {
             BlockState state = getBlockState();
             level.sendBlockUpdated(getBlockPos(), state, state, 3);
         }
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return serializeNBT();
     }
 }

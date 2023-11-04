@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.OptionalCompoundTag;
 import net.cocoonmc.core.BlockPos;
+import net.cocoonmc.core.block.BlockEntityType;
 import net.cocoonmc.core.block.BlockState;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.math.Vector3f;
@@ -29,8 +30,8 @@ public class HologramProjectorBlockEntity extends UpdatableContainerBlockEntity 
 
     private final NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
 
-    public HologramProjectorBlockEntity(Level level, BlockPos pos, BlockState blockState) {
-        super(level, pos, blockState);
+    public HologramProjectorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     @Override
@@ -166,5 +167,10 @@ public class HologramProjectorBlockEntity extends UpdatableContainerBlockEntity 
     public void setContainerChanged() {
         super.setContainerChanged();
         this.updateBlockStates();
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return serializeNBT();
     }
 }

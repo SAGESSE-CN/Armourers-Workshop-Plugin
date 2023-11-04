@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.skin.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.CacheKeys;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
+import moe.plushie.armourers_workshop.utils.OptionalCompoundTag;
 import net.cocoonmc.Cocoon;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.nbt.CompoundTag;
@@ -15,6 +16,7 @@ public class SkinDescriptor {
 
     String identifier;
     ISkinType type;
+    SkinOptions options = SkinOptions.DEFAULT;
     ColorScheme colorScheme = ColorScheme.EMPTY;
 
     public SkinDescriptor(String identifier, ISkinType type) {
@@ -31,7 +33,9 @@ public class SkinDescriptor {
     public SkinDescriptor(CompoundTag tag) {
         this.identifier = tag.getString("Identifier");
         this.type = SkinTypes.byName(tag.getString("SkinType"));
-        this.colorScheme = new ColorScheme(tag.getCompound("SkinDyes"));
+        OptionalCompoundTag otag = new OptionalCompoundTag(tag);
+        this.options = otag.getOptionalSkinOptions("SkinOptions", SkinOptions.DEFAULT);
+        this.colorScheme = otag.getOptionalColorScheme("SkinDyes", ColorScheme.EMPTY);
     }
 
     public static SkinDescriptor of(ItemStack itemStack) {
@@ -67,6 +71,9 @@ public class SkinDescriptor {
         CompoundTag nbt = CompoundTag.newInstance();
         nbt.putString("SkinType", type.getRegistryName().toString());
         nbt.putString("Identifier", identifier);
+        OptionalCompoundTag otag = new OptionalCompoundTag(nbt);
+        otag.putOptionalSkinOptions("SkinOptions", options, SkinOptions.DEFAULT);
+        otag.putOptionalColorScheme("SkinDyes", colorScheme, ColorScheme.EMPTY);
         return nbt;
     }
 

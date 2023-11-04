@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.utils;
 import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.nbt.CompoundTag;
-import net.cocoonmc.core.nbt.NbtIO;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -145,7 +144,7 @@ public class BukkitUtils {
             return;
         }
         try {
-            setObject(itemStack, key, NBTEditor.getNBTCompound(NbtIO.toString(tag)));
+            setObject(itemStack, key, NBTEditor.getNBTCompound(tag.toString()));
         } catch (Exception e) {
             e.printStackTrace();
         }

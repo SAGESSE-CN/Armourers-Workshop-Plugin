@@ -45,7 +45,7 @@ public enum ItemOverrideType {
             return true;
         }
         // test by vanilla's item.
-        return materials.contains(itemStack.getItem().asMaterial());
+        return materials.contains(itemStack.getItem().asBukkit());
     }
 
     public String getName() {
