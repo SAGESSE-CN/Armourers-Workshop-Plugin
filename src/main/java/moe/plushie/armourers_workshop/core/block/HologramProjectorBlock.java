@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.api.WorldAccessor;
+import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
 import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
@@ -15,15 +16,10 @@ import net.cocoonmc.core.block.BlockStateProperties;
 import net.cocoonmc.core.block.state.StateDefinition;
 import net.cocoonmc.core.block.state.properties.AttachFace;
 import net.cocoonmc.core.block.state.properties.BooleanProperty;
-import net.cocoonmc.core.item.ItemStack;
-import net.cocoonmc.core.math.Vector3f;
-import net.cocoonmc.core.utils.ContainerHelper;
 import net.cocoonmc.core.world.InteractionHand;
 import net.cocoonmc.core.world.InteractionResult;
 import net.cocoonmc.core.world.Level;
 import net.cocoonmc.core.world.entity.Player;
-
-import java.util.List;
 
 public class HologramProjectorBlock extends AttachedDirectionalBlock implements BlockEntitySupplier {
 
@@ -48,6 +44,14 @@ public class HologramProjectorBlock extends AttachedDirectionalBlock implements 
     public void onRemove(Level level, BlockPos blockPos, BlockState oldBlockState, BlockState newBlockState, boolean bl) {
         if (!oldBlockState.is(newBlockState.getBlock())) {
             UpdatableContainerBlockEntity.dropContainerIfNeeded(level, blockPos);
+        }
+    }
+
+    @Override
+    public void onNeighborChanged(Level level, BlockPos pos, BlockState state, BlockPos sourcePos, Block sourceBlock, boolean bl) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof HologramProjectorBlockEntity) {
+            ((HologramProjectorBlockEntity) blockEntity).updatePowerStats();
         }
     }
 

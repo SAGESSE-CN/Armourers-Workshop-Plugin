@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.serialize;
 
+import com.google.common.collect.Lists;
 import moe.plushie.armourers_workshop.api.IDataInputStream;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -10,12 +11,15 @@ import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeExcepti
 import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
+import net.cocoonmc.core.math.Vector3i;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SkinSerializer {
 
@@ -37,7 +41,21 @@ public class SkinSerializer {
 
         DataInputStream inputStream = new DataInputStream(new ByteArrayInputStream(bytes));
         int fileVersion = inputStream.readInt();
-        return  _readSkinInfoFromStream(bytes, fileVersion);
+        return _readSkinInfoFromStream(bytes, fileVersion);
+    }
+
+    public static List<Vector3i> readSkinBlockFromSkin(Skin skin) {
+        try {
+            DataInputStream inputStream = new DataInputStream(new ByteArrayInputStream(skin.getBytes()));
+            int fileVersion = inputStream.readInt();
+            if (fileVersion >= 13) {
+                return _readSkinBlockFromStream_v13(skin.getBytes(), fileVersion);
+            }
+            return _readSkinBlockFromStream_v12(skin.getBytes(), fileVersion);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Lists.newArrayList();
     }
 
     private static SkinFileHeader _readSkinInfoFromStream(byte[] bytes, int fileVersion) throws IOException, NewerFileVersionException {
@@ -49,7 +67,7 @@ public class SkinSerializer {
 
     private static SkinFileHeader _readSkinInfoFromStream_v12(byte[] bytes, int fileVersion) throws IOException, NewerFileVersionException {
         IDataInputStream stream = null;
-        stream = IDataInputStream.of(new DataInputStream(new ByteArrayInputStream(bytes)));
+        stream = createStream(bytes, 0, bytes.length);
         SkinProperties properties = null;
         boolean loadedProps = true;
         IOException e = null;
@@ -104,16 +122,17 @@ public class SkinSerializer {
         Range type1 = safeFindRange(bytes, "TYPE-START", header2.end);
         Range type2 = safeFindRange(bytes, "TYPE-END", type1.end);
 
-        stream = IDataInputStream.of(new DataInputStream(new ByteArrayInputStream(bytes, header1.end, header2.start)));
+        stream = createStream(bytes, header1.end, header2.start);
         SkinProperties properties = SkinProperties.create();
         properties.readFromStream(stream);
 
-        stream = IDataInputStream.of(new DataInputStream(new ByteArrayInputStream(bytes, type1.end, type2.start)));
+        stream = createStream(bytes, type1.end, type2.start);
         String regName = stream.readString();
         ISkinType skinType = SkinTypes.byName(regName);
 
         return new SkinFileHeader(fileVersion, skinType, properties);
     }
+
 
     private static String getTypeNameByLegacyId(int legacyId) {
         switch (legacyId) {
@@ -138,16 +157,54 @@ public class SkinSerializer {
         }
     }
 
+    private static List<Vector3i> _readSkinBlockFromStream_v12(byte[] bytes, int fileVersion) throws IOException, NewerFileVersionException {
+        ArrayList<Vector3i> list = new ArrayList<>();
+        return list;
+    }
+
+    private static List<Vector3i> _readSkinBlockFromStream_v13(byte[] bytes, int fileVersion) throws IOException, NewerFileVersionException {
+        ArrayList<Vector3i> list = new ArrayList<>();
+        int start = 4;
+        while (true) {
+            Range part1 = findRange(bytes, "PART-START", start);
+            if (part1.start < 0) {
+                break;
+            }
+            Range part2 = safeFindRange(bytes, "PART-END", part1.end);
+            IDataInputStream stream = createStream(bytes, part1.end, part2.start);
+            String regName = stream.readString();
+            int size = stream.readInt();
+            for (int i = 0; i < size; i++) {
+                // id/x/y/z + r/g/b/t * 6
+                int id = stream.readByte();
+                int x = stream.readByte();
+                int y = stream.readByte();
+                int z = stream.readByte();
+                for (int side = 0; side < 6; side++) {
+                    int rgbt = stream.readInt();
+                }
+                list.add(new Vector3i(x, y, z));
+            }
+            start = part2.end;
+        }
+        return list;
+    }
+
     private static Range safeFindRange(byte[] bytes, String key, int start) throws IOException {
+        Range range = findRange(bytes, key, start);
+        if (range.start == -1) {
+            throw new IOException("not found section " + key);
+        }
+        return range;
+    }
+
+    private static Range findRange(byte[] bytes, String key, int start) throws IOException {
         int length = key.length();
         byte[] bytes1 = new byte[key.length() + 2];
         bytes1[0] = (byte) ((length >> 8) & 0xff);
         bytes1[1] = (byte) (length & 0xff);
         System.arraycopy(key.getBytes(StandardCharsets.UTF_8), 0, bytes1, 2, length);
         int index = indexOf(bytes, bytes1, start, bytes.length);
-        if (index == -1) {
-            throw new IOException("not found section " + key);
-        }
         return new Range(index, index + bytes1.length);
     }
 
@@ -166,6 +223,10 @@ public class SkinSerializer {
             return i;
         }
         return -1;
+    }
+
+    private static IDataInputStream createStream(byte[] bytes, int start, int end) {
+        return IDataInputStream.of(new DataInputStream(new ByteArrayInputStream(bytes, start, end)));
     }
 
     private static class Range {

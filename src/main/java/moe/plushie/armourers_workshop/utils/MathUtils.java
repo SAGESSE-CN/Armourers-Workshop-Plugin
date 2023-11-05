@@ -28,4 +28,13 @@ public class MathUtils {
         return ceillog2(i) - (isPowerOfTwo(i) ? 0 : 1);
     }
 
+    public static int floor(double value) {
+        int i = (int) value;
+        return value < (double) i ? i - 1 : i;
+    }
+
+    public static int ceil(double value) {
+        int i = (int) value;
+        return value > (double) i ? i + 1 : i;
+    }
 }

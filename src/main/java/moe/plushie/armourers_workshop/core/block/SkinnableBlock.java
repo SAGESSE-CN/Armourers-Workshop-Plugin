@@ -1,19 +1,141 @@
 package moe.plushie.armourers_workshop.core.block;
 
+import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
+import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.init.ModBlockEntities;
+import moe.plushie.armourers_workshop.utils.DataSerializers;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.cocoonmc.core.BlockPos;
+import net.cocoonmc.core.Direction;
+import net.cocoonmc.core.block.Block;
 import net.cocoonmc.core.block.BlockEntity;
 import net.cocoonmc.core.block.BlockEntitySupplier;
 import net.cocoonmc.core.block.BlockState;
+import net.cocoonmc.core.block.BlockStateProperties;
+import net.cocoonmc.core.block.Blocks;
+import net.cocoonmc.core.block.state.StateDefinition;
+import net.cocoonmc.core.block.state.properties.AttachFace;
+import net.cocoonmc.core.block.state.properties.BedPart;
+import net.cocoonmc.core.block.state.properties.BooleanProperty;
+import net.cocoonmc.core.block.state.properties.EnumProperty;
+import net.cocoonmc.core.item.ItemStack;
+import net.cocoonmc.core.item.context.BlockPlaceContext;
+import net.cocoonmc.core.world.Level;
+import net.cocoonmc.core.world.entity.Player;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 public class SkinnableBlock extends AttachedDirectionalBlock implements BlockEntitySupplier {
 
+    public static final EnumProperty<BedPart> PART = BlockStateProperties.BED_PART;
+    public static final BooleanProperty LIT = BlockStateProperties.LIT;
+    public static final BooleanProperty OCCUPIED = BlockStateProperties.OCCUPIED;
+
     public SkinnableBlock(Properties properties) {
         super(properties);
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(FACE, AttachFace.WALL)
+                .setValue(LIT, false)
+                .setValue(PART, BedPart.HEAD)
+                .setValue(OCCUPIED, false));
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, BlockPlaceContext context) {
+        SkinBlockPlaceContext context1 = ObjectUtils.safeCast(context, SkinBlockPlaceContext.class);
+        if (context1 == null) {
+            return;
+        }
+        // add all part into level
+        context1.getParts().forEach(it -> {
+            BlockPos target = blockPos.offset(it.getOffset());
+            level.setBlock(target, blockState, 11);
+            SkinnableBlockEntity blockEntity = ObjectUtils.safeCast(level.getBlockEntity(target), SkinnableBlockEntity.class);
+            if (blockEntity != null) {
+                blockEntity.readFromNBT(it.getEntityTag());
+                blockEntity.updateBlockStates();
+            }
+        });
+    }
+
+    @Override
+    public void onRemove(Level level, BlockPos blockPos, BlockState oldBlockState, BlockState newBlockState, boolean bl) {
+        // update the block state also calls `onRemove`.
+        if (!newBlockState.is(oldBlockState.getBlock())) {
+            this.brokenByAnything(level, blockPos, oldBlockState, null);
+        }
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING, FACE, LIT, PART, OCCUPIED);
     }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return ModBlockEntities.SKINNABLE.create(pos, state);
+    }
+
+    public void forEach(Level level, BlockPos pos, Consumer<BlockPos> consumer) {
+        SkinnableBlockEntity blockEntity = getParentBlockEntity(level, pos);
+        if (blockEntity == null) {
+            return;
+        }
+        BlockPos parentPos = blockEntity.getBlockPos();
+        for (BlockPos offset : blockEntity.getRefers()) {
+            BlockPos targetPos = parentPos.offset(offset);
+            if (!targetPos.equals(pos)) {
+                consumer.accept(targetPos);
+            }
+        }
+    }
+
+    public void brokenByAnything(Level level, BlockPos blockPos, BlockState blockState, @Nullable Player player) {
+        if (dropItems(level, blockPos, player)) {
+            killSeatEntities(level, blockPos);
+            forEach(level, blockPos, target -> level.setBlock(target, Blocks.AIR.defaultBlockState(), 35));
+        }
+    }
+
+    public void killSeatEntities(Level level, BlockPos blockPos) {
+//        SkinnableBlockEntity blockEntity = getParentBlockEntity(level, blockPos);
+//        if (blockEntity != null) {
+//            Vector3d seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
+//            killSeatEntity(level, blockEntity.getParentPos(), seatPos);
+//        }
+    }
+
+    public boolean dropItems(Level level, BlockPos blockPos, @Nullable Player player) {
+        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        SkinnableBlockEntity parentBlockEntity = getParentBlockEntity(level, blockPos);
+        if (blockEntity == null || parentBlockEntity == null || parentBlockEntity.isDropped()) {
+            return false;
+        }
+        // anyway, we only drop all items once.
+        ItemStack droppedStack = parentBlockEntity.getDescriptor().asItemStack();
+        blockEntity.setDropped(droppedStack); // mark the attacked block
+        parentBlockEntity.setDropped(droppedStack);
+        if (parentBlockEntity.isInventory()) {
+//            DataSerializers.dropContents(level, blockPos, parentBlockEntity);
+        }
+        return true;
+    }
+
+    private SkinnableBlockEntity getBlockEntity(Level level, BlockPos pos) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof SkinnableBlockEntity) {
+            return (SkinnableBlockEntity) blockEntity;
+        }
+        return null;
+    }
+
+    private SkinnableBlockEntity getParentBlockEntity(Level level, BlockPos blockPos) {
+        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        if (blockEntity != null) {
+            return blockEntity.getParent();
+        }
+        return null;
     }
 }

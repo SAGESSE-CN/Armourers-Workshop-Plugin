@@ -1,13 +1,18 @@
 package moe.plushie.armourers_workshop.utils;
 
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinOptions;
+import moe.plushie.armourers_workshop.core.skin.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
+import net.cocoonmc.core.BlockPos;
 import net.cocoonmc.core.math.Vector3f;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.nbt.FloatTag;
+import net.cocoonmc.core.nbt.IntTag;
 import net.cocoonmc.core.nbt.ListTag;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class OptionalCompoundTag {
@@ -88,6 +93,61 @@ public class OptionalCompoundTag {
         }
     }
 
+    public BlockPos getOptionalBlockPos(String key, BlockPos defaultValue) {
+        if (tag.contains(key, 4)) {
+            return BlockPos.of(tag.getLong(key));
+        }
+        return defaultValue;
+    }
+
+    public void putOptionalBlockPos(String key, BlockPos value, BlockPos defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
+            tag.putLong(key, value.asLong());
+        }
+    }
+
+    public Collection<BlockPos> getOptionalBlockPosArray(String key) {
+        ArrayList<BlockPos> elements = new ArrayList<>();
+        if (tag.contains(key, 12)) {
+            for (long value : tag.getLongArray(key)) {
+                elements.add(BlockPos.of(value));
+            }
+        }
+        return elements;
+    }
+
+    public void putOptionalBlockPosArray(String key, Collection<BlockPos> elements) {
+        if (_shouldPutValueArray(tag, key, elements)) {
+            ArrayList<Long> list = new ArrayList<>(elements.size());
+            for (BlockPos pos : elements) {
+                list.add(pos.asLong());
+            }
+            tag.putLongArray(key, list);
+        }
+    }
+
+    public Rectangle3i getOptionalRectangle3i(String key, Rectangle3i defaultValue) {
+        ListTag listTag = tag.getList(key, 3);
+        if (listTag.size() >= 6) {
+            return new Rectangle3i(listTag.getInt(0), listTag.getInt(1), listTag.getInt(2), listTag.getInt(3), listTag.getInt(4), listTag.getInt(5));
+        }
+        return defaultValue;
+    }
+
+    public void putOptionalRectangle3i(String key, Rectangle3i value, Rectangle3i defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
+            ListTag tags = ListTag.newInstance();
+            tags.add(IntTag.valueOf(value.getX()));
+            tags.add(IntTag.valueOf(value.getY()));
+            tags.add(IntTag.valueOf(value.getZ()));
+            tags.add(IntTag.valueOf(value.getWidth()));
+            tags.add(IntTag.valueOf(value.getHeight()));
+            tags.add(IntTag.valueOf(value.getDepth()));
+            tag.put(key, tags);
+        }
+    }
+
+
     public PaintColor getOptionalPaintColor(String key, PaintColor defaultValue) {
         if (tag != null && tag.contains(key, 3)) {
             return PaintColor.of(tag.getInt(key));
@@ -113,6 +173,37 @@ public class OptionalCompoundTag {
             tag.put(key, value.serializeNBT());
         }
     }
+
+    public SkinDescriptor getOptionalSkinDescriptor(String key) {
+        CompoundTag parsedTag = _parseCompoundTag(tag, key);
+        if (parsedTag != null && !parsedTag.isEmpty()) {
+            return new SkinDescriptor(parsedTag);
+        }
+        return SkinDescriptor.EMPTY;
+    }
+
+    public void putOptionalSkinDescriptor(String key, SkinDescriptor value) {
+        if (_shouldPutValue(tag, key, value, SkinDescriptor.EMPTY)) {
+            tag.put(key, value.serializeNBT());
+        }
+    }
+
+    public SkinProperties getOptionalSkinProperties(String key) {
+        SkinProperties properties = new SkinProperties();
+        if (tag.contains(key, 10)) {
+            properties.readFromNBT(tag.getCompound(key));
+        }
+        return properties;
+    }
+
+    public void putOptionalSkinProperties(String key, SkinProperties properties) {
+        if (_shouldPutValue(tag, key, properties, SkinProperties.EMPTY)) {
+            CompoundTag propertiesTag = CompoundTag.newInstance();
+            properties.writeToNBT(propertiesTag);
+            tag.put(key, propertiesTag);
+        }
+    }
+
 
     public SkinOptions getOptionalSkinOptions(String key, SkinOptions defaultValue) {
         if (tag.contains(key, 10)) {
@@ -151,5 +242,15 @@ public class OptionalCompoundTag {
             return false;
         }
         return true;
+    }
+
+    private static CompoundTag _parseCompoundTag(CompoundTag tag, String key) {
+        if (tag.contains(key, 10)) {
+            return tag.getCompound(key);
+        }
+        if (tag.contains(key, 8)) {
+            return SkinFileUtils.readNBT(tag.getString(key));
+        }
+        return null;
     }
 }
