@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
 import net.cocoonmc.core.BlockPos;
+import net.cocoonmc.core.math.Rectangle3i;
 import net.cocoonmc.core.math.Vector3f;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.nbt.FloatTag;

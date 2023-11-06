@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.core.blockentity;
 
 import com.google.common.collect.ImmutableMap;
+import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.SkinProperty;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.OptionalCompoundTag;
-import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import net.cocoonmc.core.BlockPos;
 import net.cocoonmc.core.Direction;
 import net.cocoonmc.core.block.BlockEntityType;
@@ -14,7 +14,9 @@ import net.cocoonmc.core.block.BlockState;
 import net.cocoonmc.core.block.state.properties.AttachFace;
 import net.cocoonmc.core.inventory.Container;
 import net.cocoonmc.core.item.ItemStack;
+import net.cocoonmc.core.math.Rectangle3i;
 import net.cocoonmc.core.math.Vector3f;
+import net.cocoonmc.core.math.VoxelShape;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.utils.ContainerHelper;
 import net.cocoonmc.core.utils.NonNullList;
@@ -56,6 +58,7 @@ public class SkinnableBlockEntity extends UpdatableContainerBlockEntity {
     private SkinProperties properties;
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
 
+    private VoxelShape collissionShap = null;
     private ItemStack droppedStack = null;
 
     private boolean isParent = false;
@@ -64,17 +67,18 @@ public class SkinnableBlockEntity extends UpdatableContainerBlockEntity {
         super(type, pos, blockState);
     }
 
-//    public static Vector3f getRotations(BlockState state) {
-//        AttachFace face = state.getOptionalValue(SkinnableBlock.FACE).orElse(AttachFace.FLOOR);
-//        Direction facing = state.getOptionalValue(SkinnableBlock.FACING).orElse(Direction.NORTH);
-//        return FACING_TO_ROT.getOrDefault(Pair.of(face, facing), Vector3f.ZERO);
-//    }
+    public static Vector3f getRotations(BlockState state) {
+        AttachFace face = state.getOptionalValue(SkinnableBlock.FACE).orElse(AttachFace.FLOOR);
+        Direction facing = state.getOptionalValue(SkinnableBlock.FACING).orElse(Direction.NORTH);
+        return FACING_TO_ROT.getOrDefault(Pair.of(face, facing), Vector3f.ZERO);
+    }
 
     @Override
     public void readFromNBT(CompoundTag tag1) {
         OptionalCompoundTag tag = new OptionalCompoundTag(tag1);
         refer = tag.getOptionalBlockPos("Refer", INVALID);
         shape = tag.getOptionalRectangle3i("Shape", Rectangle3i.ZERO);
+        collissionShap = null;
         isParent = BlockPos.ZERO.equals(refer);
         if (!isParent()) {
             return;
@@ -126,6 +130,29 @@ public class SkinnableBlockEntity extends UpdatableContainerBlockEntity {
 
     public void setDescriptor(SkinDescriptor descriptor) {
         this.descriptor = descriptor;
+    }
+
+    public VoxelShape getShape() {
+        if (collissionShap != null) {
+            return collissionShap;
+        }
+        if (shape.equals(Rectangle3i.ZERO)) {
+            collissionShap = VoxelShape.BLOCK;
+            return collissionShap;
+        }
+        float minX = shape.getMinX() / 16f + 0.5f;
+        float minY = shape.getMinY() / 16f + 0.5f;
+        float minZ = shape.getMinZ() / 16f + 0.5f;
+        float maxX = shape.getMaxX() / 16f + 0.5f;
+        float maxY = shape.getMaxY() / 16f + 0.5f;
+        float maxZ = shape.getMaxZ() / 16f + 0.5f;
+        collissionShap = new VoxelShape(minX, minY, minZ, maxX, maxY, maxZ);
+        return collissionShap;
+    }
+
+    public void setShape(Rectangle3i shape) {
+        this.shape = shape;
+        this.collissionShap = null;
     }
 
     public BlockPos getLinkedBlockPos() {

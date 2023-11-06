@@ -22,11 +22,16 @@ public abstract class UpdatableContainerBlockEntity extends BlockEntity implemen
 
     public static void dropContainerIfNeeded(Level level, BlockPos blockPos) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        dropContainerIfNeeded(level, blockPos, blockEntity);
+    }
+
+    public static void dropContainerIfNeeded(Level level, BlockPos blockPos, BlockEntity blockEntity) {
         if (blockEntity instanceof UpdatableContainerBlockEntity) {
             List<ItemStack> items = ((UpdatableContainerBlockEntity) blockEntity).getDropItems();
             ContainerHelper.dropItems(items, level, Vector3f.of(blockPos));
         }
     }
+
 
     @Override
     public boolean isEmpty() {

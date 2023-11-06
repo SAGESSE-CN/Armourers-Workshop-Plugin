@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.data;
 
+import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -8,14 +9,17 @@ import moe.plushie.armourers_workshop.core.skin.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.OptionalCompoundTag;
-import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import net.cocoonmc.core.BlockPos;
 import net.cocoonmc.core.block.BlockState;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.item.context.BlockHitResult;
 import net.cocoonmc.core.item.context.BlockPlaceContext;
 import net.cocoonmc.core.item.context.UseOnContext;
+import net.cocoonmc.core.math.Quaternionf;
+import net.cocoonmc.core.math.Rectangle3f;
+import net.cocoonmc.core.math.Rectangle3i;
 import net.cocoonmc.core.math.Vector3f;
+import net.cocoonmc.core.math.Vector4f;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.world.InteractionHand;
 import net.cocoonmc.core.world.entity.Player;
@@ -72,8 +76,8 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         this.properties = skin.getProperties();
         BlockState state = ModBlocks.SKINNABLE.getStateForPlacement(this);
         if (state != null) {
-//            this.rotations = SkinnableBlockEntity.getRotations(state);
-//            this.transform(rotations);
+            this.rotations = SkinnableBlockEntity.getRotations(state);
+            this.transform(rotations);
         }
         // copy all transformed block pose into list.
         for (Part part : parts) {
@@ -132,21 +136,20 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         }
 
         public void transform(Vector3f r) {
-//            OpenQuaternionf q = new OpenQuaternionf(r.getX(), r.getY(), r.getZ(), true);
-//
-//            Vector4f f = new Vector4f(offset.getX(), offset.getY(), offset.getZ(), 1.0f);
-//            f.transform(q);
-//            offset = new BlockPos(Math.round(f.x()), Math.round(f.y()), Math.round(f.z()));
-//
-//            Rectangle3f of = new Rectangle3f(shape);
-//            of.mul(q);
-//            shape = new Rectangle3i(0, 0, 0, 0, 0, 0);
-//            shape.setX(Math.round(of.getX()));
-//            shape.setY(Math.round(of.getY()));
-//            shape.setZ(Math.round(of.getZ()));
-//            shape.setWidth(Math.round(of.getWidth()));
-//            shape.setHeight(Math.round(of.getHeight()));
-//            shape.setDepth(Math.round(of.getDepth()));
+            Quaternionf q = new Quaternionf(r.getX(), r.getY(), r.getZ(), true);
+            Vector4f f = new Vector4f(offset.getX(), offset.getY(), offset.getZ(), 1.0f);
+            f.transform(q);
+            offset = new BlockPos(Math.round(f.x()), Math.round(f.y()), Math.round(f.z()));
+
+            Rectangle3f of = new Rectangle3f(shape);
+            of.mul(q);
+            shape = new Rectangle3i(0, 0, 0, 0, 0, 0);
+            shape.setX(Math.round(of.getX()));
+            shape.setY(Math.round(of.getY()));
+            shape.setZ(Math.round(of.getZ()));
+            shape.setWidth(Math.round(of.getWidth()));
+            shape.setHeight(Math.round(of.getHeight()));
+            shape.setDepth(Math.round(of.getDepth()));
         }
 
         public BlockPos getOffset() {

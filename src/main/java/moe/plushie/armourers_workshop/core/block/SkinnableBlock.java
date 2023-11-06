@@ -1,9 +1,14 @@
 package moe.plushie.armourers_workshop.core.block;
 
+import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
+import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModBlockEntities;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
+import moe.plushie.armourers_workshop.init.ModItems;
+import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.cocoonmc.core.BlockPos;
 import net.cocoonmc.core.Direction;
@@ -20,10 +25,16 @@ import net.cocoonmc.core.block.state.properties.BooleanProperty;
 import net.cocoonmc.core.block.state.properties.EnumProperty;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.item.context.BlockPlaceContext;
+import net.cocoonmc.core.math.VoxelShape;
+import net.cocoonmc.core.world.InteractionHand;
+import net.cocoonmc.core.world.InteractionResult;
 import net.cocoonmc.core.world.Level;
 import net.cocoonmc.core.world.entity.Player;
+import net.cocoonmc.core.world.loot.LootContext;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class SkinnableBlock extends AttachedDirectionalBlock implements BlockEntitySupplier {
@@ -40,6 +51,11 @@ public class SkinnableBlock extends AttachedDirectionalBlock implements BlockEnt
                 .setValue(LIT, false)
                 .setValue(PART, BedPart.HEAD)
                 .setValue(OCCUPIED, false));
+    }
+
+    @Override
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand) {
+        return MenuManager.openMenu(ModMenuTypes.SKINNABLE, player, WorldAccessor.of(level, blockPos));
     }
 
     @Override
@@ -66,6 +82,39 @@ public class SkinnableBlock extends AttachedDirectionalBlock implements BlockEnt
         if (!newBlockState.is(oldBlockState.getBlock())) {
             this.brokenByAnything(level, blockPos, oldBlockState, null);
         }
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState blockState, LootContext context) {
+        List<ItemStack> results = super.getDrops(blockState, context);
+        SkinnableBlockEntity blockEntity = ObjectUtils.safeCast(context.blockEntity, SkinnableBlockEntity.class);
+        if (blockEntity == null || results.isEmpty()) {
+            return results;
+        }
+        ArrayList<ItemStack> fixedResults = new ArrayList<>(results.size());
+        for (ItemStack itemStack : results) {
+            // we will add an invalid skin item from loot table at data pack,
+            // so we need fix the skin info in the drop event.
+            if (itemStack.is(ModItems.SKIN) && SkinDescriptor.of(itemStack).isEmpty()) {
+                // when not found any dropped stack,
+                // we must be remove invalid skin item.
+                itemStack = blockEntity.getDropped();
+                if (itemStack == null) {
+                    continue;
+                }
+            }
+            fixedResults.add(itemStack);
+        }
+        return fixedResults;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(Level level, BlockPos blockPos, BlockState blockState) {
+        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        if (blockEntity != null) {
+            return blockEntity.getShape();
+        }
+        return VoxelShape.EMPTY;
     }
 
     @Override
@@ -118,7 +167,7 @@ public class SkinnableBlock extends AttachedDirectionalBlock implements BlockEnt
         blockEntity.setDropped(droppedStack); // mark the attacked block
         parentBlockEntity.setDropped(droppedStack);
         if (parentBlockEntity.isInventory()) {
-//            DataSerializers.dropContents(level, blockPos, parentBlockEntity);
+            UpdatableContainerBlockEntity.dropContainerIfNeeded(level, blockPos, parentBlockEntity);
         }
         return true;
     }

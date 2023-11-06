@@ -1,14 +1,15 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.builder.menu.ColorMixerMenu;
-import moe.plushie.armourers_workshop.library.menu.CreativeSkinLibraryMenu;
 import moe.plushie.armourers_workshop.core.menu.DyeTableMenu;
-import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
 import moe.plushie.armourers_workshop.core.menu.HologramProjectorMenu;
-import moe.plushie.armourers_workshop.library.menu.SkinLibraryMenu;
 import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.core.menu.SkinWardrobeOpMenu;
+import moe.plushie.armourers_workshop.core.menu.SkinnableMenu;
 import moe.plushie.armourers_workshop.core.menu.SkinningTableMenu;
+import moe.plushie.armourers_workshop.library.menu.CreativeSkinLibraryMenu;
+import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
+import moe.plushie.armourers_workshop.library.menu.SkinLibraryMenu;
 import net.cocoonmc.core.inventory.Menu;
 import net.cocoonmc.core.inventory.MenuType;
 import net.cocoonmc.core.resources.ResourceLocation;
@@ -18,6 +19,8 @@ public class ModMenuTypes {
 
     public static final MenuType<SkinWardrobeMenu> WARDROBE = normal(SkinWardrobeMenu::new).build("wardrobe");
     public static final MenuType<SkinWardrobeOpMenu> WARDROBE_OP = normal(SkinWardrobeOpMenu::new).build("wardrobe-op");
+
+    public static final MenuType<SkinnableMenu> SKINNABLE = normal(SkinnableMenu::new).build("skinnable");
 
     public static final MenuType<DyeTableMenu> DYE_TABLE = normal(DyeTableMenu::new).build("dye-table");
     public static final MenuType<SkinningTableMenu> SKINNING_TABLE = normal(SkinningTableMenu::new).build("skinning-table");
