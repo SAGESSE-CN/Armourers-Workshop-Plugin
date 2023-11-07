@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.block;
 
 import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.core.block.HorizontalDirectionalBlock;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
+import moe.plushie.armourers_workshop.init.ModBlockEntitiyTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.cocoonmc.core.BlockPos;
@@ -22,7 +22,7 @@ public class ColorMixerBlock extends HorizontalDirectionalBlock implements Block
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModBlockEntities.COLOR_MIXER.create(pos, state);
+        return ModBlockEntitiyTypes.COLOR_MIXER.create(pos, state);
     }
 
     @Override

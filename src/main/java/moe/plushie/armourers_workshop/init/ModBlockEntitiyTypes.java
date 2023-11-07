@@ -14,7 +14,7 @@ import net.cocoonmc.core.resources.ResourceLocation;
 import java.util.HashSet;
 
 @SuppressWarnings("unused")
-public class ModBlockEntities {
+public class ModBlockEntitiyTypes {
 
     public static final BlockEntityType<HologramProjectorBlockEntity> HOLOGRAM_PROJECTOR = create(HologramProjectorBlockEntity::new).of(ModBlocks.HOLOGRAM_PROJECTOR).build("hologram-projector");
     //public static final BlockEntityType<OutfitMakerBlockEntity> OUTFIT_MAKER = create(OutfitMakerBlockEntity::new).of(ModBlocks.OUTFIT_MAKER).build("outfit-maker");

@@ -159,6 +159,110 @@ public class SkinSerializer {
 
     private static List<Vector3i> _readSkinBlockFromStream_v12(byte[] bytes, int fileVersion) throws IOException, NewerFileVersionException {
         ArrayList<Vector3i> list = new ArrayList<>();
+        IDataInputStream stream = createStream(bytes, 0, bytes.length);
+        SkinProperties properties = null;
+        boolean loadedProps = true;
+        IOException e = null;
+        if (fileVersion < 12) {
+            String authorName = stream.readString();
+            String customName = stream.readString();
+            String tags = "";
+            if (!(fileVersion < 4)) {
+                tags = stream.readString();
+            }
+            properties = SkinProperties.create();
+            properties.put(SkinProperty.ALL_AUTHOR_NAME, authorName);
+            properties.put(SkinProperty.ALL_CUSTOM_NAME, customName);
+            if (!tags.equalsIgnoreCase("")) {
+                properties.put(SkinProperty.ALL_KEY_TAGS, tags);
+            }
+        } else {
+            try {
+                properties = SkinProperties.create();
+                properties.readFromStream(stream);
+            } catch (IOException propE) {
+                ModLog.error("prop load failed");
+                e = propE;
+                loadedProps = false;
+                properties = SkinProperties.create();
+            }
+        }
+        ISkinType skinType = null;
+
+        if (fileVersion < 5) {
+            if (loadedProps) {
+                String regName = getTypeNameByLegacyId(stream.readByte() - 1);
+                skinType = SkinTypes.byName(regName);
+            } else {
+                throw e;
+            }
+        } else {
+            if (loadedProps) {
+                String regName = stream.readString();
+                skinType = SkinTypes.byName(regName);
+            }
+        }
+        if (fileVersion > 7) {
+            boolean hasPaintData = stream.readBoolean();
+            if (hasPaintData) {
+//                paintData = SkinPaintData.v1();
+//                int[] colors = paintData.getData();
+                for (int i = 0; i < 64 * 32; i++) {
+                    int rgb = stream.readInt();
+                }
+            }
+        }
+        int partSize = stream.readByte();
+        for (int i = 0; i < partSize; i++) {
+            if (fileVersion < 6) {
+                String regName = getTypeNameByLegacyId(stream.readByte());
+            } else {
+                String regName = stream.readString();
+            }
+            int size = stream.readInt();
+            for (int j = 0; j < size; j++) {
+                if (fileVersion >= 10) {
+                    // id/x/y/z + r/g/b/t * 6
+                    int id = stream.readByte();
+                    int x = stream.readByte();
+                    int y = stream.readByte();
+                    int z = stream.readByte();
+                    for (int side = 0; side < 6; side++) {
+                        int rgbt = stream.readInt();
+                    }
+                    list.add(new Vector3i(x, y, z));
+                } else {
+                    // 1 - 9
+                    if (fileVersion < 3) {
+                        int x = stream.readByte();
+                        int y = stream.readByte();
+                        int z = stream.readByte();
+                        int color = stream.readInt();
+                        int id = stream.readByte();
+                        list.add(new Vector3i(x, y, z));
+                    } else {
+                        int id = stream.readByte();
+                        int x = stream.readByte();
+                        int y = stream.readByte();
+                        int z = stream.readByte();
+                        list.add(new Vector3i(x, y, z));
+                        if (fileVersion < 7) {
+                            int rgb = stream.readInt();
+                        } else {
+                            int r = stream.readByte();
+                            int g = stream.readByte();
+                            int b = stream.readByte();
+                        }
+                    }
+                }
+            }
+            if (fileVersion > 8) {
+                int markerCount = stream.readInt();
+                for (int k = 0; k < markerCount; k++) {
+                    int xyzm = stream.readInt();
+                }
+            }
+        }
         return list;
     }
 

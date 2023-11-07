@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.handler;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshopImpl;
+import moe.plushie.armourers_workshop.ArmourersWorkshopPlugin;
 import moe.plushie.armourers_workshop.core.network.NetworkManager;
 import moe.plushie.armourers_workshop.core.skin.EntityProfile;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
@@ -20,8 +20,8 @@ public class PacketEventHandler {
     }
 
     public static Packet handleAddEntity(ClientboundAddEntityPacket packet, Player player) {
-        int entityId = packet.getEntityId();
-        Bukkit.getScheduler().runTask(ArmourersWorkshopImpl.INSTANCE, () -> {
+        int entityId = packet.getId();
+        Bukkit.getScheduler().runTask(ArmourersWorkshopPlugin.INSTANCE, () -> {
             Level level = player.getLevel();
             Entity entity = level.getEntity(entityId);
             if (entity == null) {

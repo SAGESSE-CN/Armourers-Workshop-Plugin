@@ -23,13 +23,9 @@ public class SkinnableMenu extends UpdatableContainerMenu<SkinnableBlockEntity> 
         if (!blockEntity.isEnderInventory()) {
             this.row = blockEntity.getInventoryHeight();
             this.column = blockEntity.getInventoryWidth();
-            this.inventory = super.getInventory();
+            this.inventory = createInventoryContainer().asBukkit();
         }
-
-        int guiTop = 20;
-        int guiMiddle = 6;
-        int guiWidth = 176;
-        addCustomSlots(inventory, (guiWidth - (column * 18)) / 2, guiTop);
+        addCustomSlots(inventory, 0, 0);
     }
 
     protected void addCustomSlots(Inventory inventory, int x, int y) {

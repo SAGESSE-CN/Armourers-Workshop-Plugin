@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshopImpl;
+import moe.plushie.armourers_workshop.ArmourersWorkshopPlugin;
 
 import java.util.logging.Logger;
 
 public class ModLog {
 
-    private static final Logger LOGGER = ArmourersWorkshopImpl.INSTANCE.getLogger();
+    private static final Logger LOGGER = ArmourersWorkshopPlugin.INSTANCE.getLogger();
 
     public static void debug(String message, Object... params) {
         //LOGGER.finer(_format(message, params));

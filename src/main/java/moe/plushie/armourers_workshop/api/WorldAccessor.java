@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.api;
 import net.cocoonmc.core.BlockPos;
 import net.cocoonmc.core.block.Block;
 import net.cocoonmc.core.block.BlockEntity;
+import net.cocoonmc.core.block.BlockState;
 import net.cocoonmc.core.world.Level;
 
 public interface WorldAccessor {
@@ -21,9 +22,10 @@ public interface WorldAccessor {
 
             @Override
             public Block getBlock() {
-//                Location location = new Location(world, blockPos.getX(), blockPos.getY(), blockPos.getZ());
-//                return location.getBlock();
-//                return BukkitUtils.wrap(location.getBlock());
+                BlockState state = level.getBlockState(blockPos);
+                if (state != null) {
+                    return state.getBlock();
+                }
                 return null;
             }
 

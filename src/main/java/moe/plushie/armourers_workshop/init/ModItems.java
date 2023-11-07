@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.core.item.BottleItem;
+import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.item.SkinUnlockItem;
 import moe.plushie.armourers_workshop.core.item.WandOfStyleItem;
@@ -16,6 +17,7 @@ import java.util.function.Function;
 public class ModItems {
 
     public static final Item SKIN = skin(ModBlocks.SKINNABLE).build("skin");
+    public static final Item MANNEQUIN = normal(MannequinItem::new).build("mannequin");
 
     public static final Item SKIN_LIBRARY = block(ModBlocks.SKIN_LIBRARY).build("skin-library");
     public static final Item SKIN_LIBRARY_CREATIVE = block(ModBlocks.SKIN_LIBRARY_CREATIVE).build("skin-library-creative");

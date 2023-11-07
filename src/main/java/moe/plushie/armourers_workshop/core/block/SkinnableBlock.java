@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
+import moe.plushie.armourers_workshop.init.ModBlockEntitiyTypes;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
@@ -124,7 +124,7 @@ public class SkinnableBlock extends AttachedDirectionalBlock implements BlockEnt
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModBlockEntities.SKINNABLE.create(pos, state);
+        return ModBlockEntitiyTypes.SKINNABLE.create(pos, state);
     }
 
     public void forEach(Level level, BlockPos pos, Consumer<BlockPos> consumer) {

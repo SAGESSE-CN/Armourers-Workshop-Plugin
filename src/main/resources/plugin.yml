@@ -1,6 +1,6 @@
 name: armourers_workshop
 version: '${version}'
-main: moe.plushie.armourers_workshop.ArmourersWorkshopImpl
+main: moe.plushie.armourers_workshop.ArmourersWorkshopPlugin
 api-version: 1.16
 depend: [ ]
 authors: [ SAGESSE, Happy_FZM ]

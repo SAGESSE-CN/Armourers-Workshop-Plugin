@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.utils;
 
 import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
 import net.cocoonmc.core.item.ItemStack;
-import net.cocoonmc.core.nbt.CompoundTag;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -130,27 +129,27 @@ public class BukkitUtils {
         }
     }
 
-    public static void setObject(org.bukkit.inventory.ItemStack itemStack, String key, Object value) {
-        if (value == null) {
-            NBTEditor.set(itemStack, NBTEditor.DELETE, key);
-            return;
-        }
-        NBTEditor.set(itemStack, value, key);
-    }
-
-    public static void setTag(org.bukkit.inventory.ItemStack itemStack, String key, CompoundTag tag) {
-        if (tag == null) {
-            setObject(itemStack, key, null);
-            return;
-        }
-        try {
-            setObject(itemStack, key, NBTEditor.getNBTCompound(tag.toString()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
+//    public static void setObject(org.bukkit.inventory.ItemStack itemStack, String key, Object value) {
+//        if (value == null) {
+//            NBTEditor.set(itemStack, NBTEditor.DELETE, key);
+//            return;
+//        }
+//        NBTEditor.set(itemStack, value, key);
+//    }
+//
+//    public static void setTag(org.bukkit.inventory.ItemStack itemStack, String key, CompoundTag tag) {
+//        if (tag == null) {
+//            setObject(itemStack, key, null);
+//            return;
+//        }
+//        try {
+//            setObject(itemStack, key, NBTEditor.getNBTCompound(tag.toString()));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//
 //    public static void setBlock(UseOnContext context, String id, @Nullable BlockState state, @Nullable CompoundTag tag) {
 //        try {
 //            String skinURL = getSkinURL(id, state, tag);
