@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.init.ModBlockEntitiyTypes;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModCommands;
 import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -28,9 +29,7 @@ public final class ArmourersWorkshopPlugin extends JavaPlugin {
     public void onEnable() {
         INSTANCE = this;
 
-        Cocoon.enable();
-
-        ModConfig.init();
+        ModConfigSpec.init();
         ModPackets.init();
 
         ModBlocks.init();
@@ -56,7 +55,6 @@ public final class ArmourersWorkshopPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        Cocoon.disable();
         SkinLibraryManager.getServer().stop();
         LocalDataService.stop();
         DataManager.stop();

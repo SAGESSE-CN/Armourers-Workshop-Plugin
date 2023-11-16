@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.IServerPacketHandler;
+import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -86,10 +87,10 @@ public class UpdateWardrobePacket extends CustomPacket {
     public void accept(IServerPacketHandler packetHandler, Player player) {
         // We can't allow wardrobe updates without container.
         String playerName = player.getDisplayName();
-//        if (!(player.containerMenu instanceof SkinWardrobeMenu)) {
-//            ModLog.info("the wardrobe {} operation rejected for '{}'", field, playerName);
-//            return;
-//        }
+        if (!(player.getActivedMenu() instanceof SkinWardrobeMenu)) {
+            ModLog.info("the wardrobe {} operation rejected for '{}'", field, playerName);
+            return;
+        }
         if (!checkSecurityByServer()) {
             ModLog.info("the wardrobe {} operation rejected for '{}', for security reasons.", field, playerName);
             return;

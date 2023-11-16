@@ -68,7 +68,7 @@ public class MannequinItem extends Item {
         level.addFreshEntity(entity);
 //        level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
 
-//        itemStack.shrink(1);
+        itemStack.shrink(1);
         return InteractionResult.SUCCESS;
     }
 }

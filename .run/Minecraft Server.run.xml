@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Minecraft Server" type="JarApplication">
     <option name="JAR_PATH" value="$PROJECT_DIR$/run/minecraft_server.jar" />
+    <option name="VM_PARAMETERS" value="-Dlog4j.configurationFile=log4j2.xml" />
     <option name="PROGRAM_PARAMETERS" value="nogui" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />

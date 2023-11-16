@@ -11,6 +11,10 @@ public class EnvironmentManager {
         return new File("armourers_workshop");
     }
 
+    public static File getConfigDirectory() {
+        return new File("config");
+    }
+
     public static File getSkinLibraryDirectory() {
         return new File(getRootDirectory(), "skin-library");
     }

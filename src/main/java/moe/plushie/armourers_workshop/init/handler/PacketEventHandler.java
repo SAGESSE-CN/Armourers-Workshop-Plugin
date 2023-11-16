@@ -1,16 +1,15 @@
 package moe.plushie.armourers_workshop.init.handler;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshopPlugin;
 import moe.plushie.armourers_workshop.core.network.NetworkManager;
 import moe.plushie.armourers_workshop.core.skin.EntityProfile;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import net.cocoonmc.Cocoon;
 import net.cocoonmc.core.network.protocol.ClientboundAddEntityPacket;
 import net.cocoonmc.core.network.protocol.Packet;
+import net.cocoonmc.core.utils.BukkitHelper;
 import net.cocoonmc.core.world.Level;
 import net.cocoonmc.core.world.entity.Entity;
 import net.cocoonmc.core.world.entity.Player;
-import org.bukkit.Bukkit;
 
 public class PacketEventHandler {
 
@@ -21,7 +20,7 @@ public class PacketEventHandler {
 
     public static Packet handleAddEntity(ClientboundAddEntityPacket packet, Player player) {
         int entityId = packet.getId();
-        Bukkit.getScheduler().runTask(ArmourersWorkshopPlugin.INSTANCE, () -> {
+        BukkitHelper.runTask(() -> {
             Level level = player.getLevel();
             Entity entity = level.getEntity(entityId);
             if (entity == null) {

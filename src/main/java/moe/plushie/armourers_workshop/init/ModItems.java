@@ -100,10 +100,10 @@ public class ModItems {
         }
 
         public Item build(String name) {
-            ResourceLocation key = new ResourceLocation("armourers_workshop", name);
+            ResourceLocation registryName = ModConstants.key(name);
             Item item = factory.apply(properties);
-            ModLog.debug("Registering Item '{}'", key);
-            return Item.register(key, item);
+            ModLog.debug("Registering Item '{}'", registryName);
+            return Item.register(registryName, item);
         }
     }
 }

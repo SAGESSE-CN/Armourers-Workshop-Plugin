@@ -52,7 +52,7 @@ public class ModMenuTypes {
         }
 
         public MenuType<M> build(String name) {
-            ResourceLocation registryName = new ResourceLocation("armourers_workshop", name);
+            ResourceLocation registryName = ModConstants.key(name);
             return MenuType.register(registryName, new MenuType<>(factory));
         }
     }

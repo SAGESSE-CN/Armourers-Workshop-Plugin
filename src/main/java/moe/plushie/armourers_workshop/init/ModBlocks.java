@@ -87,10 +87,10 @@ public class ModBlocks {
         }
 
         public Block build(String name) {
-            ResourceLocation key = new ResourceLocation("armourers_workshop", name);
+            ResourceLocation registryName = ModConstants.key(name);
             Block block = factory.apply(properties);
-            ModLog.debug("Registering Block '{}'", key);
-            return Block.register(key, block);
+            ModLog.debug("Registering Block '{}'", registryName);
+            return Block.register(registryName, block);
         }
     }
 }

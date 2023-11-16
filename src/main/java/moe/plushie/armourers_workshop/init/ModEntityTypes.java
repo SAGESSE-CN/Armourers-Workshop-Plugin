@@ -43,7 +43,7 @@ public class ModEntityTypes {
         }
 
         public EntityType<T> build(String name) {
-            ResourceLocation registryName = new ResourceLocation("armourers_workshop", name);
+            ResourceLocation registryName = ModConstants.key(name);
             EntityType<T> entityType = new EntityType<>(factory);
             entityType.setDelegate(delegate);
             return EntityType.register(registryName, entityType);

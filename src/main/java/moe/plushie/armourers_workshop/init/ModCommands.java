@@ -10,6 +10,7 @@ import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.LiteralArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
+import moe.plushie.armourers_workshop.ArmourersWorkshopPlugin;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -17,21 +18,20 @@ import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
-import moe.plushie.armourers_workshop.utils.BukkitUtils;
-import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import net.cocoonmc.Cocoon;
 import net.cocoonmc.core.item.ItemStack;
+import net.cocoonmc.core.utils.BukkitHelper;
+import net.cocoonmc.core.world.entity.Entity;
+import net.cocoonmc.core.world.entity.Player;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.inventory.Inventory;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class ModCommands {
 
     public static void init() {
-        CommandAPI.onLoad(new CommandAPIBukkitConfig(Cocoon.getPlugin()).silentLogs(true));
+        CommandAPI.onLoad(new CommandAPIBukkitConfig(ArmourersWorkshopPlugin.INSTANCE).silentLogs(true));
 
         new CommandTree("armourers")
                 .then(literal("setSkin").then(entities().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
@@ -79,9 +79,9 @@ public class ModCommands {
                 return;
             }
             ItemStack itemStack = descriptor.asItemStack();
-            Collection<Entity> entities = ObjectUtils.unsafeCast(args[0]);
+            Collection<Entity> entities = convertToEntities(args[0]);
             for (Entity entity : entities) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(net.cocoonmc.core.world.entity.Entity.of(entity));
+                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 SkinSlotType slotType = SkinSlotType.of(descriptor.getType());
                 if (slotType != null && wardrobe != null) {
                     int slot = wardrobe.getFreeSlot(slotType);
@@ -100,18 +100,24 @@ public class ModCommands {
             if (descriptor.isEmpty()) {
                 return;
             }
-            Collection<Player> players = ObjectUtils.unsafeCast(args[0]);
-            for (Player entity : players) {
-                BukkitUtils.giveItemTo(descriptor.asItemStack(), entity);
+            Collection<Player> players = convertToPlayers(args[0]);
+            for (Player player : players) {
+                ItemStack itemStack = descriptor.asItemStack();
+                Inventory inventory = player.getInventory();
+                if (inventory.firstEmpty() < 0) {
+                    BukkitHelper.dropItem(itemStack, player);
+                } else {
+                    inventory.addItem(itemStack.asBukkit());
+                }
                 // context.getSource().sendSuccess(Component.translatable("commands.give.success.single", 1, itemStack.getDisplayName(), player.getDisplayName()), true);
             }
         }
 
         static void resyncWardrobe(CommandSender sender, CommandArguments commandArguments) {
             Object[] args = commandArguments.args();
-            Collection<Player> players = ObjectUtils.unsafeCast(args[0]);
+            Collection<Player> players = convertToPlayers(args[0]);
             for (Player player : players) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(net.cocoonmc.core.world.entity.Player.of(player));
+                SkinWardrobe wardrobe = SkinWardrobe.of(player);
                 if (wardrobe != null) {
                     wardrobe.broadcast();
                 }
@@ -119,16 +125,13 @@ public class ModCommands {
         }
 
         static void openWardrobe(CommandSender sender, CommandArguments commandArguments) {
-            if (!(sender instanceof Player)) {
-                return;
-            }
             Object[] args = commandArguments.args();
-            Collection<Entity> entities = ObjectUtils.unsafeCast(args[0]);
-            Player player = (Player) sender;
+            Collection<Entity> entities = convertToEntities(args[0]);
+            Player player = convertToPlayer(sender);
             for (Entity entity : entities) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(net.cocoonmc.core.world.entity.Entity.of(entity));
+                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe != null) {
-                    MenuManager.openMenu(ModMenuTypes.WARDROBE_OP, net.cocoonmc.core.world.entity.Player.of(player), wardrobe);
+                    MenuManager.openMenu(ModMenuTypes.WARDROBE_OP, player, wardrobe);
                     break;
                 }
             }
@@ -156,5 +159,21 @@ public class ModCommands {
             }
             return SkinDescriptor.EMPTY;
         }
+    }
+
+    private static Collection<Entity> convertToEntities(Object value) {
+        return ((Collection<?>) value).stream().map(ModCommands::convertToEntity).collect(Collectors.toList());
+    }
+
+    private static Collection<Player> convertToPlayers(Object value) {
+        return ((Collection<?>) value).stream().map(ModCommands::convertToPlayer).collect(Collectors.toList());
+    }
+
+    private static Entity convertToEntity(Object value) {
+        return Entity.of((org.bukkit.entity.Entity) value);
+    }
+
+    private static Player convertToPlayer(Object value) {
+        return Player.of((org.bukkit.entity.Player) value);
     }
 }

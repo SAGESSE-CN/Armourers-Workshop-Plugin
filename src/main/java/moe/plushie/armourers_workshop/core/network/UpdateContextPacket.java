@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.network;
 
 import io.netty.buffer.ByteBufOutputStream;
-import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModContext;
 import net.cocoonmc.core.network.FriendlyByteBuf;
@@ -40,7 +40,7 @@ public class UpdateContextPacket extends CustomPacket {
 
     private void writeConfigSpec(FriendlyByteBuf buffer) {
         try {
-            Map<String, Object> fields = ModConfig.snapshot();
+            Map<String, Object> fields = ModConfigSpec.COMMON.snapshot();
             buffer.writeInt(fields.size());
             if (fields.size() == 0) {
                 return;

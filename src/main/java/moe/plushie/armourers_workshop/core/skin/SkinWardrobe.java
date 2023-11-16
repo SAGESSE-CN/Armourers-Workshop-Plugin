@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
 
@@ -46,8 +47,11 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
         if (entity == null) {
             return null;
         }
+        EntityProfile profile = ModEntityProfiles.getProfile(entity);
+        if (profile == null) {
+            return null;
+        }
         return Cocoon.API.CACHE.computeIfAbsent(entity, CacheKeys.SKIN_WARDROBE_KEY, it -> {
-            EntityProfile profile = ModEntityProfiles.getProfile(entity);
             SkinWardrobe wardrobe = new SkinWardrobe(entity, profile);
             CompoundTag tag = entity.getPersistentData(SkinWardrobeStorage.SKIN_WARDROBE_KEY, DataSerializers.COMPOUND_TAG);
             if (tag != null && tag.size() != 0) {
@@ -55,6 +59,25 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
             }
             return wardrobe;
         });
+    }
+
+    public void dropAll(@Nullable Consumer<ItemStack> consumer) {
+        int containerSize = inventory.getContainerSize();
+        int ignoredStart = SkinSlotType.DYE.getIndex() + 8;
+        int ignoredEnd = SkinSlotType.DYE.getIndex() + SkinSlotType.DYE.getMaxSize();
+        for (int i = 0; i < containerSize; ++i) {
+            if (i >= ignoredStart && i < ignoredEnd) {
+                continue;
+            }
+            ItemStack itemStack = inventory.getItem(i);
+            if (itemStack.isEmpty()) {
+                continue;
+            }
+            if (consumer != null) {
+                consumer.accept(itemStack);
+            }
+            inventory.setItem(i, ItemStack.EMPTY);
+        }
     }
 
     public void save() {

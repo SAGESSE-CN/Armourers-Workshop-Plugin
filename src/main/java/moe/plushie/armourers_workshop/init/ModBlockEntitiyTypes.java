@@ -53,7 +53,7 @@ public class ModBlockEntitiyTypes {
         }
 
         public BlockEntityType<T> build(String name) {
-            ResourceLocation registryName = new ResourceLocation("armourers_workshop", name);
+            ResourceLocation registryName = ModConstants.key(name);
             return BlockEntityType.register(registryName, new BlockEntityType<>(validBlocks, factory));
         }
     }

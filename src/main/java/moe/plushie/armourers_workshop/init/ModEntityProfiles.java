@@ -4,7 +4,8 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import net.cocoonmc.core.world.entity.Entity;
-import org.bukkit.entity.EntityType;
+import net.cocoonmc.core.world.entity.EntityType;
+import net.cocoonmc.core.world.entity.EntityTypes;
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -73,7 +74,7 @@ public class ModEntityProfiles {
             .fixed()
             .build("projecting");
 
-    private static final HashMap<EntityType, EntityProfile> PROFILES = new HashMap<>();
+    private static final HashMap<EntityType<?>, EntityProfile> PROFILES = new HashMap<>();
 
     private static int playerSlots(ISkinType type) {
         return ModConfig.Common.prefersWardrobePlayerSlots;
@@ -84,48 +85,48 @@ public class ModEntityProfiles {
     }
 
     public static void init() {
-        register(EntityType.PLAYER, PLAYER);
+        register(EntityTypes.PLAYER, PLAYER);
 
-        register(EntityType.VILLAGER, VILLAGER);
-        register(EntityType.WITCH, VILLAGER);
-        register(EntityType.WANDERING_TRADER, VILLAGER);
+        register(EntityTypes.VILLAGER, VILLAGER);
+        register(EntityTypes.WITCH, VILLAGER);
+        register(EntityTypes.WANDERING_TRADER, VILLAGER);
 
-        register(EntityType.SKELETON, COMMON);
-        register(EntityType.STRAY, COMMON);
-        register(EntityType.WITHER_SKELETON, COMMON);
-        register(EntityType.ZOMBIE, COMMON);
-        register(EntityType.HUSK, COMMON);
-        register(EntityType.ZOMBIE_VILLAGER, COMMON);
-        register(EntityType.DROWNED, COMMON);
+        register(EntityTypes.SKELETON, COMMON);
+        register(EntityTypes.STRAY, COMMON);
+        register(EntityTypes.WITHER_SKELETON, COMMON);
+        register(EntityTypes.ZOMBIE, COMMON);
+        register(EntityTypes.HUSK, COMMON);
+        register(EntityTypes.ZOMBIE_VILLAGER, COMMON);
+        register(EntityTypes.DROWNED, COMMON);
 
-        register(EntityType.EVOKER, COMMON);
-        register(EntityType.ILLUSIONER, COMMON);
-        register(EntityType.PILLAGER, COMMON);
-        register(EntityType.VINDICATOR, COMMON);
+        register(EntityTypes.EVOKER, COMMON);
+        register(EntityTypes.ILLUSIONER, COMMON);
+        register(EntityTypes.PILLAGER, COMMON);
+        register(EntityTypes.VINDICATOR, COMMON);
 
-        register(EntityType.VEX, COMMON);
-        register(EntityType.PIGLIN, COMMON);
-        register(EntityType.PIGLIN_BRUTE, COMMON);
-        register(EntityType.ZOMBIFIED_PIGLIN, COMMON);
+        register(EntityTypes.VEX, COMMON);
+        register(EntityTypes.PIGLIN, COMMON);
+        register(EntityTypes.PIGLIN_BRUTE, COMMON);
+        register(EntityTypes.ZOMBIFIED_PIGLIN, COMMON);
 
-        register(EntityType.SLIME, ONLY_HEAD);
-        register(EntityType.GHAST, ONLY_HEAD);
-        register(EntityType.CHICKEN, ONLY_HEAD);
-        register(EntityType.CREEPER, ONLY_HEAD);
+        register(EntityTypes.SLIME, ONLY_HEAD);
+        register(EntityTypes.GHAST, ONLY_HEAD);
+        register(EntityTypes.CHICKEN, ONLY_HEAD);
+        register(EntityTypes.CREEPER, ONLY_HEAD);
 
-        register(EntityType.ARROW, PROJECTING);
-        register(EntityType.TRIDENT, PROJECTING);
+        register(EntityTypes.ARROW, PROJECTING);
+        register(EntityTypes.TRIDENT, PROJECTING);
 
 //        register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN);
-        register(EntityType.IRON_GOLEM, MANNEQUIN);
+        register(EntityTypes.IRON_GOLEM, MANNEQUIN);
 
-//        register(ModEntities.MANNEQUIN.get(), MANNEQUIN);
-//
+        register(ModEntityTypes.MANNEQUIN, MANNEQUIN);
+
 //        ModCompatible.registerCustomEntityType();
     }
 
-    public static void register(EntityType entityType, EntityProfile entityProfile) {
-        ModLog.debug("Registering Entity Profile '{}'", entityType.getKey());
+    public static void register(EntityType<?> entityType, EntityProfile entityProfile) {
+        ModLog.debug("Registering Entity Profile '{}'", entityType.getRegistryName());
         PROFILES.put(entityType, entityProfile);
     }
 
@@ -138,10 +139,10 @@ public class ModEntityProfiles {
 //    }
 
     public static <T extends Entity> EntityProfile getProfile(T entity) {
-        return getProfile(entity.asBukkit().getType());
+        return getProfile(entity.getType());
     }
 
-    public static <T extends Entity> EntityProfile getProfile(EntityType entityType) {
+    public static <T extends Entity> EntityProfile getProfile(EntityType<?> entityType) {
         return PROFILES.get(entityType);
     }
 
@@ -153,7 +154,6 @@ public class ModEntityProfiles {
         public static <T extends Entity> Builder<T> create() {
             return new Builder<>();
         }
-
 
         private Builder<T> add(ISkinType type, Function<ISkinType, Integer> f) {
             supports.put(type, f);
@@ -174,5 +174,4 @@ public class ModEntityProfiles {
             return new EntityProfile(ModConstants.key(name), supports, editable);
         }
     }
-
 }
