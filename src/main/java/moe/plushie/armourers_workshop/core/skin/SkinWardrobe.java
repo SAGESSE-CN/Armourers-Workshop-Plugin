@@ -1,10 +1,13 @@
 package moe.plushie.armourers_workshop.core.skin;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.ITagRepresentable;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.network.NetworkManager;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
+import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.utils.CacheKeys;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.cocoonmc.Cocoon;
@@ -40,6 +43,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
         this.id = entity.getId();
         this.entity = new WeakReference<>(entity);
         this.profile = profile;
+        this.inventory.addListener(it -> save());
     }
 
     @Nullable
@@ -190,19 +194,18 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
     }
 
     public boolean isEditable(Player player) {
-//        if (!ModPermissions.OPEN.accept(ModMenuTypes.WARDROBE, getEntity(), player)) {
-//            return false;
-//        }
-//        // can't edit another player's wardrobe
-//        Entity entity = getEntity();
-//        if (entity instanceof Player && entity.getId() != player.getId()) {
-//            return false;
-//        }
-//        if (!ModConfig.Common.canOpenWardrobe(entity, player)) {
-//            return false;
-//        }
-//        return !getProfile().isLocked();
-        return true;
+        if (!ModPermissions.OPEN.accept(ModMenuTypes.WARDROBE, getEntity(), player)) {
+            return false;
+        }
+        // can't edit another player's wardrobe
+        Entity entity = getEntity();
+        if (entity instanceof Player && entity.getId() != player.getId()) {
+            return false;
+        }
+        if (!ModConfig.Common.canOpenWardrobe(entity, player)) {
+            return false;
+        }
+        return !getProfile().isLocked();
     }
 
     @Override

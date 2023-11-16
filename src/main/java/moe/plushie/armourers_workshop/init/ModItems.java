@@ -1,109 +1,167 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.builder.item.BlendingToolItem;
+import moe.plushie.armourers_workshop.builder.item.BlockMarkerItem;
+import moe.plushie.armourers_workshop.builder.item.BurnToolItem;
+import moe.plushie.armourers_workshop.builder.item.ColorNoiseToolItem;
+import moe.plushie.armourers_workshop.builder.item.ColorPickerItem;
+import moe.plushie.armourers_workshop.builder.item.DodgeToolItem;
+import moe.plushie.armourers_workshop.builder.item.HueToolItem;
+import moe.plushie.armourers_workshop.builder.item.PaintRollerItem;
+import moe.plushie.armourers_workshop.builder.item.PaintbrushItem;
+import moe.plushie.armourers_workshop.builder.item.ShadeNoiseToolItem;
+import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
+import moe.plushie.armourers_workshop.core.item.ArmourersHammerItem;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
+import moe.plushie.armourers_workshop.core.item.FlavouredItem;
+import moe.plushie.armourers_workshop.core.item.GiftSackItem;
+import moe.plushie.armourers_workshop.core.item.LinkingToolItem;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
+import moe.plushie.armourers_workshop.core.item.MannequinToolItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.item.SkinUnlockItem;
+import moe.plushie.armourers_workshop.core.item.SoapItem;
 import moe.plushie.armourers_workshop.core.item.WandOfStyleItem;
 import moe.plushie.armourers_workshop.core.skin.SkinSlotType;
 import net.cocoonmc.core.block.Block;
 import net.cocoonmc.core.item.BlockItem;
 import net.cocoonmc.core.item.Item;
+import net.cocoonmc.core.item.Rarity;
 import net.cocoonmc.core.resources.ResourceLocation;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class ModItems {
 
-    public static final Item SKIN = skin(ModBlocks.SKINNABLE).build("skin");
-    public static final Item MANNEQUIN = normal(MannequinItem::new).build("mannequin");
+    private static final ItemBuilder MAIN = new ItemBuilder(ModItemGroups.MAIN_GROUP);
+    private static final ItemBuilder BUILDING = new ItemBuilder(ModItemGroups.BUILDING_GROUP);
+    private static final ItemBuilder NONE = new ItemBuilder(null);
 
-    public static final Item SKIN_LIBRARY = block(ModBlocks.SKIN_LIBRARY).build("skin-library");
-    public static final Item SKIN_LIBRARY_CREATIVE = block(ModBlocks.SKIN_LIBRARY_CREATIVE).build("skin-library-creative");
-    public static final Item SKIN_LIBRARY_GLOBAL = block(ModBlocks.SKIN_LIBRARY_GLOBAL).build("skin-library-global");
+    public static final IRegistryKey<Item> SKIN = NONE.block(SkinItem::new, ModBlocks.SKINNABLE).build("skin");
+    public static final IRegistryKey<Item> MANNEQUIN = MAIN.normal(MannequinItem::new).rarity(Rarity.RARE).build("mannequin");
 
-    public static final Item SKINNING_TABLE = block(ModBlocks.SKINNING_TABLE).build("skinning-table");
-    public static final Item DYE_TABLE = block(ModBlocks.DYE_TABLE).build("dye-table");
-    //public static final Item OUTFIT_MAKER = block(ModBlocks.OUTFIT_MAKER).build("outfit-maker");
-    public static final Item HOLOGRAM_PROJECTOR = block(ModBlocks.HOLOGRAM_PROJECTOR).build("hologram-projector");
+    public static final IRegistryKey<Item> SKIN_LIBRARY = MAIN.block(ModBlocks.SKIN_LIBRARY).build("skin-library");
+    public static final IRegistryKey<Item> SKIN_LIBRARY_CREATIVE = MAIN.block(ModBlocks.SKIN_LIBRARY_CREATIVE).rarity(Rarity.EPIC).build("skin-library-creative");
+    public static final IRegistryKey<Item> SKIN_LIBRARY_GLOBAL = MAIN.block(ModBlocks.SKIN_LIBRARY_GLOBAL).build("skin-library-global");
 
-    public static final Item BOTTLE = normal(BottleItem::new).build("dye-bottle");
-    //public static final Item MANNEQUIN_TOOL = normal(MannequinToolItem::new).build("mannequin-tool");
-    //public static final Item ARMOURERS_HAMMER = normal(ArmourersHammerItem::new).build("armourers-hammer");
-    public static final Item WAND_OF_STYLE = normal(WandOfStyleItem::new).build("wand-of-style");
+    public static final IRegistryKey<Item> SKINNING_TABLE = MAIN.block(ModBlocks.SKINNING_TABLE).build("skinning-table");
+    public static final IRegistryKey<Item> DYE_TABLE = MAIN.block(ModBlocks.DYE_TABLE).build("dye-table");
+    public static final IRegistryKey<Item> OUTFIT_MAKER = MAIN.block(ModBlocks.OUTFIT_MAKER).build("outfit-maker");
+    public static final IRegistryKey<Item> HOLOGRAM_PROJECTOR = MAIN.block(ModBlocks.HOLOGRAM_PROJECTOR).build("hologram-projector");
 
-    public static final Item SKIN_UNLOCK_HEAD = unlock(SkinSlotType.HEAD).build("skin-unlock-head");
-    public static final Item SKIN_UNLOCK_CHEST = unlock(SkinSlotType.CHEST).build("skin-unlock-chest");
-    public static final Item SKIN_UNLOCK_FEET = unlock(SkinSlotType.FEET).build("skin-unlock-feet");
-    public static final Item SKIN_UNLOCK_LEGS = unlock(SkinSlotType.LEGS).build("skin-unlock-legs");
-    public static final Item SKIN_UNLOCK_WINGS = unlock(SkinSlotType.WINGS).build("skin-unlock-wings");
-    public static final Item SKIN_UNLOCK_OUTFIT = unlock(SkinSlotType.OUTFIT).build("skin-unlock-outfit");
+    public static final IRegistryKey<Item> BOTTLE = MAIN.normal(BottleItem::new).build("dye-bottle");
+    public static final IRegistryKey<Item> MANNEQUIN_TOOL = MAIN.normal(MannequinToolItem::new).build("mannequin-tool");
+    public static final IRegistryKey<Item> ARMOURERS_HAMMER = MAIN.normal(ArmourersHammerItem::new).build("armourers-hammer");
+    public static final IRegistryKey<Item> WAND_OF_STYLE = MAIN.normal(WandOfStyleItem::new).build("wand-of-style");
 
-    public static final Item LINKING_TOOL = normal(Item::new).build("linking-tool");
-    public static final Item SKIN_TEMPLATE = normal(Item::new).stacksTo(64).build("skin-template");
-    public static final Item SOAP = normal(Item::new).stacksTo(64).build("soap");
-    public static final Item GIFT_SACK = normal(Item::new).stacksTo(64).build("gift-sack");
+    public static final IRegistryKey<Item> SKIN_UNLOCK_HEAD = MAIN.unlock(SkinSlotType.HEAD).build("skin-unlock-head");
+    public static final IRegistryKey<Item> SKIN_UNLOCK_CHEST = MAIN.unlock(SkinSlotType.CHEST).build("skin-unlock-chest");
+    public static final IRegistryKey<Item> SKIN_UNLOCK_FEET = MAIN.unlock(SkinSlotType.FEET).build("skin-unlock-feet");
+    public static final IRegistryKey<Item> SKIN_UNLOCK_LEGS = MAIN.unlock(SkinSlotType.LEGS).build("skin-unlock-legs");
+    public static final IRegistryKey<Item> SKIN_UNLOCK_WINGS = MAIN.unlock(SkinSlotType.WINGS).build("skin-unlock-wings");
+    public static final IRegistryKey<Item> SKIN_UNLOCK_OUTFIT = MAIN.unlock(SkinSlotType.OUTFIT).build("skin-unlock-outfit");
 
-    //public static final Item ARMOURER = block(ModBlocks.ARMOURER).rarity(Rarity.EPIC).build("armourer");
-    public static final Item COLOR_MIXER = block(ModBlocks.COLOR_MIXER).build("colour-mixer");
-    //public static final Item ADVANCED_SKIN_BUILDER = block(ModBlocks.ADVANCED_SKIN_BUILDER).build("advanced-skin-builder");
+    public static final IRegistryKey<Item> LINKING_TOOL = MAIN.normal(LinkingToolItem::new).build("linking-tool");
+    public static final IRegistryKey<Item> SKIN_TEMPLATE = MAIN.normal(FlavouredItem::new).stacksTo(64).build("skin-template");
+    public static final IRegistryKey<Item> SOAP = MAIN.normal(SoapItem::new).stacksTo(64).build("soap");
+    public static final IRegistryKey<Item> GIFT_SACK = MAIN.normal(GiftSackItem::new).stacksTo(64).build("gift-sack");
 
-    //public static final Item SKIN_CUBE = cube(ModBlocks.SKIN_CUBE).build("skin-cube");
-    //public static final Item SKIN_CUBE_GLOWING = cube(ModBlocks.SKIN_CUBE_GLOWING).build("skin-cube-glowing");
-    //public static final Item SKIN_CUBE_GLASS = cube(ModBlocks.SKIN_CUBE_GLASS).build("skin-cube-glass");
-    //public static final Item SKIN_CUBE_GLASS_GLOWING = cube(ModBlocks.SKIN_CUBE_GLASS_GLOWING).build("skin-cube-glass-glowing");
+    public static final IRegistryKey<Item> ARMOURER = BUILDING.block(ModBlocks.ARMOURER).rarity(Rarity.EPIC).build("armourer");
+    public static final IRegistryKey<Item> COLOR_MIXER = BUILDING.block(ModBlocks.COLOR_MIXER).build("colour-mixer");
+    public static final IRegistryKey<Item> ADVANCED_SKIN_BUILDER = BUILDING.block(ModBlocks.ADVANCED_SKIN_BUILDER).build("advanced-skin-builder");
 
-    //public static final Item PAINT_BRUSH = normal(PaintbrushItem::new).build("paintbrush");
-    //public static final Item PAINT_ROLLER = normal(PaintRollerItem::new).build("paint-roller");
-    //public static final Item BURN_TOOL = normal(BurnToolItem::new).build("burn-tool");
-    //public static final Item DODGE_TOOL = normal(DodgeToolItem::new).build("dodge-tool");
-    //public static final Item SHADE_NOISE_TOOL = normal(ShadeNoiseToolItem::new).build("shade-noise-tool");
-    //public static final Item COLOR_NOISE_TOOL = normal(ColorNoiseToolItem::new).build("colour-noise-tool");
-    //public static final Item BLENDING_TOOL = normal(BlendingToolItem::new).build("blending-tool");
-    //public static final Item HUE_TOOL = normal(HueToolItem::new).build("hue-tool");
-    //public static final Item COLOR_PICKER = normal(ColorPickerItem::new).build("colour-picker");
-    //public static final Item BLOCK_MARKER = normal(BlockMarkerItem::new).build("block-marker");
+    public static final IRegistryKey<Item> SKIN_CUBE = BUILDING.cube(ModBlocks.SKIN_CUBE).build("skin-cube");
+    public static final IRegistryKey<Item> SKIN_CUBE_GLOWING = BUILDING.cube(ModBlocks.SKIN_CUBE_GLOWING).build("skin-cube-glowing");
+    public static final IRegistryKey<Item> SKIN_CUBE_GLASS = BUILDING.cube(ModBlocks.SKIN_CUBE_GLASS).build("skin-cube-glass");
+    public static final IRegistryKey<Item> SKIN_CUBE_GLASS_GLOWING = BUILDING.cube(ModBlocks.SKIN_CUBE_GLASS_GLOWING).build("skin-cube-glass-glowing");
+
+    public static final IRegistryKey<Item> PAINT_BRUSH = BUILDING.normal(PaintbrushItem::new).build("paintbrush");
+    public static final IRegistryKey<Item> PAINT_ROLLER = BUILDING.normal(PaintRollerItem::new).build("paint-roller");
+    public static final IRegistryKey<Item> BURN_TOOL = BUILDING.normal(BurnToolItem::new).build("burn-tool");
+    public static final IRegistryKey<Item> DODGE_TOOL = BUILDING.normal(DodgeToolItem::new).build("dodge-tool");
+    public static final IRegistryKey<Item> SHADE_NOISE_TOOL = BUILDING.normal(ShadeNoiseToolItem::new).build("shade-noise-tool");
+    public static final IRegistryKey<Item> COLOR_NOISE_TOOL = BUILDING.normal(ColorNoiseToolItem::new).build("colour-noise-tool");
+    public static final IRegistryKey<Item> BLENDING_TOOL = BUILDING.normal(BlendingToolItem::new).build("blending-tool");
+    public static final IRegistryKey<Item> HUE_TOOL = BUILDING.normal(HueToolItem::new).build("hue-tool");
+    public static final IRegistryKey<Item> COLOR_PICKER = BUILDING.normal(ColorPickerItem::new).build("colour-picker");
+    public static final IRegistryKey<Item> BLOCK_MARKER = BUILDING.normal(BlockMarkerItem::new).build("block-marker");
 
     public static void init() {
     }
 
-    private static Builder normal(Function<Item.Properties, Item> factory) {
-        return new Builder(factory).stacksTo(1);
+    private static class ItemBuilder {
+
+        IRegistryKey<Object> group;
+
+        ItemBuilder(IRegistryKey<Object> group) {
+            this.group = group;
+        }
+
+        ItemBuilderImpl<Item> normal(Function<Item.Properties, Item> factory) {
+            ItemBuilderImpl<Item> builder = new ItemBuilderImpl<>(factory);
+            return builder.stacksTo(1);
+        }
+
+        ItemBuilderImpl<Item> rare(Function<Item.Properties, Item> factory) {
+            return normal(factory).rarity(Rarity.RARE);
+        }
+
+        ItemBuilderImpl<Item> block(IRegistryKey<Block> block) {
+            return block(BlockItem::new, block).rarity(Rarity.RARE);
+        }
+
+        ItemBuilderImpl<Item> block(BiFunction<Block, Item.Properties, Item> provider, IRegistryKey<Block> block) {
+            return normal(properties -> provider.apply(block.get(), properties));
+        }
+
+        ItemBuilderImpl<Item> cube(IRegistryKey<Block> block) {
+            return normal(properties -> new SkinCubeItem(block.get(), properties)).stacksTo(64);
+        }
+
+        ItemBuilderImpl<Item> unlock(SkinSlotType slotType) {
+            return normal(properties -> new SkinUnlockItem(slotType, properties)).stacksTo(16).rarity(Rarity.UNCOMMON);
+        }
+
     }
 
-    private static Builder block(Block block) {
-        return normal(properties -> new BlockItem(block, properties)).stacksTo(64);
-    }
-
-    private static Builder skin(Block block) {
-        return normal(properties -> new SkinItem(block, properties));
-    }
-
-    private static Builder unlock(SkinSlotType slotType) {
-        return normal(properties -> new SkinUnlockItem(slotType, properties)).stacksTo(16);
-    }
-
-    private static class Builder {
+    private static class ItemBuilderImpl<T extends Item> {
 
         final Item.Properties properties;
-        final Function<Item.Properties, Item> factory;
+        final Function<Item.Properties, T> factory;
 
-        public Builder(Function<Item.Properties, Item> factory) {
+        public ItemBuilderImpl(Function<Item.Properties, T> factory) {
             this.factory = factory;
             this.properties = new Item.Properties();
         }
 
-        public Builder stacksTo(int i) {
+        public ItemBuilderImpl<T> rarity(Rarity rarity) {
+            return this;
+        }
+
+        public ItemBuilderImpl<T> stacksTo(int i) {
             properties.stacksTo(i);
             return this;
         }
 
-        public Item build(String name) {
+        public IRegistryKey<T> build(String name) {
             ResourceLocation registryName = ModConstants.key(name);
-            Item item = factory.apply(properties);
+            T item = factory.apply(properties);
             ModLog.debug("Registering Item '{}'", registryName);
-            return Item.register(registryName, item);
+            Item.register(registryName, item);
+            return new IRegistryKey<T>() {
+                @Override
+                public ResourceLocation getRegistryName() {
+                    return item.getRegistryName();
+                }
+
+                @Override
+                public T get() {
+                    return item;
+                }
+            };
         }
     }
 }

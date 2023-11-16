@@ -43,7 +43,7 @@ public class SkinItem extends BlockItem {
     }
 
     public static ItemStack replaceSkin(ItemStack targetStack, SkinDescriptor descriptor) {
-        if (targetStack.isEmpty() || targetStack.is(ModItems.SKIN_TEMPLATE)) {
+        if (targetStack.isEmpty() || targetStack.is(ModItems.SKIN_TEMPLATE.get())) {
             return descriptor.asItemStack();
         }
         setSkin(targetStack, descriptor);

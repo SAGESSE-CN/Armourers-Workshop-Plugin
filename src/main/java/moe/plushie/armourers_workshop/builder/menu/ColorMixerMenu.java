@@ -19,7 +19,7 @@ public class ColorMixerMenu extends BlockContainerMenu {
     public ColorMixerMenu(MenuType<?> menuType, Player player, WorldAccessor accessor) {
         super(menuType, player, accessor);
         this.blockEntity = (ColorMixerBlockEntity) accessor.getBlockEntity();
-        this.addInputSlot(getInventory(), 0, 83, 101, PlaceFilter.only(ModItems.BOTTLE), null);
+        this.addInputSlot(getInventory(), 0, 83, 101, PlaceFilter.only(ModItems.BOTTLE.get()), null);
         this.addOutputSlot(getInventory(), 1, 134, 101);
     }
 

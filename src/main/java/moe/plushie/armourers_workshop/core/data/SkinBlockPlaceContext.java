@@ -74,7 +74,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         this.skin = descriptor;
         this.parts = parts;
         this.properties = skin.getProperties();
-        BlockState state = ModBlocks.SKINNABLE.getStateForPlacement(this);
+        BlockState state = ModBlocks.SKINNABLE.get().getStateForPlacement(this);
         if (state != null) {
             this.rotations = SkinnableBlockEntity.getRotations(state);
             this.transform(rotations);

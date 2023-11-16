@@ -1,32 +1,36 @@
 package moe.plushie.armourers_workshop.api;
 
-import com.google.common.collect.Lists;
+import moe.plushie.armourers_workshop.api.registry.IRegistryKey;
+import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.init.ModItemMatchers;
+import moe.plushie.armourers_workshop.init.ModItemTags;
+import moe.plushie.armourers_workshop.utils.ItemMatcher;
 import net.cocoonmc.core.item.ItemStack;
-import org.bukkit.Material;
+import net.cocoonmc.core.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
 
 public enum ItemOverrideType {
 
-    SWORD("sword", Material.WOODEN_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.DIAMOND_SWORD, Material.NETHERITE_SWORD),
-    SHIELD("shield", Material.SHIELD),
-    BOW("bow", Material.BOW, Material.CROSSBOW),
-    TRIDENT("trident", Material.TRIDENT),
+    SWORD("sword", ModItemTags.SWORDS, ModItemMatchers.SWORDS),
+    SHIELD("shield", ModItemTags.SHIELDS, ModItemMatchers.SHIELDS),
+    BOW("bow", ModItemTags.BOWS, ModItemMatchers.BOWS),
+    TRIDENT("trident", ModItemTags.TRIDENTS, ModItemMatchers.TRIDENTS),
 
-    PICKAXE("pickaxe", Material.WOODEN_PICKAXE, Material.STONE_PICKAXE, Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.DIAMOND_PICKAXE, Material.NETHERITE_PICKAXE),
-    AXE("axe", Material.WOODEN_AXE, Material.STONE_AXE, Material.IRON_AXE, Material.GOLDEN_AXE, Material.DIAMOND_AXE, Material.NETHERITE_AXE),
-    SHOVEL("shovel", Material.WOODEN_SHOVEL, Material.STONE_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.DIAMOND_SHOVEL, Material.NETHERITE_SHOVEL),
-    HOE("hoe", Material.WOODEN_HOE, Material.STONE_HOE, Material.IRON_HOE, Material.GOLDEN_HOE, Material.DIAMOND_HOE, Material.NETHERITE_HOE),
+    PICKAXE("pickaxe", ModItemTags.PICKAXES, ModItemMatchers.PICKAXES),
+    AXE("axe", ModItemTags.AXES, ModItemMatchers.AXES),
+    SHOVEL("shovel", ModItemTags.SHOVELS, ModItemMatchers.SHOVELS),
+    HOE("hoe", ModItemTags.HOES, ModItemMatchers.HOES),
 
-    ITEM("item");
+    ITEM("item", null, null);
 
+    private final IRegistryKey<IItemTag> tag;
     private final String name;
-    private final Collection<Material> materials;
+    private final ItemMatcher matcher;
 
-    ItemOverrideType(String name, Material... materials) {
+    ItemOverrideType(String name, IRegistryKey<IItemTag> tag, ItemMatcher matcher) {
         this.name = name;
-        this.materials = Lists.newArrayList(materials);
+        this.tag = tag;
+        this.matcher = matcher;
     }
 
     @Nullable
@@ -44,8 +48,17 @@ public enum ItemOverrideType {
         if (this == ITEM) {
             return true;
         }
-        // test by vanilla's item.
-        return materials.contains(itemStack.getItem().asBukkit());
+        // test by overrides of the config system.
+        ResourceLocation registryName = itemStack.getItem().getRegistryName();
+        if (ModConfig.Common.overrides.contains(name + ":" + registryName)) {
+            return true;
+        }
+        // test by vanilla's tag system.
+        if (tag != null && tag.get().contains(itemStack)) {
+            return true;
+        }
+        // test by item id matching system.
+        return matcher.test(registryName, itemStack);
     }
 
     public String getName() {

@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.library.block;
 
-import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.core.block.HorizontalDirectionalBlock;
-import moe.plushie.armourers_workshop.init.ModBlockEntitiyTypes;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.cocoonmc.core.BlockPos;
@@ -22,11 +21,11 @@ public class GlobalSkinLibraryBlock extends HorizontalDirectionalBlock implement
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModBlockEntitiyTypes.SKIN_LIBRARY_GLOBAL.create(pos, state);
+        return ModBlockEntityTypes.SKIN_LIBRARY_GLOBAL.get().create(pos, state);
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand) {
-        return MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY_GLOBAL, player, WorldAccessor.of(level, blockPos));
+        return MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY_GLOBAL, level.getBlockEntity(blockPos), player);
     }
 }

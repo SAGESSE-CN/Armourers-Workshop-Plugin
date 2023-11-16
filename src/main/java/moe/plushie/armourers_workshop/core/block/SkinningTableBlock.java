@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.cocoonmc.core.BlockPos;
@@ -18,6 +17,6 @@ public class SkinningTableBlock extends HorizontalDirectionalBlock {
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand) {
-        return MenuManager.openMenu(ModMenuTypes.SKINNING_TABLE, player, WorldAccessor.of(level, blockPos));
+        return MenuManager.openMenu(ModMenuTypes.SKINNING_TABLE, level, blockPos, player);
     }
 }

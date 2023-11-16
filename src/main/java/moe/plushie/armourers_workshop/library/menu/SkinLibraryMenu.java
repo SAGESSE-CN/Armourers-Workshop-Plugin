@@ -38,7 +38,7 @@ public class SkinLibraryMenu extends UpdatableContainerMenu<SkinLibraryBlockEnti
     public boolean shouldLoadStack() {
         ItemStack outputStack = outputSlots.get(0).getItem();
         ItemStack inputStack = inputSlots.get(0).getItem();
-        return outputStack.isEmpty() && !inputStack.isEmpty() && inputStack.is(ModItems.SKIN_TEMPLATE);
+        return outputStack.isEmpty() && !inputStack.isEmpty() && inputStack.is(ModItems.SKIN_TEMPLATE.get());
     }
 
     public void crafting(SkinDescriptor descriptor) {
@@ -48,7 +48,7 @@ public class SkinLibraryMenu extends UpdatableContainerMenu<SkinLibraryBlockEnti
         if (descriptor != null) {
             // only consumes the template
             newItemStack = SkinItem.replaceSkin(newItemStack, descriptor);
-            consume = newItemStack.is(ModItems.SKIN_TEMPLATE);
+            consume = newItemStack.is(ModItems.SKIN_TEMPLATE.get());
         }
         outputSlots.get(0).setItem(newItemStack);
         if (consume) {

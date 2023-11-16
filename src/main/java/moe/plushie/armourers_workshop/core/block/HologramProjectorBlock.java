@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
-import moe.plushie.armourers_workshop.init.ModBlockEntitiyTypes;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.cocoonmc.core.BlockPos;
@@ -32,12 +31,12 @@ public class HologramProjectorBlock extends AttachedDirectionalBlock implements 
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModBlockEntitiyTypes.HOLOGRAM_PROJECTOR.create(pos, state);
+        return ModBlockEntityTypes.HOLOGRAM_PROJECTOR.get().create(pos, state);
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand) {
-        return MenuManager.openMenu(ModMenuTypes.HOLOGRAM_PROJECTOR, player, WorldAccessor.of(level, blockPos));
+        return MenuManager.openMenu(ModMenuTypes.HOLOGRAM_PROJECTOR, level.getBlockEntity(blockPos), player);
     }
 
     @Override

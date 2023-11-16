@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.core.block.HorizontalDirectionalBlock;
-import moe.plushie.armourers_workshop.init.ModBlockEntitiyTypes;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.cocoonmc.core.BlockPos;
@@ -22,11 +21,11 @@ public class ColorMixerBlock extends HorizontalDirectionalBlock implements Block
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModBlockEntitiyTypes.COLOR_MIXER.create(pos, state);
+        return ModBlockEntityTypes.COLOR_MIXER.get().create(pos, state);
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand) {
-        return MenuManager.openMenu(ModMenuTypes.COLOR_MIXER, player, WorldAccessor.of(level, blockPos));
+        return MenuManager.openMenu(ModMenuTypes.COLOR_MIXER, level.getBlockEntity(blockPos), player);
     }
 }

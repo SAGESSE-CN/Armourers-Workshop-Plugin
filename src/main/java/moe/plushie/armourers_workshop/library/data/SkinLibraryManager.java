@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkManager;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilesPacket;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -147,17 +148,17 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
 
         @Override
         public boolean shouldDownloadFile(Player player) {
-//            if (!ModPermissions.SKIN_LIBRARY_SKIN_DOWNLOAD.accept(player)) {
-//                return false;
-//            }
+            if (!ModPermissions.SKIN_LIBRARY_SKIN_DOWNLOAD.accept(player)) {
+                return false;
+            }
             return ModConfig.Common.allowDownloadingSkins;
         }
 
         @Override
         public boolean shouldUploadFile(Player player) {
-//            if (!ModPermissions.SKIN_LIBRARY_SKIN_UPLOAD.accept(player)) {
-//                return false;
-//            }
+            if (!ModPermissions.SKIN_LIBRARY_SKIN_UPLOAD.accept(player)) {
+                return false;
+            }
             return ModConfig.Common.allowUploadingSkins;
         }
 

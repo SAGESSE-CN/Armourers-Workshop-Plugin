@@ -9,6 +9,7 @@ import net.cocoonmc.core.world.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
@@ -34,9 +35,18 @@ public class EntityEventHandler implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void onPlayerUpload(PlayerChangedWorldEvent event) {
+        Player player = Player.of(event.getPlayer());
+        SkinWardrobe wardrobe = SkinWardrobe.of(player);
+        if (wardrobe != null) {
+            wardrobe.broadcast();
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = Player.of(event.getEntity());
-        if (!shouldKeepWardrobe(player, event.getKeepInventory())) {
+        if (shouldKeepWardrobe(player, event.getKeepInventory())) {
             return;
         }
         SkinWardrobe oldWardrobe = SkinWardrobe.of(player);

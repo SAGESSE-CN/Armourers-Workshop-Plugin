@@ -57,7 +57,7 @@ public class MannequinItem extends Item {
         Vector3d origin = player.getLocation();
         MannequinHitResult rayTraceResult = MannequinHitResult.test(player, origin, context.getClickLocation(), context.getClickedPos());
         ItemStack itemStack = context.getItemInHand();
-        MannequinEntity entity = ModEntityTypes.MANNEQUIN.create(level, rayTraceResult.getBlockPos(), itemStack.getTag());
+        MannequinEntity entity = ModEntityTypes.MANNEQUIN.get().create(level, rayTraceResult.getBlockPos(), itemStack.getTag());
         if (entity == null) {
             return InteractionResult.FAIL;
         }
@@ -68,7 +68,9 @@ public class MannequinItem extends Item {
         level.addFreshEntity(entity);
 //        level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
 
-        itemStack.shrink(1);
+        if (!player.isCreative()) {
+            itemStack.shrink(1);
+        }
         return InteractionResult.SUCCESS;
     }
 }

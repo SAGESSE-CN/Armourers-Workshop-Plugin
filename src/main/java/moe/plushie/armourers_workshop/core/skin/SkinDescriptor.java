@@ -78,7 +78,7 @@ public class SkinDescriptor {
     }
 
     public ItemStack asItemStack() {
-        ItemStack itemStack = new ItemStack(ModItems.SKIN);
+        ItemStack itemStack = new ItemStack(ModItems.SKIN.get());
         CompoundTag tag = itemStack.getOrCreateTag();
         tag.put("ArmourersWorkshop", serializeNBT());
         return itemStack;

@@ -1,13 +1,14 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
+import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.init.ModBlockEntitiyTypes;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.cocoonmc.core.BlockPos;
@@ -29,6 +30,7 @@ import net.cocoonmc.core.math.VoxelShape;
 import net.cocoonmc.core.world.InteractionHand;
 import net.cocoonmc.core.world.InteractionResult;
 import net.cocoonmc.core.world.Level;
+import net.cocoonmc.core.world.entity.LivingEntity;
 import net.cocoonmc.core.world.entity.Player;
 import net.cocoonmc.core.world.loot.LootContext;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +57,38 @@ public class SkinnableBlock extends AttachedDirectionalBlock implements BlockEnt
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand) {
-        return MenuManager.openMenu(ModMenuTypes.SKINNABLE, player, WorldAccessor.of(level, blockPos));
+        SkinnableBlockEntity blockEntity = getBlockEntity(level, blockPos);
+        if (blockEntity == null) {
+            return InteractionResult.FAIL;
+        }
+//        if (blockEntity.isLinked()) {
+//            BlockPos linkedPos = blockEntity.getLinkedBlockPos();
+//            BlockState linkedState = level.getBlockState(linkedPos);
+//            return linkedState.getBlock().use(linkedState, level, linkedPos, player, hand, traceResult);
+//        }
+        if (blockEntity.isBed() && !player.isSecondaryUseActive()) {
+            if (ModPermissions.SKINNABLE_SLEEP.accept(blockEntity, player)) {
+//                return Blocks.RED_BED.use(blockState, level, blockEntity.getBedPos(), player, hand, traceResult);
+            }
+        }
+        if (blockEntity.isSeat() && !player.isSecondaryUseActive()) {
+            if (ModPermissions.SKINNABLE_SIT.accept(blockEntity, player)) {
+//                if (level.isClientSide()) {
+//                    return InteractionResult.CONSUME;
+//                }
+//                Vector3d seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
+//                SeatEntity seatEntity = getSeatEntity((ServerLevel) level, blockEntity.getParentPos(), seatPos);
+//                if (seatEntity == null) {
+//                    return InteractionResult.FAIL; // it is using
+//                }
+//                player.startRiding(seatEntity, true);
+//                return InteractionResult.SUCCESS;
+            }
+        }
+        if (blockEntity.isInventory()) {
+            return MenuManager.openMenu(ModMenuTypes.SKINNABLE, level.getBlockEntity(blockPos), player);
+        }
+        return InteractionResult.FAIL;
     }
 
     @Override
@@ -95,7 +128,7 @@ public class SkinnableBlock extends AttachedDirectionalBlock implements BlockEnt
         for (ItemStack itemStack : results) {
             // we will add an invalid skin item from loot table at data pack,
             // so we need fix the skin info in the drop event.
-            if (itemStack.is(ModItems.SKIN) && SkinDescriptor.of(itemStack).isEmpty()) {
+            if (itemStack.is(ModItems.SKIN.get()) && SkinDescriptor.of(itemStack).isEmpty()) {
                 // when not found any dropped stack,
                 // we must be remove invalid skin item.
                 itemStack = blockEntity.getDropped();
@@ -124,7 +157,16 @@ public class SkinnableBlock extends AttachedDirectionalBlock implements BlockEnt
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModBlockEntitiyTypes.SKINNABLE.create(pos, state);
+        return ModBlockEntityTypes.SKINNABLE.get().create(pos, state);
+    }
+
+    @Override
+    public boolean isLadder(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity) {
+        SkinnableBlockEntity blockEntity = getBlockEntity(level, pos);
+        if (blockEntity != null) {
+            return blockEntity.isLadder();
+        }
+        return false;
     }
 
     public void forEach(Level level, BlockPos pos, Consumer<BlockPos> consumer) {

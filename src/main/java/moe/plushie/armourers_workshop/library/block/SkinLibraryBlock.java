@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.library.block;
 
-import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.core.block.HorizontalDirectionalBlock;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
-import moe.plushie.armourers_workshop.init.ModBlockEntitiyTypes;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
@@ -24,16 +23,16 @@ public class SkinLibraryBlock extends HorizontalDirectionalBlock implements Bloc
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModBlockEntitiyTypes.SKIN_LIBRARY.create(pos, state);
+        return ModBlockEntityTypes.SKIN_LIBRARY.get().create(pos, state);
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand) {
-        if (this == ModBlocks.SKIN_LIBRARY_CREATIVE) {
-            return MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY_CREATIVE, player, WorldAccessor.of(level, blockPos));
+        if (this == ModBlocks.SKIN_LIBRARY_CREATIVE.get()) {
+            return MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY_CREATIVE, level.getBlockEntity(blockPos), player);
         }
-        if (this == ModBlocks.SKIN_LIBRARY) {
-            return MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY, player, WorldAccessor.of(level, blockPos));
+        if (this == ModBlocks.SKIN_LIBRARY.get()) {
+            return MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY, level.getBlockEntity(blockPos), player);
         }
         return InteractionResult.CONSUME;
     }

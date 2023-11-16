@@ -82,7 +82,7 @@ public class DyeTableMenu extends UpdatableContainerMenu<DyeTableBlockEntity> {
             ItemStack colorStack = ItemStack.EMPTY;
             PaintColor paintColor = scheme.getColor(paintTypes[i]);
             if (paintColor != null) {
-                colorStack = ModItems.BOTTLE.getDefaultInstance();
+                colorStack = ModItems.BOTTLE.get().getDefaultInstance();
                 BottleItem.setColor(colorStack, paintColor);
             }
             dataSlots.get(i).setItem(colorStack);
@@ -114,7 +114,7 @@ public class DyeTableMenu extends UpdatableContainerMenu<DyeTableBlockEntity> {
 
     private boolean allowsPlaceColor(ItemStack itemStack) {
         if (inputSlots.get(0).hasItem()) {
-            return itemStack.is(ModItems.BOTTLE);
+            return itemStack.is(ModItems.BOTTLE.get());
         }
         return false;
     }

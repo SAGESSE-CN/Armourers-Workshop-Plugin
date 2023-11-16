@@ -3,7 +3,9 @@ package moe.plushie.armourers_workshop.library.network;
 
 import moe.plushie.armourers_workshop.api.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.core.permission.BlockPermission;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -54,9 +56,9 @@ public class UpdateLibraryFilePacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, Player player) {
         String playerName = player.getDisplayName();
-//        if (!mode.permission.accept(player)) {
-//            return;
-//        }
+        if (!mode.permission.accept(player)) {
+            return;
+        }
         SkinLibrary library = SkinLibraryManager.getServer().getLibrary();
         if (mode == Mode.RELOAD) {
             library.reload();
@@ -107,17 +109,17 @@ public class UpdateLibraryFilePacket extends CustomPacket {
     }
 
     public enum Mode {
-        RELOAD(0/*, ModPermissions.SKIN_LIBRARY_RELOAD*/),
-        MKDIR(1/*, ModPermissions.SKIN_LIBRARY_MKDIR*/),
-        RENAME(3/*, ModPermissions.SKIN_LIBRARY_RENAME*/),
-        DELETE(1/*, ModPermissions.SKIN_LIBRARY_DELETE*/);
+        RELOAD(0, ModPermissions.SKIN_LIBRARY_RELOAD),
+        MKDIR(1, ModPermissions.SKIN_LIBRARY_MKDIR),
+        RENAME(3, ModPermissions.SKIN_LIBRARY_RENAME),
+        DELETE(1, ModPermissions.SKIN_LIBRARY_DELETE);
 
         final int flag;
-//        final BlockPermission permission;
+        final BlockPermission permission;
 
-        Mode(int flag/*, BlockPermission permission*/) {
+        Mode(int flag, BlockPermission permission) {
             this.flag = flag;
-//            this.permission = permission;
+            this.permission = permission;
         }
     }
 }

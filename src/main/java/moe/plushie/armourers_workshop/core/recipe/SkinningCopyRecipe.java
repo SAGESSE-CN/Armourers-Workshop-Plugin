@@ -25,7 +25,7 @@ public class SkinningCopyRecipe extends SkinningRecipe {
 
     @Override
     protected boolean isValidTarget(ItemStack itemStack) {
-        return itemStack.is(ModItems.SKIN_TEMPLATE);
+        return itemStack.is(ModItems.SKIN_TEMPLATE.get());
     }
 
     protected boolean isValidSkin(ItemStack itemStack) {

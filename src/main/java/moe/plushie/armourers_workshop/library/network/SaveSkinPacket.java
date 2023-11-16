@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.menu.SkinLibraryMenu;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -74,10 +75,10 @@ public class SaveSkinPacket extends CustomPacket {
         SkinLibraryMenu container = (SkinLibraryMenu) player.getActivedMenu();
         // load: fs -> db/ln/ws -> db/ln
         if (DataDomain.isDatabase(destination)) {
-//            if (!ModPermissions.SKIN_LIBRARY_SKIN_LOAD.accept(player)) {
-//                abort(player, "load", "load prohibited in the config file");
-//                return;
-//            }
+            if (!ModPermissions.SKIN_LIBRARY_SKIN_LOAD.accept(player)) {
+                abort(player, "load", "load prohibited in the config file");
+                return;
+            }
             Skin skin = getSkin();
             if (skin == null) {
                 abort(player, "load", "missing from skin loader");
@@ -93,10 +94,10 @@ public class SaveSkinPacket extends CustomPacket {
         }
         // save: fs -> ws/db -> ws/ws -> ws
         if (DataDomain.isServer(destination)) {
-//            if (!ModPermissions.SKIN_LIBRARY_SKIN_SAVE.accept(player)) {
-//                abort(player, "save", "save prohibited in the config file");
-//                return;
-//            }
+            if (!ModPermissions.SKIN_LIBRARY_SKIN_SAVE.accept(player)) {
+                abort(player, "save", "save prohibited in the config file");
+                return;
+            }
             Skin skin = getSkin();
             if (skin == null) {
                 abort(player, "save", "missing from skin loader");

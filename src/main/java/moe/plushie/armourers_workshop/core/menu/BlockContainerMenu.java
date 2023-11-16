@@ -151,7 +151,7 @@ public abstract class BlockContainerMenu extends ContainerMenu {
         }
 
         public static Predicate<ItemStack> allowsSkinOrTemplate() {
-            return itemStack -> itemStack.is(ModItems.SKIN_TEMPLATE) || !SkinDescriptor.of(itemStack).isEmpty();
+            return itemStack -> itemStack.is(ModItems.SKIN_TEMPLATE.get()) || !SkinDescriptor.of(itemStack).isEmpty();
         }
 
         public static Predicate<ItemStack> only(Item item) {

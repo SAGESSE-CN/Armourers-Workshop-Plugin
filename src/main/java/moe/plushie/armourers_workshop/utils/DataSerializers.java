@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.utils;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.IEntitySerializer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
 import net.cocoonmc.core.math.Vector3f;
 import net.cocoonmc.core.nbt.CompoundTag;
@@ -142,6 +143,8 @@ public class DataSerializers {
             return PaintColor.of(buffer.readInt());
         }
     };
+
+    public static final IEntitySerializer<SkinWardrobe> ENTITY_WARDROBE = null;
 
     //    public static final IEntitySerializer<PlayerTextureDescriptor> PLAYER_TEXTURE = new IEntitySerializer<PlayerTextureDescriptor>() {
 //

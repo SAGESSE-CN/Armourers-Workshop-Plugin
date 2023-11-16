@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.api.WorldAccessor;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
-import moe.plushie.armourers_workshop.init.ModBlockEntitiyTypes;
+import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.cocoonmc.core.BlockPos;
@@ -22,12 +21,12 @@ public class DyeTableBlock extends HorizontalDirectionalBlock implements BlockEn
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModBlockEntitiyTypes.DYE_TABLE.create(pos, state);
+        return ModBlockEntityTypes.DYE_TABLE.get().create(pos, state);
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand) {
-        return MenuManager.openMenu(ModMenuTypes.DYE_TABLE, player, WorldAccessor.of(level, blockPos));
+        return MenuManager.openMenu(ModMenuTypes.DYE_TABLE, level.getBlockEntity(blockPos), player);
     }
 
     @Override
