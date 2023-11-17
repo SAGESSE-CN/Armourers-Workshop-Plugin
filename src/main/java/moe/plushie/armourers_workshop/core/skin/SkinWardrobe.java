@@ -9,12 +9,12 @@ import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.utils.CacheKeys;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.cocoonmc.Cocoon;
 import net.cocoonmc.core.inventory.Container;
 import net.cocoonmc.core.inventory.SimpleContainer;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.nbt.CompoundTag;
+import net.cocoonmc.core.utils.PersistentDataHelper;
 import net.cocoonmc.core.world.entity.Entity;
 import net.cocoonmc.core.world.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -57,7 +57,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
         }
         return Cocoon.API.CACHE.computeIfAbsent(entity, CacheKeys.SKIN_WARDROBE_KEY, it -> {
             SkinWardrobe wardrobe = new SkinWardrobe(entity, profile);
-            CompoundTag tag = entity.getPersistentData(SkinWardrobeStorage.SKIN_WARDROBE_KEY, DataSerializers.COMPOUND_TAG);
+            CompoundTag tag = entity.getPersistentData(SkinWardrobeStorage.SKIN_WARDROBE_KEY, PersistentDataHelper.COMPOUND_TAG);
             if (tag != null && tag.size() != 0) {
                 wardrobe.deserializeNBT(tag);
             }
@@ -87,7 +87,7 @@ public class SkinWardrobe implements ITagRepresentable<CompoundTag> {
     public void save() {
         Entity entity = getEntity();
         if (entity != null) {
-            entity.setPersistentData(SkinWardrobeStorage.SKIN_WARDROBE_KEY, DataSerializers.COMPOUND_TAG, serializeNBT());
+            entity.setPersistentData(SkinWardrobeStorage.SKIN_WARDROBE_KEY, PersistentDataHelper.COMPOUND_TAG, serializeNBT());
         }
     }
 

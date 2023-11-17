@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.IServerPacketHandler;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.SkinWardrobe;
@@ -14,6 +15,7 @@ import net.cocoonmc.core.inventory.Container;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.network.FriendlyByteBuf;
+import net.cocoonmc.core.network.syncher.EntityDataAccessor;
 import net.cocoonmc.core.world.Level;
 import net.cocoonmc.core.world.entity.Entity;
 import net.cocoonmc.core.world.entity.Player;
@@ -155,7 +157,7 @@ public class UpdateWardrobePacket extends CustomPacket {
                 if (itemStack.isEmpty()) {
                     return true;
                 }
-                return itemStack.getItem().equals(ModItems.BOTTLE);
+                return itemStack.getItem().equals(ModItems.BOTTLE.get());
             }
             case SYNC_OPTION: {
                 return true;
@@ -177,16 +179,16 @@ public class UpdateWardrobePacket extends CustomPacket {
 
         WARDROBE_EXTRA_RENDER(SkinWardrobe::shouldRenderExtra, SkinWardrobe::setRenderExtra),
 
-        MANNEQUIN_IS_CHILD(null/*MannequinEntity.DATA_IS_CHILD*/),
-        MANNEQUIN_IS_FLYING(null/*MannequinEntity.DATA_IS_FLYING*/),
-        MANNEQUIN_IS_VISIBLE(null/*MannequinEntity.DATA_IS_VISIBLE*/),
-        MANNEQUIN_IS_GHOST(null/*MannequinEntity.DATA_IS_GHOST*/),
-        MANNEQUIN_EXTRA_RENDER(null/*MannequinEntity.DATA_EXTRA_RENDERER*/),
+        MANNEQUIN_IS_CHILD(MannequinEntity.DATA_IS_CHILD),
+        MANNEQUIN_IS_FLYING(MannequinEntity.DATA_IS_FLYING),
+        MANNEQUIN_IS_VISIBLE(MannequinEntity.DATA_IS_VISIBLE),
+        MANNEQUIN_IS_GHOST(MannequinEntity.DATA_IS_GHOST),
+        MANNEQUIN_EXTRA_RENDER(MannequinEntity.DATA_EXTRA_RENDERER),
 
-        MANNEQUIN_POSE(null/*DataSerializers.COMPOUND_TAG, MannequinEntity::saveCustomPose, MannequinEntity::readCustomPose*/),
-        MANNEQUIN_POSITION(null/*DataSerializers.VECTOR_3D, MannequinEntity::position, MannequinEntity::moveTo*/),
+        MANNEQUIN_POSE(DataSerializers.COMPOUND_TAG, MannequinEntity::saveCustomPose, MannequinEntity::readCustomPose),
+        MANNEQUIN_POSITION(DataSerializers.VECTOR_3D, MannequinEntity::getPosition, MannequinEntity::setPosition),
 
-        MANNEQUIN_TEXTURE(null/*MannequinEntity.DATA_TEXTURE*/);
+        MANNEQUIN_TEXTURE(MannequinEntity.DATA_TEXTURE);
 
         private final boolean broadcastChanges;
         private final DataAccessor<SkinWardrobe, ?> dataAccessor;
@@ -203,27 +205,25 @@ public class UpdateWardrobePacket extends CustomPacket {
                     .withApplier(applier);
         }
 
-        //        <S extends Entity, T> Field(IEntitySerializer<T> dataSerializer, Function<S, T> supplier, BiConsumer<S, T> applier) {
-//            this.broadcastChanges = false;
-//            this.dataAccessor = AWDataAccessor
-//                    .withDataSerializer(SkinWardrobe.class, dataSerializer)
-//                    .withSupplier((wardrobe) -> {
-//                        if (wardrobe.getEntity() != null) {
-//                            return supplier.apply(ObjectUtils.unsafeCast(wardrobe.getEntity()));
-//                        }
-//                        return null;
-//                    })
-//                    .withApplier((wardrobe, value) -> {
-//                        if (wardrobe.getEntity() != null) {
-//                            applier.accept(ObjectUtils.unsafeCast(wardrobe.getEntity()), value);
-//                        }
-//                    });
-//        }
-//
-        <T> Field(T o/*EntityDataAccessor<T> dataParameter*/) {
+        <S extends Entity, T> Field(IEntitySerializer<T> dataSerializer, Function<S, T> supplier, BiConsumer<S, T> applier) {
             this.broadcastChanges = false;
-            this.dataAccessor = null;
-//            this(DataSerializers.of(dataParameter.getSerializer()), e -> e.getEntityData().get(dataParameter), (e, v) -> e.getEntityData().set(dataParameter, v));
+            this.dataAccessor = DataAccessor
+                    .withDataSerializer(SkinWardrobe.class, dataSerializer)
+                    .withSupplier((wardrobe) -> {
+                        if (wardrobe.getEntity() != null) {
+                            return supplier.apply(ObjectUtils.unsafeCast(wardrobe.getEntity()));
+                        }
+                        return null;
+                    })
+                    .withApplier((wardrobe, value) -> {
+                        if (wardrobe.getEntity() != null) {
+                            applier.accept(ObjectUtils.unsafeCast(wardrobe.getEntity()), value);
+                        }
+                    });
+        }
+
+        <T> Field(EntityDataAccessor<T> dataAccessor) {
+            this(DataSerializers.of(dataAccessor.getSerializer()), e -> e.getEntityData().get(dataAccessor), (e, v) -> e.getEntityData().set(dataAccessor, v));
         }
 
         public <T> void set(SkinWardrobe wardrobe, T value) {

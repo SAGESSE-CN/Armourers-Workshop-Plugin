@@ -5,8 +5,10 @@ import moe.plushie.armourers_workshop.core.skin.SkinOptions;
 import moe.plushie.armourers_workshop.core.skin.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import net.cocoonmc.core.BlockPos;
 import net.cocoonmc.core.math.Rectangle3i;
+import net.cocoonmc.core.math.Rotations;
 import net.cocoonmc.core.math.Vector3f;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.nbt.FloatTag;
@@ -222,6 +224,35 @@ public class OptionalCompoundTag {
         }
     }
 
+    public Rotations getOptionalRotations(String key, Rotations defaultValue) {
+        ListTag listTag = tag.getList(key, 5);
+        if (listTag.size() >= 3) {
+            return new Rotations(listTag);
+        }
+        return defaultValue;
+    }
+
+    public void putOptionalRotations(String key, Rotations value, Rotations defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
+            tag.put(key, value.save());
+        }
+    }
+
+    public PlayerTextureDescriptor getOptionalTextureDescriptor(String key, PlayerTextureDescriptor defaultValue) {
+        if (tag.contains(key, 10)) {
+            CompoundTag nbt1 = tag.getCompound(key);
+            if (!nbt1.isEmpty()) {
+                return new PlayerTextureDescriptor(nbt1);
+            }
+        }
+        return defaultValue;
+    }
+
+    public void putOptionalTextureDescriptor(String key, PlayerTextureDescriptor value, PlayerTextureDescriptor defaultValue) {
+        if (_shouldPutValue(tag, key, value, defaultValue)) {
+            tag.put(key, value.serializeNBT());
+        }
+    }
 
     private static <T> boolean _shouldPutValue(CompoundTag tag, String key, T value, T defaultValue) {
         if (tag == null || key == null) {

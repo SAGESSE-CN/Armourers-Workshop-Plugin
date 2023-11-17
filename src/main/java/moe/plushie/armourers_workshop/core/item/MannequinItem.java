@@ -3,8 +3,6 @@ package moe.plushie.armourers_workshop.core.item;
 import moe.plushie.armourers_workshop.core.data.MannequinHitResult;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
-import moe.plushie.armourers_workshop.utils.Constants;
-import net.cocoonmc.core.BlockPos;
 import net.cocoonmc.core.item.Item;
 import net.cocoonmc.core.item.ItemStack;
 import net.cocoonmc.core.item.context.UseOnContext;
@@ -54,7 +52,7 @@ public class MannequinItem extends Item {
             return InteractionResult.FAIL;
         }
         Level level = context.getLevel();
-        Vector3d origin = player.getLocation();
+        Vector3d origin = player.getPosition();
         MannequinHitResult rayTraceResult = MannequinHitResult.test(player, origin, context.getClickLocation(), context.getClickedPos());
         ItemStack itemStack = context.getItemInHand();
         MannequinEntity entity = ModEntityTypes.MANNEQUIN.get().create(level, rayTraceResult.getBlockPos(), itemStack.getTag());
@@ -62,7 +60,7 @@ public class MannequinItem extends Item {
             return InteractionResult.FAIL;
         }
         Vector3d clickedLocation = rayTraceResult.getLocation();
-        entity.setLocation(clickedLocation); // 0.0f, 0.0f
+        entity.setPosition(clickedLocation); // 0.0f, 0.0f
         entity.setBodyRot(new Vector3f(0, rayTraceResult.getRotation(), 0));
 //
         level.addFreshEntity(entity);

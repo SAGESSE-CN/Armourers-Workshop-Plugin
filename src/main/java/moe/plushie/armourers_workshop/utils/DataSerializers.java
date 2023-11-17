@@ -1,59 +1,24 @@
 package moe.plushie.armourers_workshop.utils;
 
-import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.IEntitySerializer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.skin.color.PaintColor;
+import net.cocoonmc.core.math.Vector3d;
 import net.cocoonmc.core.math.Vector3f;
 import net.cocoonmc.core.nbt.CompoundTag;
 import net.cocoonmc.core.nbt.IntArrayTag;
 import net.cocoonmc.core.nbt.StringTag;
 import net.cocoonmc.core.nbt.Tag;
 import net.cocoonmc.core.network.FriendlyByteBuf;
-import org.bukkit.persistence.PersistentDataAdapterContext;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
+import net.cocoonmc.core.network.syncher.EntityDataSerializer;
+import net.cocoonmc.core.network.syncher.EntityDataSerializers;
 
 import java.util.UUID;
 
 public class DataSerializers {
 
-    public static final PersistentDataType<byte[], CompoundTag> COMPOUND_TAG = new PersistentDataType<byte[], CompoundTag>() {
-
-        @NotNull
-        @Override
-        public Class<byte[]> getPrimitiveType() {
-            return byte[].class;
-        }
-
-        @NotNull
-        @Override
-        public Class<CompoundTag> getComplexType() {
-            return CompoundTag.class;
-        }
-
-        @NotNull
-        @Override
-        public byte[] toPrimitive(@NotNull CompoundTag complex, @NotNull PersistentDataAdapterContext context) {
-            FriendlyByteBuf buf = new FriendlyByteBuf();
-            buf.writeNbt(complex);
-            return buf.array();
-        }
-
-        @NotNull
-        @Override
-        public CompoundTag fromPrimitive(@NotNull byte[] primitive, @NotNull PersistentDataAdapterContext context) {
-            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.wrappedBuffer(primitive));
-            CompoundTag tag = buf.readNbt();
-            if (tag != null) {
-                return tag;
-            }
-            return CompoundTag.newInstance();
-        }
-    };
-
-    //    public static final IEntitySerializer<CompoundTag> COMPOUND_TAG = of(EntityDataSerializers.COMPOUND_TAG);
+    public static final IEntitySerializer<CompoundTag> COMPOUND_TAG = of(EntityDataSerializers.COMPOUND_TAG);
 
     public static final IEntitySerializer<Boolean> BOOLEAN = new IEntitySerializer<Boolean>() {
         @Override
@@ -103,20 +68,20 @@ public class DataSerializers {
         }
     };
 
-//
-//    public static final IEntitySerializer<Vec3> VECTOR_3D = new IEntitySerializer<Vec3>() {
-//        @Override
-//        public void write(FriendlyByteBuf buffer, Vec3 pos) {
-//            buffer.writeDouble(pos.x());
-//            buffer.writeDouble(pos.y());
-//            buffer.writeDouble(pos.z());
-//        }
-//
-//        @Override
-//        public Vec3 read(FriendlyByteBuf buffer) {
-//            return new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-//        }
-//    };
+
+    public static final IEntitySerializer<Vector3d> VECTOR_3D = new IEntitySerializer<Vector3d>() {
+        @Override
+        public void write(FriendlyByteBuf buffer, Vector3d pos) {
+            buffer.writeDouble(pos.getX());
+            buffer.writeDouble(pos.getY());
+            buffer.writeDouble(pos.getZ());
+        }
+
+        @Override
+        public Vector3d read(FriendlyByteBuf buffer) {
+            return new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+        }
+    };
 
     public static final IEntitySerializer<Vector3f> VECTOR_3F = new IEntitySerializer<Vector3f>() {
         @Override
@@ -290,20 +255,21 @@ public class DataSerializers {
 //    };
 //
 //    private static final Random RANDOM = new Random();
-//
-//    public static <T> IEntitySerializer<T> of(EntityDataSerializer<T> serializer) {
-//        return new IEntitySerializer<T>() {
-//            @Override
-//            public T read(FriendlyByteBuf buffer) {
-//                return serializer.read(buffer);
-//            }
-//
-//            @Override
-//            public void write(FriendlyByteBuf buffer, T descriptor) {
-//                serializer.write(buffer, descriptor);
-//            }
-//        };
-//    }
+
+    public static <T> IEntitySerializer<T> of(EntityDataSerializer<T> serializer) {
+        return new IEntitySerializer<T>() {
+            @Override
+            public T read(FriendlyByteBuf buffer) {
+                return serializer.read(buffer);
+            }
+
+            @Override
+            public void write(FriendlyByteBuf buffer, T descriptor) {
+                serializer.write(buffer, descriptor);
+            }
+        };
+    }
+
     public static CompoundTag parseCompoundTag(CompoundTag nbt, String key) {
         Tag value = nbt.get(key);
         if (value instanceof CompoundTag) {
