@@ -9,11 +9,7 @@ import moe.plushie.armourers_workshop.core.network.ResponseSkinPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateHologramProjectorPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
-import moe.plushie.armourers_workshop.library.network.SaveSkinPacket;
-import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilePacket;
-import moe.plushie.armourers_workshop.library.network.UpdateLibraryFilesPacket;
-import moe.plushie.armourers_workshop.library.network.UploadSkinPacket;
-import moe.plushie.armourers_workshop.library.network.UploadSkinPrePacket;
+import moe.plushie.armourers_workshop.library.network.*;
 import net.cocoonmc.core.network.FriendlyByteBuf;
 
 import java.util.function.Function;
@@ -42,13 +38,13 @@ public enum ModPackets {
     UPLOAD_SKIN_TO_GLOBAL(0x43, UploadSkinPacket.class, UploadSkinPacket::new),
     UPLOAD_SKIN_TO_GLOBAL_PRE(0x44, UploadSkinPrePacket.class, UploadSkinPrePacket::new),
 
-//    UPDATE_BLOCK_COLOR(0x80, UpdateBlockColorPacket.class, UpdateBlockColorPacket::new),
-//
-//    UPDATE_COLOR_PICKER(0x81, UpdateColorPickerPacket.class, UpdateColorPickerPacket::new),
-//    UPDATE_PAINTING_TOOL(0x82, UpdatePaintingToolPacket.class, UpdatePaintingToolPacket::new),
-//
-//    UNDO_ACTION(0x83, UndoActionPacket.class, UndoActionPacket::new),
-//
+    UPDATE_BLOCK_COLOR(0x80, EmptyPacket.class, EmptyPacket::new),
+
+    UPDATE_COLOR_PICKER(0x81, EmptyPacket.class, EmptyPacket::new),
+    UPDATE_PAINTING_TOOL(0x82, EmptyPacket.class, EmptyPacket::new),
+
+    UNDO_ACTION(0x83, EmptyPacket.class, EmptyPacket::new),
+
 //    UPDATE_OUTFIT_MAKER(0x84, UpdateOutfitMakerPacket.class, UpdateOutfitMakerPacket::new),
 //    UPDATE_ARMOURER(0x85, UpdateArmourerPacket.class, UpdateArmourerPacket::new);
     ;
