@@ -48,7 +48,7 @@ public class SkinLibraryMenu extends UpdatableContainerMenu<SkinLibraryBlockEnti
         if (descriptor != null) {
             // only consumes the template
             newItemStack = SkinItem.replaceSkin(newItemStack, descriptor);
-            consume = newItemStack.is(ModItems.SKIN_TEMPLATE.get());
+            consume = itemStack.is(ModItems.SKIN_TEMPLATE.get());
         }
         outputSlots.get(0).setItem(newItemStack);
         if (consume) {
