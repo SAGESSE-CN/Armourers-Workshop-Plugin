@@ -124,8 +124,8 @@ public class ModConfigSpec {
     }
 
     public static void init() {
+        COMMON.reload();
         if (IS_INITED) {
-            COMMON.reload();
             return;
         }
         IS_INITED = true;
