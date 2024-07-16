@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.handler.EntityEventHandler;
 import moe.plushie.armourers_workshop.init.handler.PacketEventHandler;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import moe.plushie.armourers_workshop.utils.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ArmourersWorkshopPlugin extends JavaPlugin {
@@ -54,6 +55,7 @@ public final class ArmourersWorkshopPlugin extends JavaPlugin {
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(new EntityEventHandler(), this);
         PacketEventHandler.init();
+        new Metrics(this, 22663);
     }
 
     @Override

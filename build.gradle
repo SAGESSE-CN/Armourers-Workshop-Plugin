@@ -11,7 +11,6 @@ if (version == "unspecified") {
 }
 
 repositories {
-    flatDir { dir "../cocoon/build/libs/" }
 
     mavenLocal()
     mavenCentral()
@@ -20,6 +19,7 @@ repositories {
     maven { url "https://repo.dmulloy2.net/repository/public/" }
     maven { url "https://jitpack.io/" }
     maven { url "https://repo.codemc.org/repository/maven-public/" }
+    maven { url "https://api.modrinth.com/maven/" }
 }
 
 dependencies {
@@ -29,7 +29,7 @@ dependencies {
     compileOnly "io.netty:netty-buffer:4.1.80+"
     compileOnly "io.netty:netty-handler:4.1.80+"
 
-    compileOnly "net.cocoonmc:cocoon:2.0.0"
+    compileOnly 'maven.modrinth:cocoon:2.0.1'
 
     compileOnly "commons-io:commons-io:2.11.0"
     compileOnly "commons-lang:commons-lang:2.6"
