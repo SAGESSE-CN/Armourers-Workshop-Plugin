@@ -34,6 +34,7 @@ public class ModCommands {
         CommandAPI.onLoad(new CommandAPIBukkitConfig(ArmourersWorkshopPlugin.INSTANCE).silentLogs(true));
 
         new CommandTree("armourers")
+                .then(literal("config").then(literal("reload").executes(Executor::reloadConfig)))
                 .then(literal("setSkin").then(entities().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
                 .then(literal("giveSkin").then(players().then(skins().executes(Executor::giveSkin))))
                 .then(literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
@@ -62,6 +63,10 @@ public class ModCommands {
     }
 
     public static class Executor {
+
+        static void reloadConfig(CommandSender sender, CommandArguments commandArguments) {
+            ModConfigSpec.COMMON.reload();
+        }
 
         public static void setSkin(CommandSender sender, CommandArguments commandArguments) {
             int slotIn;
